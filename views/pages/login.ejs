@@ -1,0 +1,193 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="w-full min-h-[calc(100vh-5rem)] flex flex-col lg:flex-row items-stretch justify-center p-4 lg:p-8 max-w-[1400px] mx-auto">
+  <!-- Left Hero & Social Proof Column (45% on Desktop) -->
+  <div class="lg:w-[45%] flex flex-col justify-between p-8 lg:p-12 rounded-3xl bg-surface-container-low shadow-sm relative overflow-hidden mb-6 lg:mb-0 lg:mr-6">
+    <!-- Background Ambient Glow -->
+    <div class="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-secondary-container/30 blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-80 h-80 rounded-full bg-primary-fixed/20 blur-3xl pointer-events-none"></div>
+
+    <!-- Header & Brand Placement -->
+    <div class="relative z-10">
+      <div class="flex items-center space-x-3 mb-10">
+        <img alt="Nestly Logo" class="w-12 h-12 rounded-xl object-contain shadow-sm bg-surface-container-lowest p-1.5" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/>
+        <div class="flex flex-col">
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Nestly</span>
+          <span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Student Stays Verified</span>
+        </div>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/50 text-secondary mb-6">
+        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+        <span class="font-label-md text-label-md">Trusted across 12+ university hubs</span>
+      </div>
+
+      <h1 class="font-display text-display-mobile lg:text-display text-on-surface font-bold tracking-tight leading-tight mb-5">
+        Find a place that feels like home during your <span class="text-primary-container">college years.</span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mb-8 leading-relaxed">
+        Join 45,000+ students across Pune, Mumbai, Bengaluru, and Delhi discovering 100% verified hostels with zero brokerage.
+      </p>
+
+      <!-- Value Proposition Pillars -->
+      <div class="space-y-4 mb-10">
+        <div class="flex items-center gap-3.5 group">
+          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">fact_check</span>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-surface font-semibold block">25-Point On-Ground Audit</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Fire safety, biometric locks & hygiene checked quarterly</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3.5 group">
+          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">handshake</span>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-surface font-semibold block">Zero Brokerage Direct Connect</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Deal straight with registered campus wardens</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3.5 group">
+          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">badge</span>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-surface font-semibold block">Verified Student ID Community</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Curated roommate matches from your campus & cohort</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verified Student Testimonial Card -->
+    <div class="relative z-10 bg-surface-container-lowest p-6 rounded-2xl shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-1 text-tertiary-fixed-dim">
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+        </div>
+        <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold inline-flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified Stay
+        </span>
+      </div>
+      <p class="font-body-md text-body-md text-on-surface mb-4 italic leading-relaxed">
+        “I booked my Hinjewadi PG through Nestly in less than 2 days. The zero deposit scam protection gave my parents complete peace of mind.”
+      </p>
+      <div class="flex items-center gap-3.5">
+        <img class="w-11 h-11 rounded-full object-cover shadow-sm" alt="Student testimonial avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4YLUXQRewQa--nn1DhOFXgNpRdiva49laW9fXvwfEi5YZT6V4Cj1FXQIsi8lzBSspcZixzOcPwRtkLCJyM4YZn2T6O_W211IpQctpk8agTC3oY8rbnfq1I7LC5yZGyAbjOCFxIS7ojQhSgqsBzHpySTpTdkDyW3j4Fa6c3UQX0YOnWTXSLoCOdUn1n5LPS2sWXSCN42t3At2R2ALfa-otnOzjmXHnlyzW8n9LAKPOnuUvt8IttDHz"/>
+        <div class="flex flex-col">
+          <span class="font-title-md text-title-md text-on-surface font-bold">Priya Nair</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">COEP Pune • B.Tech Computer Engineering</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side Authentication Form Container (55% on Desktop) -->
+  <div class="lg:w-[55%] flex flex-col justify-between p-6 lg:p-12 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/30">
+    <!-- Top Utility / Property Owner Bar -->
+    <div class="flex items-center justify-between pb-6 mb-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+        <span class="font-label-md text-label-md text-primary font-semibold">Nestly Account Portal</span>
+      </div>
+      <a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-primary hover:text-primary-container transition-colors font-semibold" href="/owner/register">
+        <span>List property? Partner Registration</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </a>
+    </div>
+
+    <!-- Main Form Wrapper -->
+    <div class="max-w-md w-full mx-auto my-auto py-4">
+      <!-- Header -->
+      <div class="mb-8">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight mb-2">
+          Welcome back to Nestly
+        </h2>
+        <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Enter your email and password to access your student bookings, saved stays, or partner operations hub.
+        </p>
+      </div>
+
+      <!-- Segmented Tab Switcher -->
+      <div class="grid grid-cols-2 p-1 bg-surface-container rounded-xl mb-6">
+        <a href="/login" class="py-2.5 text-center font-label-lg text-label-lg font-semibold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all">
+          Account Login
+        </a>
+        <a href="/signup" class="py-2.5 text-center font-label-lg text-label-lg font-medium rounded-lg text-on-surface-variant hover:text-on-surface transition-all">
+          Student Sign Up
+        </a>
+      </div>
+
+      <!-- Login Form (POST /login) -->
+      <form action="/login" method="POST" class="space-y-4">
+        <div>
+          <label class="block font-label-lg text-label-lg text-on-surface font-semibold mb-1.5" for="email">
+            Student Email Address
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-xl">alternate_email</span>
+            <input name="email" class="w-full pl-11 pr-4 py-3 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="email" placeholder="e.g. ananya@scit.edu.in" type="email" required autofocus/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-lg text-label-lg text-on-surface font-semibold mb-1.5" for="password">
+            Password
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-xl">lock</span>
+            <input name="password" class="w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="password" placeholder="Enter your Nestly password" type="password" required/>
+            <button aria-label="Show or hide password" class="absolute right-3.5 p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" id="toggle-password" type="button">
+              <span class="material-symbols-outlined text-xl" id="eye-icon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Primary Submit Button -->
+        <div class="pt-3">
+          <button class="w-full py-3.5 px-6 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-on-primary-fixed-variant transition-all duration-200 transform active:scale-[0.99] flex items-center justify-center gap-2" type="submit">
+            <span>Log In to Nestly</span>
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Bottom Links -->
+    <div class="pt-6 mt-4 text-center space-y-3">
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        New student? 
+        <a class="text-primary font-semibold hover:underline" href="/signup">Create free student account</a>
+      </p>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Hostel or PG owner? 
+        <a class="text-secondary font-semibold hover:underline" href="/owner/register">Register as property partner</a>
+      </p>
+      <p class="font-label-sm text-label-sm text-on-surface-variant/80 max-w-sm mx-auto leading-relaxed">
+        By continuing, you agree to Nestly's Terms of Service and Privacy Policy.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (toggleBtn && passwordInput && eyeIcon) {
+      toggleBtn.addEventListener('click', function() {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+    }
+  })();
+</script>

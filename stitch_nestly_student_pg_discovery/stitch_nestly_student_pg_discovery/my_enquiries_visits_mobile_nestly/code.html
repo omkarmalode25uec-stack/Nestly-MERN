@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-error-container": "#93000a", "on-surface": "#131e1b", "secondary-fixed-dim": "#99d2c3", "tertiary-fixed-dim": "#ffb872", "surface-container-highest": "#d9e5e0", "secondary-container": "#b1ebdc", "primary-container": "#176b5b", "on-background": "#131e1b", "outline-variant": "#bec9c4", "surface-dim": "#d0ddd8", "primary-fixed": "#a5f1dd", "outline": "#6f7975", "surface-container-low": "#eaf6f1", "on-error": "#ffffff", "primary": "#005144", "on-primary-fixed-variant": "#005143", "tertiary-fixed": "#ffdcbe", "on-secondary-fixed": "#00201a", "secondary": "#30685c", "surface-container": "#e4f1eb", "on-tertiary-fixed": "#2d1600", "on-tertiary-container": "#ffd1a8", "inverse-surface": "#27332f", "inverse-on-surface": "#e7f4ee", "surface": "#f0fcf7", "on-primary": "#ffffff", "on-secondary-fixed-variant": "#135044", "surface-container-lowest": "#ffffff", "surface-variant": "#d9e5e0", "on-secondary": "#ffffff", "on-tertiary-fixed-variant": "#6a3c00", "on-surface-variant": "#3f4945", "tertiary": "#6b3c00", "on-primary-container": "#9ce9d4", "error-container": "#ffdad6", "background": "#f0fcf7", "primary-fixed-dim": "#89d5c1", "on-tertiary": "#ffffff", "on-primary-fixed": "#00201a", "error": "#ba1a1a", "surface-tint": "#166a5a", "on-secondary-container": "#346c60", "surface-container-high": "#deebe6", "surface-bright": "#f0fcf7", "inverse-primary": "#89d5c1", "secondary-fixed": "#b4eedf", "tertiary-container": "#8c5100" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-lg": "1.5rem", "space-xl": "2rem", "gutter": "1.5rem", "space-2xl": "3rem", "margin": "2rem", "space-xs": "0.25rem", "space-md": "1rem", "margin-mobile": "1rem", "space-sm": "0.5rem", "gutter-mobile": "1rem" }, fontFamily: { "label-sm": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "title-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"] }, fontSize: { "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "title-lg": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }] } } } }</script><style>@layer base{html,body{width:100%;min-height:100%;margin:0;padding:0;}.pb-safe{padding-bottom:max(env(safe-area-inset-bottom,0px),0.5rem);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-on-surface flex flex-col min-h-full antialiased selection:bg-secondary-container selection:text-on-secondary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_12px_rgba(23,107,91,0.06)]"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Modern minimalist logo for Nestly - an elegant stylized bird nest and house roof shelter icon in deep emerald green #176B5B with a fresh mint accent #55B89A, accompanied by the clean wordmark 'Nestly'. Brand logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/><div class="flex items-center bg-surface-container-low px-space-sm py-1 rounded-full text-secondary gap-1"><span class="material-symbols-outlined text-[15px] text-primary">location_on</span><span class="font-label-md text-label-md text-on-surface">Pune, MH</span><span class="material-symbols-outlined text-[14px] text-outline">keyboard_arrow_down</span></div></div><div class="flex items-center gap-space-xs"><button aria-label="Notifications" class="relative w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-tertiary-container ring-2 ring-surface"></span></button><a aria-label="Profile" class="w-11 h-11 flex items-center justify-center" data-path="profile" href="#"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/30" src="https://lh3.googleusercontent.com/aida/AEtjO1X8UESVKar4q8r2qztHLCsX09Je4ZGvVxWhmdNyh8VGzKBVd--wIR0cowdZFQoPF2BU-08qgd9fMF7a-CmW4tII_IT3OSPdv8ZkW5H4Rqc1pEenmuII5Bx7JTJPnnUWJf-yXaprySd_5DZNp6rQlKX3aiPJChZf5SrnuTjfqgBNtTpGgK296zoW5TH74hNvQhUjrSjDuF8LCxPA4WDXaHl4WDI5QGJldXJjcYmbrcfZgWXAzu6S8ZT-uxA"/></a></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface min-h-[calc(100vh-5rem)]"><div class="sr-only">Enquiries</div><div class="flex flex-col w-full">
+<!-- Screen Header & Context -->
+<section class="px-margin-mobile pt-space-md pb-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary tracking-wider uppercase font-bold">Applicant Dashboard</span>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold tracking-tight mt-0.5">My Enquiries &amp; Visits</h1>
+</div>
+<button aria-label="Refresh list" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary active:scale-95 transition-transform shadow-sm" id="refresh-btn" type="button">
+<span class="material-symbols-outlined text-[20px]">sync</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 leading-relaxed">
+      Track physical walkthroughs, resident warden interactions, and secure your digital campus gate passes.
+    </p>
+</section>
+<!-- Quick Metrics Carousel -->
+<section class="w-full overflow-x-auto py-space-sm px-margin-mobile flex gap-space-sm no-scrollbar">
+<!-- Metric 1: Active -->
+<div class="flex-shrink-0 min-w-[124px] bg-surface-container-lowest rounded-xl p-3 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary text-[20px]">pending_actions</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="mt-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold block leading-none">5</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 block">Active Requests</span>
+</div>
+</div>
+<!-- Metric 2: Visits with Highlight -->
+<div class="flex-shrink-0 min-w-[136px] bg-secondary-container rounded-xl p-3 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]">door_front</span>
+<span class="bg-primary text-on-primary font-label-sm text-label-sm px-1.5 py-0.5 rounded-full font-bold">2 Up</span>
+</div>
+<div class="mt-2">
+<span class="font-headline-sm text-headline-sm text-on-secondary-container font-bold block leading-none">2 Visits</span>
+<span class="font-label-sm text-label-sm text-secondary mt-1 block">Gate Passes Ready</span>
+</div>
+</div>
+<!-- Metric 3: Messages -->
+<div class="flex-shrink-0 min-w-[124px] bg-surface-container-lowest rounded-xl p-3 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-secondary text-[20px]">mark_chat_unread</span>
+<span class="w-2 h-2 rounded-full bg-tertiary-container"></span>
+</div>
+<div class="mt-2">
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold block leading-none">3 New</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant mt-1 block">Warden Replies</span>
+</div>
+</div>
+<!-- Metric 4: Bed on Hold -->
+<div class="flex-shrink-0 min-w-[140px] bg-tertiary-fixed rounded-xl p-3 shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-on-tertiary-fixed text-[20px]">lock_clock</span>
+<span class="bg-tertiary-container text-on-tertiary font-label-sm text-label-sm px-1.5 py-0.5 rounded font-bold">26h left</span>
+</div>
+<div class="mt-2">
+<span class="font-headline-sm text-headline-sm text-on-tertiary-fixed font-bold block leading-none">1 Priority</span>
+<span class="font-label-sm text-label-sm text-on-tertiary-fixed-variant mt-1 block">Bed Locked</span>
+</div>
+</div>
+</section>
+<!-- Interactive Filter Tabs -->
+<section class="w-full overflow-x-auto px-margin-mobile py-space-sm flex items-center gap-space-xs no-scrollbar" id="filter-container">
+<button class="filter-chip active flex-shrink-0 px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md transition-all shadow-sm" type="button">
+      All Enquiries (5)
+    </button>
+<button class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md transition-all shadow-sm" type="button">
+      Visits Scheduled (2)
+    </button>
+<button class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md transition-all shadow-sm" type="button">
+      Warden Chats (3)
+    </button>
+<button class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md transition-all shadow-sm" type="button">
+      Awaiting Reply (1)
+    </button>
+<button class="filter-chip flex-shrink-0 px-3.5 py-1.5 rounded-full bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md transition-all shadow-sm" type="button">
+      Completed (1)
+    </button>
+</section>
+<!-- Main Enquiries Feed -->
+<div class="flex flex-col gap-space-md px-margin-mobile py-space-sm">
+<!-- Card 1: Upcoming Visit with Digital Pass -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col transition-all">
+<!-- Property Header Media Banner -->
+<div class="relative w-full h-36 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A modern student room with two ergonomic wooden study desks, warm ambient task lighting, double twin beds dressed in crisp sage-green linen, large sunlit window showing Hinjewadi IT hub greenery, spotless minimalist interior photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtZHTccZLNvB9TLOo2Bswpk-fui1p_TCj1SZJUIHGVkM262Czxx2Zu9Rh3yw__1A7IjPouidwY1BzWoMm1w9F3c-onRpAz-NlT6uQwnwtohnoMU0_ulv7df6ahr2A2GypdMPJpOuVTdrwWDVnO3Fg5wGsypRKNyVzqVvQ7-O6_fgzN2tXKZM7LXAwsePwDPiUe6_HnSGdtPIKDTNCzsO8k-GlScdgpPCP2nDaVhr8TipQPF-flpmYT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/80 via-transparent to-black/20"></div>
+<!-- Top Floating Badges -->
+<div class="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between">
+<div class="flex items-center gap-1 bg-surface-container-lowest/95 backdrop-blur-md px-2 py-0.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">Nestly Assured</span>
+</div>
+<div class="flex items-center gap-1 bg-tertiary-container/90 backdrop-blur-md text-on-tertiary font-label-sm text-label-sm px-2 py-0.5 rounded-full font-bold">
+<span class="material-symbols-outlined text-[13px]">event</span>
+<span>Sat, 12 Jul • 11:30 AM</span>
+</div>
+</div>
+<!-- Property Title Overlay -->
+<div class="absolute bottom-2.5 left-3 right-3 text-surface">
+<h2 class="font-title-md text-title-md font-bold leading-tight">Green Valley Premier PG</h2>
+<p class="font-body-sm text-body-sm text-surface-container-highest flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+            Hinjewadi Phase 1, Pune • Double Sharing • ₹8,500/mo
+          </p>
+</div>
+</div>
+<div class="p-4 flex flex-col gap-space-sm">
+<!-- Digital Gate Pass Banner (Interactive) -->
+<div class="bg-surface-container-low rounded-lg p-3 flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-9 h-9 rounded-lg bg-primary-fixed flex items-center justify-center text-on-primary-fixed flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-sm text-label-sm text-primary font-bold tracking-wide">DIGITAL PASS READY</span>
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">Pass #VP-9024</span>
+</div>
+</div>
+<button class="px-2.5 py-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-transform flex-shrink-0" id="open-qr-modal" type="button">
+<span>View QR</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</button>
+</div>
+<!-- 4-Step Milestone Progress Bar -->
+<div class="py-1">
+<div class="flex items-center justify-between text-center relative">
+<!-- Continuous track behind nodes -->
+<div class="absolute top-3 left-6 right-6 h-0.5 bg-surface-container-high -z-0"></div>
+<div class="absolute top-3 left-6 w-2/3 h-0.5 bg-primary -z-0"></div>
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-1 z-10">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Sent</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-1 z-10">
+<div class="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Confirmed</span>
+</div>
+<!-- Step 3 (Active) -->
+<div class="flex flex-col items-center gap-1 z-10">
+<div class="w-6 h-6 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-label-sm text-label-sm animate-pulse">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold">Visit Day</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-1 z-10">
+<div class="w-6 h-6 rounded-full bg-surface-container-highest text-outline flex items-center justify-center font-label-sm text-label-sm">
+                4
+              </div>
+<span class="font-label-sm text-label-sm text-outline">Book Bed</span>
+</div>
+</div>
+</div>
+<!-- Resident Warden Snippet & Last Chat -->
+<div class="bg-surface-container rounded-lg p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="relative">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Portrait of a welcoming senior Indian male hostel warden wearing a beige collared shirt with spectacles and a friendly confident smile, standing in front of a well-maintained hostel campus lobby." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKMrnp_QOVfSnnxSxor1ZYBgM3sU8k6IdeSg7T7UtEXjvahVGG8--3ClaLj8gm7N66pCoaUlndL9jhUFzwLjxu9bkDX2JCogS-AQn9bewVts4-93Q-6oMjC13rLnG0gau7ALWMQ-o9SAVWZjvv4yUmlrNGJQxBqL9PgB6Lwc8oY5ZW87fG6bfzP15d5s8_XcDsjB0g2bBI9taVT-GXKjlPgM5FDZwwfNvsnb8ddw28C1R8NiOp1-r0"/>
+<span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-bold">Mr. Rajesh Deshmukh</span>
+<span class="font-label-sm text-label-sm text-secondary">Chief Warden • Active now</span>
+</div>
+</div>
+<!-- Quick warden direct calls -->
+<div class="flex items-center gap-1">
+<a aria-label="Call Warden" class="w-8 h-8 rounded-full bg-surface-container-lowest text-primary flex items-center justify-center active:scale-95 shadow-sm" href="tel:+919876543210">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</a>
+<button aria-label="Chat with Warden" class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic bg-surface-container-lowest/80 p-2 rounded">
+            "Hello Ananya! Looking forward to showing you the 2nd floor double room and the study terrace at 11:30 AM."
+          </p>
+</div>
+<!-- Primary Actions -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="py-2.5 px-3 rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold text-center active:scale-98 transition-transform" type="button">
+            Reschedule
+          </button>
+<button class="py-2.5 px-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold text-center active:scale-98 transition-transform shadow-sm flex items-center justify-center gap-1" id="card-pass-trigger" type="button">
+<span class="material-symbols-outlined text-[16px]">badge</span>
+<span>View Pass &amp; QR</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Card 2: Awaiting Owner/Warden Response -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm p-4 flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A clean exterior shot of Scholar Haven Girls Hostel building in Viman Nagar Pune with security guard booth, manicured potted plants, and modern glass facade under soft daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEr19b743qi3nf0OCa3BXjamO2gWW43--aV9KAHieOKL7vctN1cCQHFMzbCZS1kxiiDCVOq3krLfMTggK2RMyvanuQLEuhBzPqGbj5_jmGKP7huGwNPq7Fxx30cMBD97mQqwl3OSqbxtl0EAqN9J_qWc2lOoTWMacweQ6hdTn4QyVupYV1wY6VjdRntZAIv3sSQEfJ8CjhFYuQbF1wrYRZQxeEEWVzv72PyG003zid2UfoUXNVObvI"/>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface font-bold truncate">Scholar Haven Girls PG</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Viman Nagar • Twin Sharing AC</span>
+</div>
+</div>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold flex-shrink-0 flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">schedule</span>
+<span>Awaiting (4h)</span>
+</span>
+</div>
+<!-- Query details snippet -->
+<div class="bg-surface-container-low rounded-lg p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Sent Today at 7:15 AM</span>
+<span class="font-label-sm text-label-sm text-outline">Warden: Mrs. Sunita K.</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface bg-surface-container-lowest p-2 rounded leading-relaxed">
+          "Is there an option for pure vegetarian meal plans in the evening mess? Also, what is the weekend gate curfew timing?"
+        </p>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-between pt-1">
+<button class="text-error font-label-md text-label-md font-semibold px-2 py-1 active:opacity-75" type="button">
+          Withdraw Enquiry
+        </button>
+<button class="bg-surface-container-high text-primary px-3.5 py-1.5 rounded-lg font-label-md text-label-md font-semibold active:scale-95 transition-transform flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">send</span>
+<span>Send Quick Nudge</span>
+</button>
+</div>
+</article>
+<!-- Card 3: Visit Completed • Ready to Reserve Bed -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col">
+<div class="bg-primary text-on-primary px-4 py-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="font-label-md text-label-md font-bold tracking-wide">VISIT COMPLETED</span>
+</div>
+<span class="font-label-sm text-label-sm bg-on-primary-container text-on-surface px-2 py-0.5 rounded font-bold">Room #304 Approved</span>
+</div>
+<div class="p-4 flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div class="flex flex-col">
+<h3 class="font-title-md text-title-md text-on-surface font-bold">CozyNest Student Co-living</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Baner Road, Pune • Studio Suite with Balcony</span>
+</div>
+<div class="text-right">
+<span class="font-title-lg text-title-lg text-tertiary font-bold">₹11,500</span>
+<span class="font-label-sm text-label-sm text-outline block">/month</span>
+</div>
+</div>
+<!-- 48-Hour Priority Hold Countdown Box -->
+<div class="bg-tertiary-fixed rounded-lg p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-on-tertiary-fixed">
+<span class="font-label-md text-label-md font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>48-Hour Priority Bed Hold</span>
+</span>
+<span class="font-label-sm text-label-sm font-bold bg-tertiary text-on-tertiary px-1.5 py-0.2 rounded">26:14:08 left</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-tertiary-fixed-variant leading-tight">
+            Bed #304-B is temporarily withheld from other students. Claim it before priority expires to lock this rate.
+          </p>
+</div>
+<!-- Reserve CTA -->
+<div class="flex flex-col gap-2 pt-1">
+<button class="w-full py-3 px-4 rounded-lg bg-tertiary text-on-tertiary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 active:scale-98 transition-transform shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]">lock</span>
+<span>Reserve Bed (₹2,000 Fully Refundable Token)</span>
+</button>
+<div class="flex items-center justify-between px-1">
+<a class="font-label-sm text-label-sm text-primary flex items-center gap-0.5 hover:underline" href="#">
+<span class="material-symbols-outlined text-[14px]">description</span>
+<span>Download Inspection Report</span>
+</a>
+<span class="font-label-sm text-label-sm text-outline flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px] text-primary">shield</span>
+              Zero-Risk Escrow Guarantee
+            </span>
+</div>
+</div>
+</div>
+</article>
+<!-- Student Safety & Ambassador Accompaniment Section -->
+<article class="bg-secondary-container rounded-xl p-4 shadow-sm flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-lowest flex items-center justify-center text-primary flex-shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">supervised_user_circle</span>
+</div>
+<div class="flex flex-col">
+<h4 class="font-title-md text-title-md text-on-secondary-container font-bold leading-tight">Visiting a hostel alone?</h4>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5 leading-relaxed">
+            Request a verified senior Nestly Campus Ambassador to accompany you for 100% free. Never feel pressured during lease walkthroughs.
+          </p>
+</div>
+</div>
+<!-- Ambassador Face Pile + Action -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center">
+<div class="flex -space-x-2 overflow-hidden">
+<img alt="Ambassador 1" class="inline-block h-8 w-8 rounded-full object-cover shadow-sm ring-2 ring-surface" data-alt="Close-up headshot of a friendly female Indian engineering student ambassador wearing Nestly lanyard and round spectacles smiling warmly." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNi9Zw4N-spBhzsD4FH7tkUyrY6IEt7AzdZWtWUpPqoli8rppxcGttcNTi1iomspqPuH7L_c6507dNYvmpw1yEb83NHjYJF-_uloD5D2MXzLLOuGI5Y8nXyYjdAdlO89Knaa6CLds4r7NWMikRK_36xzivdph78jqHZ95codJ1vGFLK6XiRuI4Vb_zxrvV_AtXwRXqJ5Pa9-bhA43tcFA1N9PoLoKoSgmXzQdMOI8OwI5CNIWwccK9"/>
+<img alt="Ambassador 2" class="inline-block h-8 w-8 rounded-full object-cover shadow-sm ring-2 ring-surface" data-alt="Portrait of a young collegiate male ambassador with a clean confident look in an emerald green Nestly polo shirt outdoors on a university campus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4HLZdigw81tEXvI7O0Inr3l8SfvqlMdK6d2jVDl6w_s6dS2cueyYi4FtM5XZ68kUev5KOd_FUtIW4r1TsL_HD6qSM8vWwVCRjzQ_L9vRH0qToL6jCd4aqBBYK4h2xQ2WxuX0shJ0FM_ncBIbcqaIxUlsen40pswvO0n-PL8RFDGQ1JWnjj91OS0s9omYCuaQGOQO7pBSoL852xtxwxSlhvUfvUxU3oK3Nmt8VttvP0Dh8i9oT9muu"/>
+<img alt="Ambassador 3" class="inline-block h-8 w-8 rounded-full object-cover shadow-sm ring-2 ring-surface" data-alt="Portrait of a cheerful female student ambassador with styled hair holding a campus map and smiling toward the camera." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSRQPGSrt_ZfJOkajolWIZ64_4m0Ienw_EhCAtbTVW3n__yID38F0PE_CibwSSuT_12P2DYaxBJYQ3AD1v7SUxqq6KXj2XqiwI9ptwGAll91xbVFsL7kURiuANP1OIrbZWhNDyCqFMLj4Vwvax4pFnM0h_UhldQYbQlIt9CpRMQyIGQ_37LTzMIW2m4Cywjpt6jonGQr9TckKbEmzCQwhm3fX2DoOp09dUGPsRPLTeOyMmcwxbCugo"/>
+</div>
+<span class="font-label-sm text-label-sm text-on-secondary-container font-semibold ml-3">12 on duty in Pune</span>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md font-bold active:scale-95 transition-transform shadow-sm" type="button">
+          Request Buddy
+        </button>
+</div>
+<!-- Trust Stamp -->
+<div class="flex items-center justify-center gap-1.5 pt-1 text-on-secondary-container opacity-80">
+<span class="material-symbols-outlined text-[14px]">verified_user</span>
+<span class="font-label-sm text-label-sm font-semibold">Nestly Zero-Deception Protocol &amp; 100% Escrow Protection</span>
+</div>
+</article>
+</div>
+<!-- QR Digital Visit Pass Modal / Bottom Sheet -->
+<div class="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity duration-200" id="qr-modal">
+<div class="bg-surface-container-lowest w-full max-w-sm rounded-t-2xl sm:rounded-2xl p-6 shadow-xl flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+<div class="flex items-center justify-between pb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">qr_code_scanner</span>
+<span class="font-title-lg text-title-lg text-on-surface font-bold">Campus Visit Pass</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container text-on-surface flex items-center justify-center" id="close-qr-modal" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- QR Visual Presentation -->
+<div class="bg-surface-container-low rounded-xl p-5 flex flex-col items-center justify-center gap-3">
+<!-- SVG Generated QR Mockup -->
+<div class="w-44 h-44 bg-surface-container-lowest p-3 rounded-lg shadow-sm flex items-center justify-center">
+<svg class="w-full h-full text-on-surface fill-current" viewbox="0 0 100 100">
+<!-- QR Pattern SVG -->
+<rect fill="currentColor" height="30" rx="4" width="30" x="0" y="0"></rect>
+<rect fill="#ffffff" height="20" rx="2" width="20" x="5" y="5"></rect>
+<rect fill="currentColor" height="12" width="12" x="9" y="9"></rect>
+<rect fill="currentColor" height="30" rx="4" width="30" x="70" y="0"></rect>
+<rect fill="#ffffff" height="20" rx="2" width="20" x="75" y="5"></rect>
+<rect fill="currentColor" height="12" width="12" x="79" y="9"></rect>
+<rect fill="currentColor" height="30" rx="4" width="30" x="0" y="70"></rect>
+<rect fill="#ffffff" height="20" rx="2" width="20" x="5" y="75"></rect>
+<rect fill="currentColor" height="12" width="12" x="9" y="79"></rect>
+<circle cx="50" cy="50" fill="#176b5b" r="10"></circle>
+<!-- Data dots -->
+<rect height="6" rx="1" width="6" x="40" y="10"></rect>
+<rect height="6" rx="1" width="6" x="52" y="10"></rect>
+<rect height="6" rx="1" width="8" x="40" y="24"></rect>
+<rect height="8" rx="1" width="6" x="10" y="44"></rect>
+<rect height="6" rx="1" width="6" x="24" y="44"></rect>
+<rect height="6" rx="1" width="12" x="70" y="44"></rect>
+<rect height="8" rx="1" width="6" x="88" y="44"></rect>
+<rect height="12" rx="1" width="6" x="40" y="70"></rect>
+<rect height="6" rx="1" width="10" x="52" y="76"></rect>
+<rect height="8" rx="1" width="8" x="70" y="70"></rect>
+<rect height="12" rx="1" width="8" x="84" y="80"></rect>
+</svg>
+</div>
+<div class="text-center">
+<span class="font-headline-sm text-headline-sm text-primary font-bold tracking-widest block">PASS #VP-9024</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant block mt-0.5">Show this at the security guard post upon entry</span>
+</div>
+</div>
+<!-- Pass Metadata Specs -->
+<div class="bg-surface-container rounded-lg p-3 flex flex-col gap-2 font-body-sm text-body-sm">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Hostel:</span>
+<span class="text-on-surface font-semibold">Green Valley Premier PG</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Slot:</span>
+<span class="text-on-surface font-semibold">Sat, 12 Jul • 11:30 AM</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Visitor:</span>
+<span class="text-on-surface font-semibold">Ananya Sharma (Verified)</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Host:</span>
+<span class="text-on-surface font-semibold">Mr. Rajesh Deshmukh</span>
+</div>
+</div>
+<button class="w-full py-3 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg font-bold active:scale-98 transition-transform shadow-md flex items-center justify-center gap-2" id="save-pass-btn" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Save to Wallet / Gallery</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+  (function initEnquiriesInteractions() {
+    // Filter chip toggle
+    const chips = document.querySelectorAll('.filter-chip');
+    chips.forEach(chip => {
+      chip.addEventListener('click', function() {
+        chips.forEach(c => {
+          c.classList.remove('bg-primary', 'text-on-primary');
+          c.classList.add('bg-surface-container-lowest', 'text-on-surface-variant');
+        });
+        this.classList.remove('bg-surface-container-lowest', 'text-on-surface-variant');
+        this.classList.add('bg-primary', 'text-on-primary');
+      });
+    });
+
+    // QR Modal Controls
+    const qrModal = document.getElementById('qr-modal');
+    const openBtn = document.getElementById('open-qr-modal');
+    const cardPassBtn = document.getElementById('card-pass-trigger');
+    const closeBtn = document.getElementById('close-qr-modal');
+    const saveBtn = document.getElementById('save-pass-btn');
+
+    function showModal() {
+      if (qrModal) {
+        qrModal.classList.remove('hidden');
+      }
+    }
+
+    function hideModal() {
+      if (qrModal) {
+        qrModal.classList.add('hidden');
+      }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', showModal);
+    if (cardPassBtn) cardPassBtn.addEventListener('click', showModal);
+    if (closeBtn) closeBtn.addEventListener('click', hideModal);
+
+    if (qrModal) {
+      qrModal.addEventListener('click', function(e) {
+        if (e.target === qrModal) hideModal();
+      });
+    }
+
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span> Pass Saved to Device!';
+        saveBtn.classList.replace('bg-primary', 'bg-secondary');
+        setTimeout(() => {
+          saveBtn.innerHTML = originalText;
+          saveBtn.classList.replace('bg-secondary', 'bg-primary');
+          hideModal();
+        }, 1500);
+      });
+    }
+
+    // Refresh animation feedback
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', function() {
+        const icon = refreshBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.classList.add('animate-spin');
+          setTimeout(() => {
+            icon.classList.remove('animate-spin');
+          }, 800);
+        }
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_24px_rgba(23,107,91,0.08)]" data-active-classes="text-primary font-label-md font-bold"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">roofing</span><span class="font-label-sm text-label-sm mt-0.5">Home</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="explore" href="#"><span class="material-symbols-outlined text-[24px]">travel_explore</span><span class="font-label-sm text-label-sm mt-0.5">Explore</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="saved" href="#"><span class="material-symbols-outlined text-[24px]">favorite</span><span class="font-label-sm text-label-sm mt-0.5">Saved</span></a><a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 transition-colors text-primary font-label-md font-bold" data-path="enquiries" href="#"><span class="material-symbols-outlined text-[24px]">chat_bubble</span><span class="font-label-sm text-label-sm mt-0.5">Enquiries</span></a><a class="flex flex-col items-center justify-center min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-primary transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">account_circle</span><span class="font-label-sm text-label-sm mt-0.5">Profile</span></a></div></nav></body></html>

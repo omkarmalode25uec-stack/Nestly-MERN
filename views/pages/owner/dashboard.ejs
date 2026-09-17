@@ -1,0 +1,392 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Owner Dashboard Canvas (Stitch Partner/Owner Hub) -->
+<div class="max-w-7xl mx-auto px-margin-mobile md:px-margin py-space-lg w-full space-y-space-xl">
+
+  <!-- Sub-header / Partner Quick Status Bar -->
+  <section class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30">
+    <div class="flex flex-col gap-space-xs">
+      <div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+        <span class="material-symbols-outlined text-[16px] text-primary">domain</span>
+        <span>Partner &amp; Property Operations Hub</span>
+        <span class="text-outline-variant">•</span>
+        <span>Partner ID: #NVH-<%= currentUser._id.toString().slice(-4).toUpperCase() %></span>
+      </div>
+      <div class="flex flex-wrap items-center gap-space-sm">
+        <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">
+          Welcome back, <%= currentUser.name %>
+        </h1>
+        <span class="inline-flex items-center gap-1 px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+          <span class="material-symbols-outlined text-[14px]">verified</span>
+          <%= properties.length %> <%= properties.length === 1 ? 'Property' : 'Properties' %> Listed • Verified Partner
+        </span>
+      </div>
+    </div>
+
+    <!-- Controls / Action Buttons -->
+    <div class="flex flex-wrap items-center gap-space-sm">
+      <a href="/stays" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
+        <span class="material-symbols-outlined text-[18px]">visibility</span>
+        <span>Student View</span>
+      </a>
+      <a href="/stays/new" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+        <span>+ List New Property</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 4-Card KPI Summary Grid (Stitch Partner Hub) -->
+  <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-space-md">
+    <!-- KPI 1: Beds & Occupancy -->
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-md relative overflow-hidden border border-outline-variant/30">
+      <div class="flex items-center justify-between">
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Beds Available</span>
+        <span class="p-1.5 rounded-xl bg-surface-container text-primary">
+          <span class="material-symbols-outlined text-[20px]">bed</span>
+        </span>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg font-bold text-on-surface"><%= stats.totalBeds %></span>
+          <span class="font-label-md text-label-md text-primary font-bold">Beds Vacant</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Across <%= properties.length %> managed <%= properties.length === 1 ? 'accommodation' : 'accommodations' %>
+        </p>
+      </div>
+      <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold pt-space-xs border-t border-surface-container">
+        <span class="material-symbols-outlined text-[15px]">sync_alt</span>
+        <span>Live Inventory Synced</span>
+      </div>
+    </div>
+
+    <!-- KPI 2: Active Properties -->
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-md relative overflow-hidden border border-outline-variant/30">
+      <div class="flex items-center justify-between">
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Active Listings</span>
+        <span class="p-1.5 rounded-xl bg-surface-container text-primary">
+          <span class="material-symbols-outlined text-[20px]">apartment</span>
+        </span>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg font-bold text-on-surface"><%= stats.totalProperties %></span>
+          <span class="font-label-md text-label-md text-on-surface-variant">Live on Nestly</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          100% physically audited
+        </p>
+      </div>
+      <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold pt-space-xs border-t border-surface-container">
+        <span class="material-symbols-outlined text-[15px]">verified_user</span>
+        <span>Zero Brokerage Direct Connect</span>
+      </div>
+    </div>
+
+    <!-- KPI 3: Monthly Run-Rate Capacity -->
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-md relative overflow-hidden border border-outline-variant/30">
+      <div class="flex items-center justify-between">
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Monthly Capacity</span>
+        <span class="p-1.5 rounded-xl bg-surface-container text-primary">
+          <span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+        </span>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg font-bold text-tertiary-container">₹<%= stats.totalRevenue.toLocaleString('en-IN') %></span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">/mo</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Cumulative monthly rental value
+        </p>
+      </div>
+      <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold pt-space-xs border-t border-surface-container">
+        <span class="material-symbols-outlined text-[15px]">payments</span>
+        <span>Direct Student Payments</span>
+      </div>
+    </div>
+
+    <!-- KPI 4: Partner Trust Index -->
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col justify-between gap-space-md relative overflow-hidden border border-outline-variant/30">
+      <div class="flex items-center justify-between">
+        <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Partner Rating</span>
+        <span class="p-1.5 rounded-xl bg-surface-container text-primary">
+          <span class="material-symbols-outlined text-[20px]">hotel_class</span>
+        </span>
+      </div>
+      <div>
+        <div class="flex items-baseline gap-space-xs">
+          <span class="font-headline-lg text-headline-lg font-bold text-on-surface"><%= stats.avgRating %></span>
+          <span class="font-body-md text-body-md text-on-surface-variant">/ 5.0</span>
+          <span class="material-symbols-outlined text-amber-500 text-[18px] ml-1" style="font-variation-settings: 'FILL' 1;">star</span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">
+          Verified Student &amp; Parent Ratings
+        </p>
+      </div>
+      <div class="flex items-center gap-1 text-primary font-label-sm text-label-sm font-semibold pt-space-xs border-t border-surface-container">
+        <span class="material-symbols-outlined text-[15px]">shield</span>
+        <span>Nestly Assured Partner</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payouts & Escrow Settlement Hub Overview -->
+  <section class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-outline-variant/20 pb-space-md">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[22px]">account_balance_wallet</span>
+          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Escrow Deposits &amp; Settlements</h2>
+          <% if (currentUser.settlementProfile && currentUser.settlementProfile.isConfigured) { %>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+              <span class="material-symbols-outlined text-[13px]">check_circle</span>
+              Payout Destination Set
+            </span>
+          <% } else { %>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200 font-label-sm text-label-sm font-semibold">
+              <span class="material-symbols-outlined text-[13px]">warning</span>
+              Payout Account Unset
+            </span>
+          <% } %>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Token deposits (₹2,000) collected via ZapUPI PayIn enter platform escrow and disburse directly to your registered destination.
+        </p>
+      </div>
+      <a href="/owner/settlement" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-on-primary-fixed-variant font-label-md text-label-md font-bold transition-all shadow-sm self-start sm:self-auto whitespace-nowrap">
+        <span>Payout Ledger &amp; Settings</span>
+        <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+      </a>
+    </div>
+
+    <!-- Settlement Metric Tiles -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md pt-space-xs">
+      <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-1">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Escrow Collected</span>
+        <div class="font-headline-md text-headline-md font-bold text-on-surface">
+          ₹<%= ((stats && stats.totalCollected) || 0).toLocaleString('en-IN') %>
+        </div>
+        <p class="text-[12px] text-on-surface-variant">Student token deposits secured</p>
+      </div>
+
+      <div class="p-space-md rounded-xl bg-secondary-container/30 border border-secondary/20 space-y-1">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Settled &amp; Disbursed</span>
+        <div class="font-headline-md text-headline-md font-bold text-on-secondary-container">
+          ₹<%= ((stats && stats.settledAmount) || 0).toLocaleString('en-IN') %>
+        </div>
+        <p class="text-[12px] text-on-surface-variant">Transferred with bank UTR proof</p>
+      </div>
+
+      <div class="p-space-md rounded-xl bg-amber-50/80 border border-amber-200/80 space-y-1">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-800 font-bold">Pending Escrow Release</span>
+        <div class="font-headline-md text-headline-md font-bold text-amber-900">
+          ₹<%= ((stats && stats.pendingSettlement) || 0).toLocaleString('en-IN') %>
+        </div>
+        <p class="text-[12px] text-amber-800">Under campus clearance / check-in</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accommodation & Booking Requests Section (Stitch Partner Hub) -->
+  <section class="space-y-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+      <div>
+        <div class="flex items-center gap-2">
+          <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Booking &amp; Accommodation Requests</h2>
+          <% if (typeof stats !== 'undefined' && stats.pendingRequests > 0) { %>
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-label-sm text-label-sm font-bold animate-pulse">
+              <%= stats.pendingRequests %> Action Required
+            </span>
+          <% } %>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Incoming student unit reservation requests requiring host review</p>
+      </div>
+    </div>
+
+    <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
+      <div class="space-y-3">
+        <% bookings.forEach(booking => { %>
+          <div class="p-space-md rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md hover:shadow-md transition-shadow">
+            <div class="flex items-start gap-space-md">
+              <div class="w-12 h-12 rounded-xl bg-secondary-container text-primary flex items-center justify-center font-bold shrink-0">
+                <span class="material-symbols-outlined text-[24px]">person</span>
+              </div>
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-title-md text-title-md text-on-surface font-bold"><%= booking.user ? booking.user.name : 'Student Member' %></span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-bold uppercase <%= booking.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' : (booking.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800') %>">
+                    <%= booking.status %>
+                  </span>
+                  <span class="text-xs font-mono text-outline"><%= booking.referenceCode %></span>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Property: <strong class="text-on-surface"><%= booking.property ? booking.property.title : 'Stay' %></strong> • Move-In: <strong><%= new Date(booking.moveInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+                </p>
+                <p class="font-body-sm text-body-sm text-outline">
+                  College: <%= booking.user && booking.user.college ? booking.user.college : 'Verified Student' %> • Contact: <%= booking.user && booking.user.phone ? booking.user.phone : booking.user.email %>
+                </p>
+                <% if (booking.studentNotes) { %>
+                  <p class="font-body-sm text-body-sm text-secondary italic">"<%= booking.studentNotes %>"</p>
+                <% } %>
+              </div>
+            </div>
+
+            <!-- Action Buttons for Owner -->
+            <div class="flex items-center gap-2 w-full md:w-auto justify-end pt-2 md:pt-0 border-t md:border-0 border-surface-container">
+              <a href="/bookings/<%= booking._id %>" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold transition-colors">
+                View Pass
+              </a>
+
+              <% if (booking.status === 'pending') { %>
+                <form action="/owner/bookings/<%= booking._id %>/accept" method="POST" class="inline">
+                  <button type="submit" class="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-label-sm text-label-sm font-bold transition-all shadow-sm flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">check</span>
+                    <span>Accept</span>
+                  </button>
+                </form>
+                <form action="/owner/bookings/<%= booking._id %>/reject" method="POST" class="inline">
+                  <button type="submit" class="px-3 py-1.5 rounded-lg bg-error-container hover:opacity-90 text-error font-label-sm text-label-sm font-semibold transition-all">
+                    Decline
+                  </button>
+                </form>
+              <% } %>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 text-center space-y-1">
+        <span class="material-symbols-outlined text-[28px] text-outline-variant">inbox</span>
+        <p class="font-title-md text-title-md text-on-surface font-semibold">No booking requests pending</p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Incoming student inquiries and reservation requests will appear here for your review.</p>
+      </div>
+    <% } %>
+  </section>
+
+  <!-- Managed Properties Inventory Section (Stitch Design) -->
+  <section class="space-y-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+      <div>
+        <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Managed Accommodations &amp; Inventory</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Live property synchronization with Nestly student discovery engine</p>
+      </div>
+      <a href="/stays/new" class="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-on-primary-fixed-variant transition-colors shadow-sm self-start sm:self-auto">
+        <span class="material-symbols-outlined text-[18px]">add_business</span>
+        <span>+ Add Stay</span>
+      </a>
+    </div>
+
+    <!-- Properties Feed -->
+    <% if (properties && properties.length > 0) { %>
+      <div class="space-y-space-md">
+        <% properties.forEach(property => { %>
+          <article class="p-space-md rounded-2xl bg-surface-container-lowest shadow-sm flex flex-col md:flex-row gap-space-md hover:shadow-md transition-shadow border border-outline-variant/30 relative">
+            <!-- Property Image -->
+            <div class="md:w-60 h-44 rounded-xl overflow-hidden shrink-0 relative bg-surface-container">
+              <img class="w-full h-full object-cover" alt="<%= property.title %>" src="<%= property.images && property.images.length ? property.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
+              <div class="absolute top-2 left-2 flex items-center gap-1">
+                <span class="px-2 py-0.5 rounded-lg bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-sm text-label-sm font-bold flex items-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-[14px]">verified</span> Nestly Assured
+                </span>
+              </div>
+              <div class="absolute bottom-2 left-2">
+                <span class="px-2 py-0.5 rounded-md bg-surface-container-lowest/95 backdrop-blur-md text-on-surface font-label-sm text-label-sm font-semibold shadow-sm">
+                  <%= property.genderPreference %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Property Info & Controls -->
+            <div class="flex-1 flex flex-col justify-between gap-space-sm">
+              <div>
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
+                  <div>
+                    <h3 class="font-title-lg text-title-lg text-on-surface font-bold hover:text-primary transition-colors">
+                      <a href="/stays/<%= property._id %>"><%= property.title %></a>
+                    </h3>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+                      <span class="material-symbols-outlined text-[16px] text-secondary">location_on</span>
+                      <span><%= property.locality %>, <%= property.city %> • <strong class="font-semibold text-on-surface"><%= property.campusDistance %></strong></span>
+                    </p>
+                  </div>
+                  <div class="sm:text-right">
+                    <span class="font-title-lg text-title-lg font-bold text-tertiary-container">₹<%= property.price.toLocaleString('en-IN') %></span>
+                    <span class="block font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+                  </div>
+                </div>
+
+                <!-- Bed Allocation & Category Chips -->
+                <div class="flex flex-wrap items-center gap-space-xs mt-space-sm">
+                  <span class="px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface font-medium">
+                    Type: <strong><%= property.propertyType %></strong>
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg bg-surface-container font-label-sm text-label-sm text-on-surface font-medium">
+                    Sharing: <strong><%= property.roomSharing %></strong>
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg <%= property.availableBeds > 0 ? 'bg-secondary-container text-on-secondary-container font-bold' : 'bg-surface-container-high text-error font-semibold' %> font-label-sm text-label-sm flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full <%= property.availableBeds > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-red-500' %>"></span>
+                    <span><%= property.availableBeds > 0 ? property.availableBeds + ' Beds Left' : 'Fully Booked' %></span>
+                  </span>
+                  <span class="px-2.5 py-1 rounded-lg <%= property.isAvailable ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' %> font-label-sm text-label-sm font-semibold">
+                    <%= property.isAvailable ? 'Active Listing' : 'Paused' %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="pt-space-xs flex flex-wrap items-center justify-between gap-space-sm border-t border-outline-variant/30">
+                <!-- Toggle Availability Form -->
+                <form action="/owner/properties/<%= property._id %>/toggle-status" method="POST" class="inline-flex items-center">
+                  <button type="submit" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-body-sm font-label-sm text-label-sm font-medium transition-colors <%= property.isAvailable ? 'bg-surface-container hover:bg-surface-container-high text-on-surface' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100' %>">
+                    <span class="material-symbols-outlined text-[16px]"><%= property.isAvailable ? 'pause_circle' : 'play_circle' %></span>
+                    <span><%= property.isAvailable ? 'Pause Listing' : 'Activate Listing' %></span>
+                  </button>
+                </form>
+
+                <!-- Edit, View Details & Delete Action Group -->
+                <div class="flex items-center gap-2">
+                  <a href="/stays/<%= property._id %>" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                    <span>View Stay</span>
+                  </a>
+
+                  <a href="/stays/<%= property._id %>/edit" class="px-3 py-1.5 rounded-lg bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1 shadow-sm">
+                    <span class="material-symbols-outlined text-[16px]">edit</span>
+                    <span>Edit Listing</span>
+                  </a>
+
+                  <form action="/owner/properties/<%= property._id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to permanently delete \'<%= property.title %>\'? This cannot be undone.');" class="inline-block">
+                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-error-container/40 hover:bg-error-container text-error font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[16px]">delete</span>
+                      <span>Delete</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </article>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <!-- Stitch Empty State for Owner with no accommodations -->
+      <div class="bg-surface-container-lowest p-space-2xl rounded-2xl text-center space-y-space-md border border-outline-variant/30 shadow-sm">
+        <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-primary mx-auto">
+          <span class="material-symbols-outlined text-[32px]">domain_add</span>
+        </div>
+        <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">No student stays listed yet</h3>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+          You haven't listed any student accommodations under your partner account. Add your first hostel, PG, or shared accommodation to start receiving student bookings with zero brokerage!
+        </p>
+        <div class="pt-2">
+          <a href="/stays/new" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-on-primary-fixed-variant transition-all shadow-md">
+            <span class="material-symbols-outlined text-[20px]">add_business</span>
+            <span>List Your First Property</span>
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </section>
+
+</div>

@@ -1,0 +1,138 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-3xl mx-auto px-margin-mobile md:px-margin py-space-xl">
+  <div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-3xl shadow-sm border border-outline-variant/30 space-y-space-md">
+    <!-- Header -->
+    <div class="border-b border-outline-variant/30 pb-space-md flex items-center justify-between">
+      <div>
+        <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface">Edit Stay Listing</h1>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+          Update room details, pricing, and availability for "<%= property.title %>".
+        </p>
+      </div>
+      <a href="/stays/<%= property._id %>" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md font-semibold">
+        View Listing
+      </a>
+    </div>
+
+    <!-- Edit Form (POST /stays/:id) -->
+    <form action="/stays/<%= property._id %>" method="POST" class="space-y-space-md">
+      <!-- Section 1: Basic Information -->
+      <div class="space-y-3">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">1. Basic Property Details</h3>
+        
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="title">Property Title / Name *</label>
+          <input name="title" id="title" value="<%= property.title %>" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required/>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="propertyType">Accommodation Type *</label>
+            <select name="propertyType" id="propertyType" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="PG" <%= property.propertyType === 'PG' ? 'selected' : '' %>>Paying Guest (PG)</option>
+              <option value="Hostel" <%= property.propertyType === 'Hostel' ? 'selected' : '' %>>Student Hostel</option>
+              <option value="Shared Flat" <%= property.propertyType === 'Shared Flat' ? 'selected' : '' %>>Shared Flat / Apartment</option>
+              <option value="Co-Living" <%= property.propertyType === 'Co-Living' ? 'selected' : '' %>>Student Co-Living</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="genderPreference">Occupant Gender *</label>
+            <select name="genderPreference" id="genderPreference" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="Boys" <%= property.genderPreference === 'Boys' ? 'selected' : '' %>>Boys Only</option>
+              <option value="Girls" <%= property.genderPreference === 'Girls' ? 'selected' : '' %>>Girls Only</option>
+              <option value="Unisex" <%= property.genderPreference === 'Unisex' ? 'selected' : '' %>>Co-Ed / Unisex</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="roomSharing">Room Sharing *</label>
+            <select name="roomSharing" id="roomSharing" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="Single" <%= property.roomSharing === 'Single' ? 'selected' : '' %>>Single (Private)</option>
+              <option value="Double" <%= property.roomSharing === 'Double' ? 'selected' : '' %>>Double / Twin Sharing</option>
+              <option value="Triple" <%= property.roomSharing === 'Triple' ? 'selected' : '' %>>Triple Sharing</option>
+              <option value="Four+" <%= property.roomSharing === 'Four+' ? 'selected' : '' %>>Four+ Sharing</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="description">Property Description *</label>
+          <textarea name="description" id="description" rows="3" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required><%= property.description %></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Location Details -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <div class="flex items-center justify-between">
+          <h3 class="font-title-md text-title-md font-bold text-on-surface">2. Location & Campus Proximity</h3>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">Service Area: Kopargaon</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="city">City (Active Scope) *</label>
+            <input name="city" id="city" value="<%= property.city || 'Kopargaon' %>" readonly class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-body-md text-on-surface outline-none cursor-not-allowed font-medium" required/>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Nestly currently serves Kopargaon, Maharashtra.</p>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="locality">Locality / Area in Kopargaon *</label>
+            <input name="locality" id="locality" value="<%= property.locality %>" placeholder="e.g. Sahajanandnagar, Sai City, Mewad" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="address">Street Address *</label>
+          <input name="address" id="address" value="<%= property.address %>" placeholder="e.g. Plot 18, near Sanjivani College of Engineering, Sahajanandnagar, Kopargaon" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required/>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="campusDistance">Proximity to Campuses / Landmarks</label>
+          <input name="campusDistance" id="campusDistance" value="<%= property.campusDistance %>" placeholder="e.g. 400m from Sanjivani College of Engineering • 5 mins walk" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary"/>
+        </div>
+      </div>
+
+      <!-- Section 3: Pricing & Inventory -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">3. Rent & Bed Availability</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="price">Monthly Rent (₹) *</label>
+            <input type="number" name="price" id="price" value="<%= property.price %>" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required min="0"/>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="securityDeposit">Security Deposit (₹)</label>
+            <input type="number" name="securityDeposit" id="securityDeposit" value="<%= property.securityDeposit %>" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" min="0"/>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="availableBeds">Available Beds</label>
+            <input type="number" name="availableBeds" id="availableBeds" value="<%= property.availableBeds %>" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" min="0"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="contactPhone">Contact Phone</label>
+          <input name="contactPhone" id="contactPhone" value="<%= property.contactPhone %>" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary"/>
+        </div>
+      </div>
+
+      <!-- Section 4: Image URLs -->
+      <div class="space-y-2 pt-2 border-t border-outline-variant/30">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">4. Photos (Image URLs)</h3>
+        <textarea name="images" rows="3" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary font-mono text-xs"><%= (property.images || []).join('\n') %></textarea>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="pt-space-md flex items-center justify-end gap-3 border-t border-outline-variant/30">
+        <a href="/stays/<%= property._id %>" class="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+          Cancel
+        </a>
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold shadow-md transition-all">
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

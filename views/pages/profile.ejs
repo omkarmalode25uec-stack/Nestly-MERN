@@ -1,0 +1,401 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <!-- Top Ambient Banner & Header Information -->
+  <div class="w-full relative overflow-hidden bg-surface-container-low px-margin-mobile md:px-margin py-space-xl border-b border-outline-variant/30 mb-space-xl">
+    <div class="absolute -right-16 -top-20 w-96 h-96 rounded-full bg-secondary-container/40 blur-3xl pointer-events-none"></div>
+    <div class="absolute left-1/3 -bottom-16 w-80 h-80 rounded-full bg-primary-fixed/25 blur-2xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto flex flex-col gap-space-lg relative z-10">
+      <!-- Back Link & Metadata Pill -->
+      <div class="flex flex-wrap items-center justify-between gap-space-sm">
+        <a class="inline-flex items-center gap-space-xs text-primary font-label-lg text-label-lg group hover:text-on-surface transition-colors" href="/stays">
+          <span class="material-symbols-outlined text-[18px] transition-transform group-hover:-translate-x-1">arrow_back</span>
+          <span>Back to Explore Stays</span>
+        </a>
+        <div class="flex items-center gap-space-xs bg-surface-container px-space-md py-1 rounded-full text-on-surface-variant font-label-sm text-label-sm">
+          <span class="w-2 h-2 rounded-full bg-primary"></span>
+          <span>Verified Student Member</span>
+        </div>
+      </div>
+
+      <!-- Title & Progress Bar Metric -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-end">
+        <div class="lg:col-span-7 space-y-space-xs">
+          <span class="text-secondary font-label-md text-label-md uppercase tracking-wider font-semibold">Account &amp; Residency Dossier</span>
+          <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">Student Profile &amp; Preferences</h1>
+          <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+            Manage your verified student credentials, stay preferences, personal contact, and account security.
+          </p>
+        </div>
+
+        <!-- Sleek Completion Widget -->
+        <div class="lg:col-span-5 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col gap-space-sm border border-outline-variant/30">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-primary text-[20px]">task_alt</span>
+              <span class="font-title-md text-title-md text-on-surface font-semibold">Profile Active &amp; Verified</span>
+            </div>
+            <span class="font-label-md text-label-md text-tertiary font-bold bg-tertiary-fixed px-2.5 py-0.5 rounded-full capitalize">
+              <%= user.role %>
+            </span>
+          </div>
+          <div class="w-full bg-surface-container rounded-full h-2.5 overflow-hidden">
+            <div class="bg-primary h-full rounded-full transition-all duration-700 ease-out" style="width: 90%;"></div>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-tertiary text-[16px]">verified</span>
+            <span>Joined on <strong><%= new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) %></strong></span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Dashboard Workspace -->
+  <div class="max-w-7xl mx-auto w-full px-margin-mobile md:px-margin">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+      <!-- LEFT COLUMN: Profile Summary & Sidebar -->
+      <aside class="lg:col-span-4 flex flex-col gap-space-lg lg:sticky lg:top-24">
+        <!-- Student Identity Card -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg relative overflow-hidden border border-outline-variant/30">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-secondary-container/20 rounded-bl-full pointer-events-none"></div>
+          <div class="flex flex-col items-center text-center">
+            <!-- Profile Avatar with Verified Badge -->
+            <div class="relative w-28 h-28 mb-space-md">
+              <img alt="<%= user.name %>" class="w-full h-full rounded-full object-cover shadow-sm ring-4 ring-primary/20" src="<%= user.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAqpTMQUCkhceotbCDpxAeWqtXHfAaUd_MvLbHpoUKqbSReNrdROy2OxJ61b2HqePtFbEMVR10ceaXifCBtpESiztRrvm8YE-x5_CI3jGo4SfPWrOHiQ8ZEMQWrK4aFi6A_w_5fYZW8xVmq0M2Wfi2nQl26KqZ1Y9c-Gd9B8S9ay1POG96lryJev6l73TDl0uvnogfOth_Tx2LfXvMyBHZr4hxiN1CYSdO86eYigQFE-EKDCs9yeUs' %>"/>
+              <span class="absolute bottom-1 right-1 bg-primary text-on-primary rounded-full p-1 shadow-md" title="Student Verified">
+                <span class="material-symbols-outlined text-[18px] block" style="font-variation-settings: 'FILL' 1;">verified</span>
+              </span>
+            </div>
+
+            <!-- Name and Status -->
+            <h2 class="font-headline-sm text-headline-sm text-on-surface mb-0.5 font-bold"><%= user.name %></h2>
+            <div class="inline-flex items-center gap-1.5 px-space-sm py-0.5 bg-secondary-container rounded-full text-on-secondary-container font-label-sm text-label-sm mb-space-sm">
+              <span class="material-symbols-outlined text-[14px]">school</span>
+              <span><%= user.college || 'Verified Student Member' %></span>
+            </div>
+
+            <!-- College & Contact Meta block -->
+            <div class="w-full bg-surface-container-low rounded-lg p-space-md mt-space-md text-left flex flex-col gap-space-xs">
+              <div class="flex items-start gap-space-xs">
+                <span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">apartment</span>
+                <div>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider">Campus</span>
+                  <span class="font-title-md text-title-md text-on-surface leading-tight font-semibold"><%= user.college || 'Institution Not Specified' %></span>
+                </div>
+              </div>
+              <div class="flex items-start gap-space-xs pt-space-xs">
+                <span class="material-symbols-outlined text-secondary text-[18px] shrink-0 mt-0.5">call</span>
+                <div>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider">Contact Phone</span>
+                  <span class="font-body-md text-body-md text-on-surface font-semibold"><%= user.phone || 'Not Provided' %></span>
+                </div>
+              </div>
+              <div class="flex items-start gap-space-xs pt-space-xs">
+                <span class="material-symbols-outlined text-tertiary text-[18px] shrink-0 mt-0.5">mail</span>
+                <div>
+                  <span class="font-label-sm text-label-sm text-on-surface-variant block uppercase tracking-wider">Email Address</span>
+                  <span class="font-body-md text-body-md text-on-surface font-semibold truncate max-w-[200px]"><%= user.email %></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Shortlist Link Quick Widget -->
+            <div class="w-full mt-space-md">
+              <a href="/saved" class="w-full py-2.5 px-space-md rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md font-semibold flex items-center justify-between transition-colors">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[18px] text-primary">bookmark</span>
+                  <span>My Saved Stays</span>
+                </div>
+                <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary text-xs font-bold"><%= savedProperties ? savedProperties.length : 0 %></span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu Tabs -->
+        <nav aria-label="Profile Sections" class="bg-surface-container-lowest rounded-xl shadow-sm p-space-sm flex flex-col gap-1 border border-outline-variant/30">
+          <a class="flex items-center justify-between p-space-md rounded-lg bg-secondary-container text-on-secondary-container font-label-lg text-label-lg transition-colors font-semibold" href="#section-academic">
+            <div class="flex items-center gap-space-sm">
+              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">person</span>
+              <span>1. Personal &amp; Academic Info</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+          </a>
+          <a class="flex items-center justify-between p-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-lg text-label-lg transition-colors" href="/saved">
+            <div class="flex items-center gap-space-sm">
+              <span class="material-symbols-outlined text-[20px]">bookmark</span>
+              <span>2. Saved Accommodations (<%= savedProperties ? savedProperties.length : 0 %>)</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+          </a>
+          <a class="flex items-center justify-between p-space-md rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-lg text-label-lg transition-colors" href="/logout">
+            <div class="flex items-center gap-space-sm text-error">
+              <span class="material-symbols-outlined text-[20px]">logout</span>
+              <span>3. Log Out</span>
+            </div>
+            <span class="material-symbols-outlined text-[18px] text-error">chevron_right</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- RIGHT COLUMN: Main Configuration & Edit Sections -->
+      <section class="lg:col-span-8 flex flex-col gap-space-xl">
+        <!-- Edit Profile Form -->
+        <form action="/profile" method="POST" class="flex flex-col gap-space-xl">
+          <!-- SECTION 1: Academic & Personal Details -->
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-lg border border-outline-variant/30" id="section-academic">
+            <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                  <span class="material-symbols-outlined text-[24px]">school</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Academic &amp; Personal Details</h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Validated credentials for institutional discounts &amp; hostel verification</p>
+                </div>
+              </div>
+              <span class="px-space-sm py-1 bg-surface-container text-primary font-label-sm text-label-sm rounded-full flex items-center gap-1 font-semibold">
+                <span class="material-symbols-outlined text-[14px]">verified</span> Verified Dossier
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+              <!-- Full Name (Editable) -->
+              <div class="flex flex-col gap-1.5">
+                <label for="name" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Full Legal Name</label>
+                <div class="relative">
+                  <input type="text" id="name" name="name" value="<%= user.name %>" required class="w-full bg-surface-container-low px-space-md py-3 rounded-lg font-body-md text-body-md text-on-surface font-semibold border border-transparent focus:border-primary focus:bg-surface-container-lowest focus:outline-none transition-all"/>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">As shown on your university student ID</span>
+              </div>
+
+              <!-- Email (Read-only for security) -->
+              <div class="flex flex-col gap-1.5">
+                <label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Email Address (Account ID)</label>
+                <div class="bg-surface-container-low px-space-md py-3 rounded-lg flex items-center justify-between border border-outline-variant/30">
+                  <span class="font-body-md text-body-md text-on-surface-variant font-medium truncate mr-2"><%= user.email %></span>
+                  <span class="shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-secondary-container text-on-secondary-container font-label-sm text-[11px] font-bold">
+                    <span class="material-symbols-outlined text-[13px]">lock</span> Secured
+                  </span>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Primary login credential</span>
+              </div>
+
+              <!-- Mobile (Editable) -->
+              <div class="flex flex-col gap-1.5">
+                <label for="phone" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Primary Contact Phone</label>
+                <div class="relative">
+                  <input type="text" id="phone" name="phone" value="<%= user.phone %>" placeholder="+91 98765 43210" class="w-full bg-surface-container-low px-space-md py-3 rounded-lg font-body-md text-body-md text-on-surface font-medium border border-transparent focus:border-primary focus:bg-surface-container-lowest focus:outline-none transition-all"/>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Used for hostel visit confirmations and owner communication</span>
+              </div>
+
+              <!-- College / University (Editable) -->
+              <div class="flex flex-col gap-1.5">
+                <label for="college" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">College / University</label>
+                <div class="relative">
+                  <input type="text" id="college" name="college" value="<%= user.college %>" placeholder="e.g. Symbiosis International University, Pune" class="w-full bg-surface-container-low px-space-md py-3 rounded-lg font-body-md text-body-md text-on-surface font-medium border border-transparent focus:border-primary focus:bg-surface-container-lowest focus:outline-none transition-all"/>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Helps match nearby student accommodations</span>
+              </div>
+
+              <!-- Avatar Image URL (Editable) -->
+              <div class="flex flex-col gap-1.5 md:col-span-2">
+                <label for="avatar" class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Profile Photo URL</label>
+                <div class="relative">
+                  <input type="url" id="avatar" name="avatar" value="<%= user.avatar %>" placeholder="https://..." class="w-full bg-surface-container-low px-space-md py-3 rounded-lg font-body-md text-body-md text-on-surface font-medium border border-transparent focus:border-primary focus:bg-surface-container-lowest focus:outline-none transition-all"/>
+                </div>
+                <span class="font-body-sm text-body-sm text-on-surface-variant">Provide a link to an image for your profile avatar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 2: Accommodation Preferences (Stitch UI) -->
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-lg border border-outline-variant/30" id="section-stay">
+            <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                  <span class="material-symbols-outlined text-[24px]">tune</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Accommodation Preferences</h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Feeds our real-time matching for hostel and PG recommendations</p>
+                </div>
+              </div>
+              <span class="px-space-sm py-1 bg-surface-container text-secondary font-label-sm text-label-sm rounded-full flex items-center gap-1 font-semibold">
+                <span class="material-symbols-outlined text-[14px]">auto_awesome</span> Active Preferences
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+              <!-- Preferred Micro-Markets -->
+              <div class="flex flex-col gap-2 md:col-span-2">
+                <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Preferred Micro-Markets</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold">
+                    <span class="material-symbols-outlined text-[16px]">pin_drop</span>
+                    <span>Hinjewadi Phase 1</span>
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold">
+                    <span class="material-symbols-outlined text-[16px]">pin_drop</span>
+                    <span>Viman Nagar</span>
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold">
+                    <span class="material-symbols-outlined text-[16px]">pin_drop</span>
+                    <span>Wakad</span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Monthly Budget -->
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Target Monthly Budget</span>
+                  <span class="font-title-md text-title-md text-tertiary font-bold">₹7,000 – ₹12,000 / mo</span>
+                </div>
+                <div class="bg-surface-container-low p-space-md rounded-lg flex flex-col gap-2">
+                  <div class="relative w-full flex items-center">
+                    <div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden">
+                      <div class="bg-primary h-full rounded-full" style="width: 65%;"></div>
+                    </div>
+                  </div>
+                  <div class="flex justify-between font-label-sm text-label-sm text-on-surface-variant">
+                    <span>₹5,000</span>
+                    <span class="font-semibold text-on-surface">Optimal ₹9,000</span>
+                    <span>₹20,000+</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Distance to Campus -->
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Max Distance to Campus</span>
+                  <span class="font-title-md text-title-md text-primary font-bold">Under 2.0 km</span>
+                </div>
+                <div class="bg-surface-container-low p-space-md rounded-lg flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary text-[22px]">directions_walk</span>
+                    <span class="font-body-md text-body-md text-on-surface">Walking radius around campus</span>
+                  </div>
+                  <span class="px-2 py-0.5 bg-surface-container-highest rounded text-on-surface font-label-sm text-label-sm font-semibold">High Priority</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SECTION 3: Lifestyle & Roommate Habits (Stitch UI) -->
+          <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-lg border border-outline-variant/30" id="section-lifestyle">
+            <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+              <div class="flex items-center gap-space-sm">
+                <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                  <span class="material-symbols-outlined text-[24px]">psychology</span>
+                </div>
+                <div>
+                  <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Lifestyle &amp; Roommate Habits</h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant">Compatibility indicators for shared accommodation matching</p>
+                </div>
+              </div>
+              <span class="px-space-sm py-0.5 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm rounded-full font-bold">
+                96% Match Index
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+              <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+                <div class="flex items-center justify-between text-primary">
+                  <span class="font-label-md text-label-md uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">bedtime</span> Sleep Schedule
+                  </span>
+                  <span class="material-symbols-outlined text-[16px]">verified</span>
+                </div>
+                <span class="font-title-md text-title-md text-on-surface font-semibold">Early Bird (11:00 PM – 7:00 AM)</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Quiet night routines preferred</p>
+              </div>
+
+              <div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-xs">
+                <div class="flex items-center justify-between text-primary">
+                  <span class="font-label-md text-label-md uppercase tracking-wider font-semibold flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px]">local_library</span> Study Atmosphere
+                  </span>
+                  <span class="material-symbols-outlined text-[16px]">verified</span>
+                </div>
+                <span class="font-title-md text-title-md text-on-surface font-semibold">Silent / Library Focus in Room</span>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Prefers headphones for media &amp; calls</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sticky Form Action Bar -->
+          <div class="w-full bg-surface-container-lowest rounded-xl shadow-md p-space-lg flex flex-col sm:flex-row items-center justify-between gap-space-md border border-outline-variant/30">
+            <div class="flex items-center gap-space-sm">
+              <span class="material-symbols-outlined text-secondary text-[22px]">verified</span>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">
+                Changes will immediately update your verified student profile.
+              </p>
+            </div>
+            <div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+              <a href="/profile" class="px-space-lg py-3 rounded-lg text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-colors text-center">
+                Discard
+              </a>
+              <button type="submit" class="px-space-xl py-3 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container active:scale-[0.98] transition-all shadow-sm flex items-center justify-center gap-2 font-semibold">
+                <span class="material-symbols-outlined text-[18px]">check</span>
+                <span>Save Profile Changes</span>
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- SECTION 2: Saved Stays Preview -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg flex flex-col gap-space-md border border-outline-variant/30">
+          <div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+            <div class="flex items-center gap-space-sm">
+              <div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[24px]">bookmark</span>
+              </div>
+              <div>
+                <h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Saved Stays Shortlist</h3>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Accommodations you shortlisted for comparison or booking</p>
+              </div>
+            </div>
+            <a href="/saved" class="text-primary font-label-md text-label-md hover:underline font-semibold flex items-center gap-1">
+              <span>View All (<%= savedProperties ? savedProperties.length : 0 %>)</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+
+          <% if (savedProperties && savedProperties.length > 0) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md pt-2">
+              <% savedProperties.slice(0, 4).forEach(stay => { %>
+                <div class="p-space-sm rounded-xl bg-surface-container-low flex items-center gap-space-md hover:bg-surface-container transition-colors">
+                  <img class="w-16 h-16 rounded-lg object-cover" alt="<%= stay.title %>" src="<%= stay.images && stay.images.length ? stay.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBOrNw175WzCkuvMlm7sMt5Z4gVl6ARPGmEgQC8v1iwv5LJRVBBjSTESxd7PYZU-yZzTolNfcwTk-9GIE93IL5_qDIAA9zQd7dxG-s9HI82Vc-p5WnsZ5etSnzag4KQ8BxGKvJGDqePA5IxfzV_R9qqj9LPS50NNkVnFLx1yvUhXgBDhOMjV1usCrHirZzktItO7FRYKxz1OINOPj_c3zp6AduahZbvjX4XI-pNEo1pKEpp2-NuwHLQ' %>"/>
+                  <div class="flex-1 min-w-0">
+                    <h4 class="font-title-md text-title-md text-on-surface font-bold truncate">
+                      <a href="/stays/<%= stay._id %>" class="hover:text-primary"><%= stay.title %></a>
+                    </h4>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant truncate"><%= stay.locality %>, <%= stay.city %></p>
+                    <p class="font-label-sm text-label-sm text-tertiary font-bold mt-0.5">₹<%= stay.price.toLocaleString('en-IN') %>/mo</p>
+                  </div>
+                  <a href="/stays/<%= stay._id %>" class="p-2 rounded-lg bg-surface-container-lowest text-primary hover:bg-primary hover:text-on-primary transition-colors" title="View">
+                    <span class="material-symbols-outlined text-[18px]">visibility</span>
+                  </a>
+                </div>
+              <% }) %>
+            </div>
+          <% } else { %>
+            <div class="py-space-lg text-center">
+              <span class="material-symbols-outlined text-[36px] text-outline-variant">bookmark_border</span>
+              <p class="font-body-md text-body-md text-on-surface-variant mt-2">You haven't saved any stays yet.</p>
+              <a href="/stays" class="inline-flex items-center gap-1 text-primary font-label-md text-label-md hover:underline font-semibold mt-1">
+                <span>Browse verified student stays</span>
+                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+              </a>
+            </div>
+          <% } %>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

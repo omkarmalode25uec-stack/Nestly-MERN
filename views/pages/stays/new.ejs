@@ -1,0 +1,177 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-3xl mx-auto px-margin-mobile md:px-margin py-space-xl">
+  <div class="bg-surface-container-lowest p-space-lg md:p-space-xl rounded-3xl shadow-sm border border-outline-variant/30 space-y-space-md">
+    <!-- Header -->
+    <div class="border-b border-outline-variant/30 pb-space-md">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold uppercase mb-2">
+        <span class="material-symbols-outlined text-[15px]">add_business</span>
+        Property Owner Portal
+      </div>
+      <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface">List Your Student Accommodation</h1>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        Reach 45,000+ verified college students seeking trusted hostels, PGs, and shared stays.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form action="/stays" method="POST" class="space-y-space-md">
+      <!-- Section 1: Basic Information -->
+      <div class="space-y-3">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">1. Basic Property Details</h3>
+        
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="title">Property Title / Name *</label>
+          <input name="title" id="title" placeholder="e.g. Green Valley Premier PG & Student Residency" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required autofocus/>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="propertyType">Accommodation Type *</label>
+            <select name="propertyType" id="propertyType" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="PG">Paying Guest (PG)</option>
+              <option value="Hostel">Student Hostel</option>
+              <option value="Shared Flat">Shared Flat / Apartment</option>
+              <option value="Co-Living">Student Co-Living</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="genderPreference">Occupant Gender *</label>
+            <select name="genderPreference" id="genderPreference" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="Boys">Boys Only</option>
+              <option value="Girls">Girls Only</option>
+              <option value="Unisex" selected>Co-Ed / Unisex</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="roomSharing">Room Sharing *</label>
+            <select name="roomSharing" id="roomSharing" class="w-full px-3 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required>
+              <option value="Single">Single (Private)</option>
+              <option value="Double" selected>Double / Twin Sharing</option>
+              <option value="Triple">Triple Sharing</option>
+              <option value="Four+">Four+ Sharing</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="description">Property Description *</label>
+          <textarea name="description" id="description" rows="3" placeholder="Describe room amenities, study desks, food schedule, curfew rules, and hostel atmosphere..." class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required></textarea>
+        </div>
+      </div>
+
+      <!-- Section 2: Location Details -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <div class="flex items-center justify-between">
+          <h3 class="font-title-md text-title-md font-bold text-on-surface">2. Location & Campus Proximity</h3>
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">Service Area: Kopargaon</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="city">City (Active Scope) *</label>
+            <input name="city" id="city" value="Kopargaon" readonly class="w-full px-4 py-2.5 bg-surface-container rounded-xl text-body-md text-on-surface outline-none cursor-not-allowed font-medium" required/>
+            <p class="text-[11px] text-on-surface-variant mt-0.5">Nestly currently serves Kopargaon, Maharashtra.</p>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="locality">Locality / Area in Kopargaon *</label>
+            <input name="locality" id="locality" placeholder="e.g. Sahajanandnagar, Sai City, Mewad, Station Rd" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="address">Complete Street Address *</label>
+          <input name="address" id="address" placeholder="e.g. Plot 18, near Sanjivani College of Engineering, Sahajanandnagar, Kopargaon" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required/>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="campusDistance">Proximity to Campuses / Landmarks</label>
+          <input name="campusDistance" id="campusDistance" placeholder="e.g. 400m from Sanjivani College of Engineering • 5 mins walk" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary"/>
+        </div>
+      </div>
+
+      <!-- Section 3: Pricing & Inventory -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">3. Rent & Bed Availability</h3>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="price">Monthly Rent (₹) *</label>
+            <input type="number" name="price" id="price" placeholder="8500" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" required min="0"/>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="securityDeposit">Security Deposit (₹)</label>
+            <input type="number" name="securityDeposit" id="securityDeposit" placeholder="8500" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" min="0"/>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="availableBeds">Available Beds</label>
+            <input type="number" name="availableBeds" id="availableBeds" value="3" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary" min="0"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="contactPhone">Host / Warden Contact Number</label>
+          <input name="contactPhone" id="contactPhone" placeholder="+91 98765 43210" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary"/>
+        </div>
+      </div>
+
+      <!-- Section 4: Amenities Checklist -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">4. Included Amenities</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-body-sm">
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="High-Speed Wi-Fi" checked class="accent-primary w-4 h-4"/>
+            <span>High-Speed Wi-Fi</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="3x Meals (Mess Included)" checked class="accent-primary w-4 h-4"/>
+            <span>3x Meals (Mess)</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="Air Conditioning (AC)" class="accent-primary w-4 h-4"/>
+            <span>Air Conditioning (AC)</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="Washing Machine / Laundry" checked class="accent-primary w-4 h-4"/>
+            <span>Laundry Service</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="Power Backup (24/7)" checked class="accent-primary w-4 h-4"/>
+            <span>Power Backup (24/7)</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="Attached Washroom" class="accent-primary w-4 h-4"/>
+            <span>Attached Bath</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="Biometric / CCTV Security" checked class="accent-primary w-4 h-4"/>
+            <span>Biometric Security</span>
+          </label>
+          <label class="flex items-center gap-2 p-2.5 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container">
+            <input type="checkbox" name="amenities" value="No Curfew / Flexible Entry" class="accent-primary w-4 h-4"/>
+            <span>Flexible Curfew</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Section 5: Image URLs -->
+      <div class="space-y-2 pt-2 border-t border-outline-variant/30">
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">5. Property Photos (Image URLs)</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Add photo web links separated by line breaks. (Optional: leave blank for default campus verified photos).</p>
+        <textarea name="images" rows="3" placeholder="https://example.com/room.jpg&#10;https://example.com/bathroom.jpg" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary font-mono text-xs"></textarea>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="pt-space-md flex items-center justify-end gap-3 border-t border-outline-variant/30">
+        <a href="/stays" class="px-5 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+          Cancel
+        </a>
+        <button type="submit" class="px-6 py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold shadow-md transition-all">
+          Publish Stay Listing
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

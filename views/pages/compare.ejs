@@ -1,0 +1,426 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Subtle Ambient Glow Background Element -->
+<div class="relative w-full max-w-[1280px] mx-auto px-margin py-space-xl">
+  <div class="absolute top-0 right-1/4 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="absolute top-48 left-10 w-72 h-72 bg-secondary-container/25 rounded-full blur-3xl pointer-events-none -z-10"></div>
+
+  <!-- Header & Action Bar -->
+  <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg pb-space-xl">
+    <div class="space-y-space-xs max-w-2xl">
+      <div class="inline-flex items-center gap-space-xs px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider font-semibold">
+        <span class="material-symbols-outlined text-[14px]">balance</span>
+        Decision Assistant
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+        Compare Shortlisted Stays
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        Side-by-side evaluation of pricing, amenities, room specifications, and house rules to help you make the right choice.
+      </p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap items-center gap-space-sm">
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer" id="share-link-btn" type="button">
+        <span class="material-symbols-outlined text-[18px] text-secondary">share</span>
+        <span>Share Link</span>
+      </button>
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer" onclick="window.print()" type="button">
+        <span class="material-symbols-outlined text-[18px] text-secondary">picture_as_pdf</span>
+        <span>Export PDF</span>
+      </button>
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-error font-label-lg text-label-lg shadow-sm hover:bg-error-container hover:text-on-error-container transition-colors focus:outline-none cursor-pointer" id="clear-all-btn" type="button">
+        <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
+        <span>Clear All</span>
+      </button>
+      <a href="/stays" class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary-container transition-all active:scale-[0.98] focus:outline-none">
+        <span class="material-symbols-outlined text-[18px]">add_circle</span>
+        <span>Add Another Stay</span>
+      </a>
+    </div>
+  </div>
+
+  <% 
+    const p1 = properties && properties[0] ? properties[0] : null;
+    const p2 = properties && properties[1] ? properties[1] : null;
+    const p3 = properties && properties[2] ? properties[2] : null;
+    const props = [p1, p2, p3].filter(Boolean);
+  %>
+
+  <!-- Quick Highlights Bento Row -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mb-space-xl">
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-[22px]">savings</span>
+        </div>
+        <div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Lowest Monthly Rent</p>
+          <p class="font-title-md text-title-md text-on-surface font-bold">
+            ₹<%= p1 ? Math.min(...props.map(p => p.price)).toLocaleString('en-IN') : '7,800' %> 
+            <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span>
+          </p>
+        </div>
+      </div>
+      <span class="material-symbols-outlined text-primary text-[24px]">trending_down</span>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+          <span class="material-symbols-outlined text-[22px]">directions_walk</span>
+        </div>
+        <div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nearest to Campus</p>
+          <p class="font-title-md text-title-md text-on-surface font-bold">400m <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">(Symbiosis)</span></p>
+        </div>
+      </div>
+      <span class="inline-block px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">Scholar Haven</span>
+    </div>
+
+    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
+      <div class="flex items-center gap-space-sm">
+        <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+          <span class="material-symbols-outlined text-[22px]">verified_user</span>
+        </div>
+        <div>
+          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Highest Overall Score</p>
+          <p class="font-title-md text-title-md text-tertiary font-bold">9.4 / 10 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">Value Metric</span></p>
+        </div>
+      </div>
+      <span class="inline-block px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">Green Valley</span>
+    </div>
+  </div>
+
+  <!-- Comparison Table Wrapper (Responsive Scroll for Mobile) -->
+  <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-x-auto">
+    <div class="min-w-[768px]">
+      <!-- Sticky Property Profile Header Row -->
+      <div class="sticky top-20 z-20 bg-surface-container-lowest shadow-sm">
+        <div class="grid grid-cols-12 gap-0 border-b border-surface-container">
+          <!-- Column 1: Feature Title Blank / Switcher -->
+          <div class="col-span-3 p-space-lg flex flex-col justify-between bg-surface-container-low/50">
+            <div>
+              <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Comparison Metric</span>
+              <h2 class="font-title-lg text-title-lg text-on-surface font-bold mt-1"><%= props.length %> Accommodations</h2>
+              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Verified for safety, mess food, and hygiene standards.</p>
+            </div>
+            <div class="flex items-center gap-space-xs pt-space-md">
+              <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+              <span class="font-label-sm text-label-sm text-secondary font-semibold">Live Availability Synchronized</span>
+            </div>
+          </div>
+
+          <!-- Columns 2, 3, 4: Properties -->
+          <% [p1, p2, p3].forEach((p, idx) => { %>
+            <div class="col-span-3 p-space-md bg-surface-container-lowest hover:bg-surface-bright transition-colors relative flex flex-col border-l border-surface-container">
+              <% if (p) { %>
+                <div class="relative rounded-lg overflow-hidden aspect-[16/10] mb-space-sm bg-surface-container">
+                  <img class="w-full h-full object-cover" alt="<%= p.title %>" src="<%= (p.images && p.images[0]) || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
+                  <div class="absolute top-2 left-2 inline-flex items-center gap-1 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm font-semibold shadow-sm">
+                    <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                    <span>Verified</span>
+                  </div>
+                  <% if (idx === 0) { %>
+                    <div class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-primary text-on-primary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold">
+                      Best Value
+                    </div>
+                  <% } else if (idx === 1) { %>
+                    <div class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-secondary text-on-secondary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold">
+                      Closest to Campus
+                    </div>
+                  <% } %>
+                </div>
+                <div>
+                  <h3 class="font-title-md text-title-md text-on-surface font-bold leading-tight line-clamp-1"><%= p.title %></h3>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+                    <span class="material-symbols-outlined text-[14px] text-secondary">location_on</span>
+                    <%= p.locality %>, <%= p.city || 'Pune' %>
+                  </p>
+                </div>
+                <div class="flex items-center gap-space-sm mt-space-xs pt-space-xs">
+                  <div class="flex items-center gap-1 bg-secondary-container px-2 py-0.5 rounded text-on-secondary-container font-label-md text-label-md font-bold">
+                    <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <%= p.rating || '4.8' %>
+                  </div>
+                  <span class="font-body-sm text-body-sm text-outline">(<%= p.reviewCount || 24 %> reviews)</span>
+                  <span class="font-label-sm text-label-sm bg-surface-container text-secondary px-1.5 py-0.5 rounded"><%= p.propertyType %></span>
+                </div>
+              <% } else { %>
+                <div class="flex flex-col items-center justify-center h-full py-12 text-center text-outline">
+                  <span class="material-symbols-outlined text-4xl mb-2">add_home</span>
+                  <p class="font-label-md">Empty Slot</p>
+                  <a href="/stays" class="mt-2 text-primary font-label-sm hover:underline">Select Stay</a>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- SECTION 1: PRICING & DEPOSITS -->
+      <div class="w-full">
+        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
+          <div class="flex items-center gap-space-sm">
+            <span class="material-symbols-outlined text-[20px] text-primary">payments</span>
+            <h3 class="font-title-md text-title-md text-on-surface font-bold">1. Pricing &amp; Deposits</h3>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Standard Sharing Basis</span>
+        </div>
+
+        <!-- Monthly Rent -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Monthly Rent</span>
+            <span class="font-body-sm text-body-sm text-outline">Per student inclusive</span>
+          </div>
+          <% [p1, p2, p3].forEach((p, idx) => { %>
+            <div class="col-span-3 p-space-md flex items-center justify-between border-l border-surface-container <%= idx === 0 ? 'bg-primary-fixed/10' : '' %>">
+              <% if (p) { %>
+                <div>
+                  <span class="font-headline-sm text-headline-sm <%= idx === 0 ? 'text-primary font-bold' : 'text-on-surface font-bold' %>">₹<%= p.price.toLocaleString('en-IN') %></span>
+                  <span class="font-body-sm text-body-sm text-on-surface-variant">/month</span>
+                </div>
+                <% if (idx === 0) { %>
+                  <span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-semibold">Optimal</span>
+                <% } %>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Security Deposit -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-bright hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Security Deposit</span>
+            <span class="font-body-sm text-body-sm text-outline">100% refundable at move-out</span>
+          </div>
+          <% [p1, p2, p3].forEach((p, idx) => { %>
+            <div class="col-span-3 p-space-md flex items-center border-l border-surface-container">
+              <% if (p) { %>
+                <div>
+                  <p class="font-title-md text-title-md text-on-surface font-semibold">1 Month (₹<%= (p.securityDeposit || p.price).toLocaleString('en-IN') %>)</p>
+                  <p class="font-body-sm text-body-sm text-secondary">Zero deductions on timely notice</p>
+                </div>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Maintenance Charges -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Maintenance Charges</span>
+            <span class="font-body-sm text-body-sm text-outline">Lift, cleaning &amp; common repair</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex items-center gap-space-xs text-primary font-semibold border-l border-surface-container">
+              <% if (p) { %>
+                <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                <span>Included in Rent</span>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- SECTION 2: SPECIFICATIONS & AMENITIES -->
+      <div class="w-full">
+        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
+          <div class="flex items-center gap-space-sm">
+            <span class="material-symbols-outlined text-[20px] text-primary">hotel</span>
+            <h3 class="font-title-md text-title-md text-on-surface font-bold">2. Room Specs &amp; Amenities</h3>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Daily Student Essentials</span>
+        </div>
+
+        <!-- Meal Plan -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Mess / Meal Plan</span>
+            <span class="font-body-sm text-body-sm text-outline">Breakfast, Lunch, Dinner</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex items-center gap-1 text-secondary font-semibold border-l border-surface-container">
+              <% if (p) { %>
+                <span class="material-symbols-outlined text-[18px]">restaurant</span>
+                <span><%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('meal') || a.toLowerCase().includes('food')) ? '3x Meals Included' : 'Self Cooking / Optional' %></span>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Wi-Fi & Power Backup -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-bright hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Wi-Fi &amp; Power Backup</span>
+            <span class="font-body-sm text-body-sm text-outline">For late study sessions</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex items-center gap-1 text-primary font-semibold border-l border-surface-container">
+              <% if (p) { %>
+                <span class="material-symbols-outlined text-[18px]">wifi</span>
+                <span>High-Speed + 24/7 Backup</span>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Washroom Type -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Washroom Type</span>
+            <span class="font-body-sm text-body-sm text-outline">Private vs Shared</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex items-center gap-1 text-on-surface font-semibold border-l border-surface-container">
+              <% if (p) { %>
+                <span class="material-symbols-outlined text-[18px] text-secondary">bathtub</span>
+                <span><%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('attached')) ? 'Attached En-suite' : 'Shared Clean Washroom' %></span>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- SECTION 3: PROXIMITY & COMMUTE -->
+      <div class="w-full">
+        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
+          <div class="flex items-center gap-space-sm">
+            <span class="material-symbols-outlined text-[20px] text-primary">distance</span>
+            <h3 class="font-title-md text-title-md text-on-surface font-bold">3. Proximity &amp; Commute</h3>
+          </div>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Verified Field Audits</span>
+        </div>
+
+        <!-- Campus Distance -->
+        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
+          <div class="col-span-3 p-space-md flex flex-col justify-center">
+            <span class="font-title-md text-title-md text-on-surface font-semibold">Campus Distance</span>
+            <span class="font-body-sm text-body-sm text-outline">Walking vs Transit</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex flex-col justify-center border-l border-surface-container">
+              <% if (p) { %>
+                <span class="font-title-md text-title-md text-on-surface font-bold"><%= p.campusDistance || 'Short walk to transit' %></span>
+                <span class="font-body-sm text-body-sm text-secondary"><%= p.locality %> hub</span>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- SECTION 4: VALUE SCORE & ACTIONS -->
+      <div class="w-full bg-surface-container-low/70">
+        <div class="grid grid-cols-12 gap-0 border-b border-surface-container">
+          <div class="col-span-3 p-space-lg flex flex-col justify-center">
+            <span class="font-title-lg text-title-lg text-on-surface font-bold">Nestly Value Score</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Weighted algorithm considering price, safety, amenities &amp; student ratings.</span>
+          </div>
+          <% [p1, p2, p3].forEach((p, idx) => { %>
+            <div class="col-span-3 p-space-lg flex flex-col justify-center bg-surface-container-lowest shadow-sm border-l border-surface-container">
+              <% if (p) { %>
+                <div class="flex items-baseline gap-1">
+                  <span class="font-display text-display <%= idx === 0 ? 'text-primary font-bold' : 'text-on-surface font-bold' %>"><%= (p.rating * 2).toFixed(1) %></span>
+                  <span class="font-title-md text-title-md text-outline">/ 10</span>
+                </div>
+                <div class="w-full bg-surface-container rounded-full h-2 mt-2 overflow-hidden">
+                  <div class="bg-primary h-full rounded-full" style="width: <%= Math.min(100, Math.round(p.rating * 20)) %>%;"></div>
+                </div>
+                <p class="font-label-sm text-label-sm text-secondary font-semibold mt-2">
+                  <%= idx === 0 ? 'Highest Value for Money' : idx === 1 ? 'Top Safety & Campus Proximity' : 'Ideal for Independent Living' %>
+                </p>
+              <% } else { %>
+                <span class="text-outline">-</span>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+
+        <!-- Action Buttons Row -->
+        <div class="grid grid-cols-12 gap-0 p-space-md bg-surface-container-high/30">
+          <div class="col-span-3 p-space-md flex items-center">
+            <span class="font-body-md text-body-md text-on-surface-variant font-medium">Ready to take the next step? Reserve a free 24-hr room hold.</span>
+          </div>
+          <% [p1, p2, p3].forEach((p) => { %>
+            <div class="col-span-3 p-space-md flex flex-col gap-space-xs border-l border-surface-container">
+              <% if (p) { %>
+                <a class="w-full text-center py-space-sm px-space-md rounded-lg bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary-container transition-all active:scale-[0.98]" href="/stays/<%= p._id %>">
+                  View <%= p.title.split(' ')[0] %>
+                </a>
+                <a href="/bookings/new?propertyId=<%= p._id %>" class="w-full text-center py-space-xs px-space-sm rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-secondary/90 transition-colors flex items-center justify-center gap-1">
+                  <span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                  Reserve Bed Hold
+                </a>
+              <% } else { %>
+                <a href="/stays" class="w-full text-center py-space-sm px-space-md rounded-lg bg-surface-container text-on-surface font-label-md">
+                  Explore Stays
+                </a>
+              <% } %>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assurance Banner Under Table -->
+  <div class="mt-space-xl p-space-lg rounded-xl bg-surface-container flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-sm">
+    <div class="flex items-center gap-space-md">
+      <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[28px]">verified</span>
+      </div>
+      <div>
+        <h4 class="font-title-md text-title-md text-on-surface font-bold">100% Nestly Verified Guarantee</h4>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Every shortlisted property has had its room dimensions, washroom cleanliness, power backup, and food quality physically audited by our campus field crew.
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center gap-space-sm shrink-0">
+      <a class="px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-lg text-label-lg hover:bg-surface-container-low transition-colors shadow-sm" href="/stays">
+        Explore All Hostels
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Copy Share Link Feedback
+  const shareBtn = document.getElementById('share-link-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', () => {
+      navigator.clipboard?.writeText(window.location.href);
+      const originalHTML = shareBtn.innerHTML;
+      shareBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] text-primary">check</span><span>Link Copied!</span>';
+      setTimeout(() => {
+        shareBtn.innerHTML = originalHTML;
+      }, 2000);
+    });
+  }
+
+  // Clear All Confirmation
+  const clearBtn = document.getElementById('clear-all-btn');
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear your current comparison shortlist?')) {
+        window.location.href = '/stays';
+      }
+    });
+  }
+</script>

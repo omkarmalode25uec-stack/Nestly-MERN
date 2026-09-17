@@ -1,0 +1,175 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-[960px] mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-xl">
+  <!-- Top Breadcrumb & Return -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+      <a href="/" class="hover:text-primary transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px]">home</span>
+        <span>Home</span>
+      </a>
+      <span class="text-outline-variant">/</span>
+      <span class="text-on-surface font-semibold">Partner Verification</span>
+    </div>
+
+    <% if (owner.verificationStatus === 'verified') { %>
+      <a href="/owner/dashboard" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-sm hover:bg-on-primary-fixed-variant transition-colors">
+        <span class="material-symbols-outlined text-[18px]">domain</span>
+        <span>Go to Owner Dashboard</span>
+      </a>
+    <% } %>
+  </div>
+
+  <!-- Main Status Card -->
+  <div class="bg-surface-container-lowest rounded-3xl p-6 md:p-10 shadow-sm border border-outline-variant/30 space-y-space-lg">
+    <!-- Header with Partner Avatar & Status Pill -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-space-lg border-b border-outline-variant/20">
+      <div class="flex items-center gap-space-md">
+        <div class="w-16 h-16 rounded-2xl bg-surface-container-low flex items-center justify-center text-primary border border-outline-variant/30 shrink-0">
+          <span class="material-symbols-outlined text-[36px]">apartment</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-headline-sm text-headline-sm text-on-surface font-bold">
+              <%= owner.businessName || owner.name %>
+            </h1>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant">
+            Owner: <strong class="text-on-surface"><%= owner.name %></strong> • <span class="capitalize"><%= (owner.ownerType || 'individual').replace('_', ' ') %></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Verification Badge -->
+      <div>
+        <% if (owner.verificationStatus === 'verified') { %>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-bold shadow-sm">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+            <span>VERIFIED PARTNER</span>
+          </div>
+        <% } else if (owner.verificationStatus === 'rejected') { %>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-error-container text-on-error-container font-label-md text-label-md font-bold shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">cancel</span>
+            <span>VERIFICATION DECLINED</span>
+          </div>
+        <% } else { %>
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 text-amber-900 border border-amber-200 font-label-md text-label-md font-bold shadow-sm">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+            <span>VERIFICATION PENDING</span>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Status Details Body -->
+    <% if (owner.verificationStatus === 'pending') { %>
+      <!-- Pending Verification State -->
+      <div class="space-y-space-lg">
+        <div class="bg-surface-container-low rounded-2xl p-space-lg border border-outline-variant/30 space-y-space-sm">
+          <div class="flex items-center gap-2 text-primary font-title-md text-title-md font-bold">
+            <span class="material-symbols-outlined text-[22px]">pending_actions</span>
+            <span>On-Ground Campus Audit In Progress</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Your property owner registration has been recorded. To protect students against fake listings and inaccurate pricing, Nestly requires an on-ground audit before accommodation listings can be published or made discoverable in Kopargaon.
+          </p>
+        </div>
+
+        <!-- 3-Step Verification Timeline -->
+        <div class="space-y-space-md pt-space-xs">
+          <h2 class="font-title-md text-title-md text-on-surface font-semibold">Verification Progress</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+            <!-- Step 1 -->
+            <div class="p-space-md rounded-2xl bg-surface-container-lowest border-2 border-primary/30 flex flex-col justify-between">
+              <div class="flex items-center gap-2 text-primary font-label-md text-label-md font-bold mb-2">
+                <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                <span>Step 1: Application</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Owner profile registered with contact and accommodation details.</p>
+              <span class="text-[11px] text-primary font-bold mt-2 uppercase tracking-wide">Completed</span>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="p-space-md rounded-2xl bg-amber-50 border-2 border-amber-300 flex flex-col justify-between">
+              <div class="flex items-center gap-2 text-amber-900 font-label-md text-label-md font-bold mb-2">
+                <span class="material-symbols-outlined text-[20px] animate-spin">autorenew</span>
+                <span>Step 2: Campus Audit</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-amber-950">Local team verifies premises near Sanjivani / Sahajanandnagar.</p>
+              <span class="text-[11px] text-amber-800 font-bold mt-2 uppercase tracking-wide">Under Review (24-48 hrs)</span>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="p-space-md rounded-2xl bg-surface-container opacity-60 border border-outline-variant/30 flex flex-col justify-between">
+              <div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md font-semibold mb-2">
+                <span class="material-symbols-outlined text-[20px]">lock</span>
+                <span>Step 3: Partner Badge</span>
+              </div>
+              <p class="font-body-sm text-body-sm text-on-surface-variant">Listing activation and instant student token booking enabled.</p>
+              <span class="text-[11px] text-outline font-medium mt-2 uppercase tracking-wide">Awaiting Audit</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Restricted Notice -->
+        <div class="p-space-md rounded-xl bg-surface-container flex items-center justify-between gap-space-md">
+          <div class="flex items-center gap-space-sm text-on-surface-variant font-body-sm text-body-sm">
+            <span class="material-symbols-outlined text-outline text-[20px]">info</span>
+            <span>Property creation is currently disabled until verification completes.</span>
+          </div>
+          <a href="/owner/dashboard" class="text-primary hover:underline font-label-md text-label-md font-semibold shrink-0">
+            View Hub
+          </a>
+        </div>
+      </div>
+
+    <% } else if (owner.verificationStatus === 'verified') { %>
+      <!-- Verified State -->
+      <div class="space-y-space-lg">
+        <div class="bg-secondary-container/40 rounded-2xl p-space-lg border border-secondary/30 space-y-space-sm">
+          <div class="flex items-center gap-2 text-secondary font-title-md text-title-md font-bold">
+            <span class="material-symbols-outlined text-[24px]">verified</span>
+            <span>Your Owner Account is Fully Verified</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Your accommodation credentials have been approved by Nestly Campus Administration. You can now publish student stays, manage room inventories, and receive token holds with zero commission fees.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-space-md pt-space-xs">
+          <a href="/stays/new" class="inline-flex items-center gap-2 px-space-lg py-3 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold hover:bg-on-primary-fixed-variant transition-all shadow-md">
+            <span class="material-symbols-outlined text-[20px]">add_circle</span>
+            <span>List A New Accommodation</span>
+          </a>
+          <a href="/owner/dashboard" class="inline-flex items-center gap-2 px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-colors">
+            <span class="material-symbols-outlined text-[20px]">domain</span>
+            <span>Manage Existing Properties</span>
+          </a>
+        </div>
+      </div>
+
+    <% } else { %>
+      <!-- Rejected State -->
+      <div class="space-y-space-lg">
+        <div class="bg-error-container/40 rounded-2xl p-space-lg border border-error/30 space-y-space-sm">
+          <div class="flex items-center gap-2 text-error font-title-md text-title-md font-bold">
+            <span class="material-symbols-outlined text-[24px]">error</span>
+            <span>Account Application Declined</span>
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Our campus audit was unable to approve this partner account.
+          </p>
+          <% if (owner.verificationNotes) { %>
+            <div class="p-3 bg-surface-container-lowest rounded-xl text-on-surface text-body-sm font-body-sm border border-outline-variant/30">
+              <strong>Admin Reason:</strong> <%= owner.verificationNotes %>
+            </div>
+          <% } %>
+        </div>
+
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          If you believe this decision was made in error or would like to submit updated campus documentation, please reach out to <a href="mailto:support@nestly.in" class="text-primary underline">support@nestly.in</a>.
+        </p>
+      </div>
+    <% } %>
+  </div>
+</div>

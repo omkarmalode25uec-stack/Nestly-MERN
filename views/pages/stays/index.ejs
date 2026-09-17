@@ -1,0 +1,470 @@
+<% layout('layouts/boilerplate') %>
+
+<%
+  const curFilters = typeof filters !== 'undefined' && filters ? filters : {};
+  const isAmenityChecked = (item) => {
+    if (!curFilters.amenities) return false;
+    if (Array.isArray(curFilters.amenities)) {
+      return curFilters.amenities.some(a => a.toLowerCase().includes(item.toLowerCase()) || item.toLowerCase().includes(a.toLowerCase()));
+    }
+    return curFilters.amenities.toLowerCase().includes(item.toLowerCase()) || item.toLowerCase().includes(curFilters.amenities.toLowerCase());
+  };
+
+  const isTypeChecked = (t) => {
+    if (!curFilters.type) return false;
+    if (Array.isArray(curFilters.type)) return curFilters.type.includes(t);
+    return curFilters.type === t;
+  };
+
+  const isSharingChecked = (s) => {
+    if (!curFilters.sharing) return false;
+    if (Array.isArray(curFilters.sharing)) return curFilters.sharing.includes(s);
+    return curFilters.sharing === s;
+  };
+%>
+
+<!-- Top Command & Filter Sub-Bar -->
+<section class="w-full bg-surface-container-lowest shadow-sm z-30">
+  <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-md">
+    <!-- Breadcrumb, Counter & Controls -->
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-md">
+      <div>
+        <div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm mb-1">
+          <a href="/" class="hover:text-primary cursor-pointer transition-colors">Home</a>
+          <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+          <span class="font-title-md text-title-md text-on-surface font-semibold">Verified Student Stays</span>
+        </div>
+        <div class="flex items-center gap-space-sm flex-wrap">
+          <h1 class="font-headline-sm text-headline-sm text-on-surface font-bold">Discover Accommodations</h1>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-surface-container font-label-md text-label-md text-secondary font-medium">
+            <%= properties.length %> verified stays found
+          </span>
+        </div>
+      </div>
+
+      <!-- Sort Dropdown & List CTA -->
+      <div class="flex items-center gap-space-sm self-start lg:self-auto flex-wrap">
+        <!-- Sort Dropdown Container -->
+        <div class="relative inline-flex items-center">
+          <label class="sr-only" for="sortDropdown">Sort properties</label>
+          <span class="material-symbols-outlined text-[18px] text-outline absolute left-3 pointer-events-none">swap_vert</span>
+          <select id="sortDropdown" class="appearance-none bg-surface-container-low text-on-surface font-label-md text-label-md pl-9 pr-8 py-2 rounded-xl cursor-pointer focus:outline-none focus:bg-surface-container transition-all" onchange="const url = new URL(window.location.href); url.searchParams.set('sort', this.value); window.location.href = url.toString();">
+            <option value="recommended" <%= !curFilters.sort || curFilters.sort === 'recommended' ? 'selected' : '' %>>Sort: Recommended</option>
+            <option value="price_asc" <%= curFilters.sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+            <option value="price_desc" <%= curFilters.sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+            <option value="rating" <%= curFilters.sort === 'rating' ? 'selected' : '' %>>Highest Rated</option>
+          </select>
+          <span class="material-symbols-outlined text-[18px] text-outline absolute right-2.5 pointer-events-none">expand_more</span>
+        </div>
+
+        <a href="/stays/new" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm">
+          <span class="material-symbols-outlined text-[18px]">add_business</span>
+          <span>List A Stay</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick Fast-Filter Horizontally Scrollable Pills (Stitch Explore Design) -->
+    <div class="mt-space-md pt-space-xs flex items-center gap-space-xs overflow-x-auto no-scrollbar scroll-smooth">
+      <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider shrink-0 mr-1">Quick:</span>
+
+      <a href="/stays?q=Sanjivani" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.q === 'Sanjivani' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">school</span>
+        <span>Near Sanjivani (SCOE)</span>
+        <% if (curFilters.q === 'Sanjivani') { %><span class="material-symbols-outlined text-[14px]">close</span><% } %>
+      </a>
+
+      <a href="/stays?locality=Sahajanandnagar" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.locality === 'Sahajanandnagar' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">apartment</span>
+        <span>Sahajanandnagar</span>
+        <% if (curFilters.locality === 'Sahajanandnagar') { %><span class="material-symbols-outlined text-[14px]">close</span><% } %>
+      </a>
+
+      <a href="/stays?locality=Sai+City" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.locality === 'Sai City' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">location_on</span>
+        <span>Sai City</span>
+        <% if (curFilters.locality === 'Sai City') { %><span class="material-symbols-outlined text-[14px]">close</span><% } %>
+      </a>
+
+      <a href="/stays?gender=Girls" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.gender === 'Girls' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">female</span>
+        <span>Girls Only</span>
+        <% if (curFilters.gender === 'Girls') { %><span class="material-symbols-outlined text-[14px]">close</span><% } %>
+      </a>
+
+      <a href="/stays?gender=Boys" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.gender === 'Boys' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">male</span>
+        <span>Boys Only</span>
+        <% if (curFilters.gender === 'Boys') { %><span class="material-symbols-outlined text-[14px]">close</span><% } %>
+      </a>
+
+      <a href="/stays?amenities=3x+Meals" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= isAmenityChecked('Meals') ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">restaurant</span>
+        <span>Food Included</span>
+      </a>
+
+      <a href="/stays?maxPrice=8500" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.maxPrice == 8500 ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">payments</span>
+        <span>Under ₹8,500/mo</span>
+      </a>
+
+      <a href="/stays?amenities=Air+Conditioning" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= isAmenityChecked('Air Conditioning') || isAmenityChecked('AC') ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">ac_unit</span>
+        <span>AC Rooms</span>
+      </a>
+
+      <a href="/stays?availableOnly=true" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full font-label-md text-label-md whitespace-nowrap transition-all <%= curFilters.availableOnly === 'true' ? 'bg-secondary-container text-on-secondary-container font-semibold shadow-sm' : 'bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface' %>">
+        <span class="material-symbols-outlined text-[16px]">bed</span>
+        <span>Immediate Availability</span>
+      </a>
+
+      <% if (Object.keys(curFilters).length > 0) { %>
+        <a href="/stays" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-surface-container-high text-secondary hover:text-primary font-label-md text-label-md whitespace-nowrap transition-all ml-auto">
+          <span>Reset All</span>
+        </a>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<!-- Main Explore Showcase -->
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-lg w-full">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+    <!-- Filter Sidebar (Left, 3 cols on desktop) -->
+    <aside class="lg:col-span-3 bg-surface-container-lowest p-space-md rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-md">
+      <div class="flex items-center justify-between pb-space-xs border-b border-outline-variant/30">
+        <h3 class="font-title-md text-title-md text-on-surface font-bold flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-[20px]">tune</span> Filters
+        </h3>
+        <a href="/stays" class="font-label-sm text-label-sm text-secondary hover:text-primary font-semibold transition-colors">Clear All</a>
+      </div>
+
+      <form action="/stays" method="GET" class="space-y-space-md" id="filterForm">
+        <!-- Preserve Sort parameter if active -->
+        <% if (curFilters.sort) { %>
+          <input type="hidden" name="sort" value="<%= curFilters.sort %>" />
+        <% } %>
+
+        <!-- 1. Micro-Location / College / Landmark Search -->
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold mb-1">Locality / College in Kopargaon</label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-outline text-[18px]">location_on</span>
+            <input name="q" value="<%= curFilters.q || '' %>" placeholder="e.g. Sanjivani, Sahajanandnagar..." class="w-full pl-9 pr-3 py-2 bg-surface-container-low rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container focus:ring-1 focus:ring-primary text-sm"/>
+          </div>
+        </div>
+
+        <!-- 2. Service Scope Notice -->
+        <div class="p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/30 space-y-1">
+          <div class="flex items-center justify-between text-xs font-semibold text-on-surface">
+            <span class="flex items-center gap-1 text-primary">
+              <span class="material-symbols-outlined text-[15px]">pin_drop</span>
+              Active Service Area
+            </span>
+            <span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold">Kopargaon</span>
+          </div>
+          <p class="text-[11px] text-on-surface-variant leading-tight">
+            Nestly is actively dedicated to students in Kopargaon, Maharashtra.
+          </p>
+        </div>
+
+        <!-- 3. Monthly Budget Range Slider -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold">Monthly Budget</span>
+            <span id="budgetDisplay" class="font-title-md text-title-md text-primary font-bold">
+              <%= curFilters.maxPrice ? 'Max ₹' + Number(curFilters.maxPrice).toLocaleString('en-IN') : 'Any Budget' %>
+            </span>
+          </div>
+          <div class="relative pt-1">
+            <input type="range" name="maxPrice" id="budgetRange" min="4000" max="25000" step="500" value="<%= curFilters.maxPrice || 25000 %>" class="w-full accent-primary h-2 bg-surface-container rounded-lg cursor-pointer" oninput="document.getElementById('budgetDisplay').innerText = 'Max ₹' + Number(this.value).toLocaleString('en-IN')"/>
+            <div class="flex justify-between font-label-sm text-label-sm text-outline mt-1">
+              <span>₹4k</span>
+              <span>₹14k</span>
+              <span>₹25k+</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Occupant Suitability: Gender Preference (Segmented Radios) -->
+        <div class="space-y-1.5">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold block">Gender Preference</span>
+          <div class="grid grid-cols-2 gap-1.5 p-1 bg-surface-container-low rounded-xl">
+            <label class="py-1.5 text-center rounded-lg cursor-pointer text-xs font-semibold transition-all <%= !curFilters.gender ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface' %>">
+              <input type="radio" name="gender" value="" class="sr-only" <%= !curFilters.gender ? 'checked' : '' %>>
+              All Stays
+            </label>
+            <label class="py-1.5 text-center rounded-lg cursor-pointer text-xs font-semibold transition-all <%= curFilters.gender === 'Girls' ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface' %>">
+              <input type="radio" name="gender" value="Girls" class="sr-only" <%= curFilters.gender === 'Girls' ? 'checked' : '' %>>
+              Girls Only
+            </label>
+            <label class="py-1.5 text-center rounded-lg cursor-pointer text-xs font-semibold transition-all <%= curFilters.gender === 'Boys' ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface' %>">
+              <input type="radio" name="gender" value="Boys" class="sr-only" <%= curFilters.gender === 'Boys' ? 'checked' : '' %>>
+              Boys Only
+            </label>
+            <label class="py-1.5 text-center rounded-lg cursor-pointer text-xs font-semibold transition-all <%= curFilters.gender === 'Unisex' ? 'bg-surface-container-lowest shadow-sm text-primary' : 'text-on-surface-variant hover:text-on-surface' %>">
+              <input type="radio" name="gender" value="Unisex" class="sr-only" <%= curFilters.gender === 'Unisex' ? 'checked' : '' %>>
+              Co-Living
+            </label>
+          </div>
+        </div>
+
+        <!-- 5. Stay Category / Property Type -->
+        <div class="space-y-1.5">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold block">Stay Category</span>
+          <div class="space-y-1.5">
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="type" value="PG" <%= isTypeChecked('PG') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary"/>
+                <span>Paying Guest (PG)</span>
+              </span>
+              <span class="font-label-sm text-label-sm text-outline"><%= (typeof categoryCounts !== 'undefined' && categoryCounts['PG']) || 1 %></span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="type" value="Hostel" <%= isTypeChecked('Hostel') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary"/>
+                <span>Student Hostel</span>
+              </span>
+              <span class="font-label-sm text-label-sm text-outline"><%= (typeof categoryCounts !== 'undefined' && categoryCounts['Hostel']) || 1 %></span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="type" value="Shared Flat" <%= isTypeChecked('Shared Flat') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary"/>
+                <span>Shared Flat</span>
+              </span>
+              <span class="font-label-sm text-label-sm text-outline"><%= (typeof categoryCounts !== 'undefined' && categoryCounts['Shared Flat']) || 0 %></span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="type" value="Co-Living" <%= isTypeChecked('Co-Living') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary focus:ring-0 accent-primary"/>
+                <span>Student Co-Living</span>
+              </span>
+              <span class="font-label-sm text-label-sm text-outline"><%= (typeof categoryCounts !== 'undefined' && categoryCounts['Co-Living']) || 1 %></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 6. Room Occupancy / Sharing Tier -->
+        <div class="space-y-1.5">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold block">Occupancy Tier</span>
+          <div class="grid grid-cols-2 gap-1.5">
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors text-xs">
+              <input type="checkbox" name="sharing" value="Single" <%= isSharingChecked('Single') ? 'checked' : '' %> class="w-3.5 h-3.5 rounded text-primary accent-primary"/>
+              <span>Single</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors text-xs">
+              <input type="checkbox" name="sharing" value="Double" <%= isSharingChecked('Double') ? 'checked' : '' %> class="w-3.5 h-3.5 rounded text-primary accent-primary"/>
+              <span>Double</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors text-xs">
+              <input type="checkbox" name="sharing" value="Triple" <%= isSharingChecked('Triple') ? 'checked' : '' %> class="w-3.5 h-3.5 rounded text-primary accent-primary"/>
+              <span>Triple</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-xl bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors text-xs">
+              <input type="checkbox" name="sharing" value="Four+" <%= isSharingChecked('Four+') ? 'checked' : '' %> class="w-3.5 h-3.5 rounded text-primary accent-primary"/>
+              <span>Four+</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 7. Essential Amenities & Comfort -->
+        <div class="space-y-1.5">
+          <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider font-semibold block">Amenities & Comfort</span>
+          <div class="space-y-1.5">
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="High-Speed Wi-Fi" <%= isAmenityChecked('Wi-Fi') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>High-Speed Wi-Fi</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">wifi</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="3x Meals" <%= isAmenityChecked('Meals') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>3x Meals (Mess)</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">restaurant</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="Air Conditioning" <%= isAmenityChecked('Air Conditioning') || isAmenityChecked('AC') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>Air Conditioning (AC)</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">ac_unit</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="Washing Machine" <%= isAmenityChecked('Washing Machine') || isAmenityChecked('Laundry') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>Laundry Service</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">local_laundry_service</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="Power Backup" <%= isAmenityChecked('Power Backup') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>Power Backup (24/7)</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">bolt</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="Attached Washroom" <%= isAmenityChecked('Attached Washroom') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>Attached Washroom</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">shower</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="CCTV" <%= isAmenityChecked('CCTV') || isAmenityChecked('Biometric') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>Biometric / CCTV</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">videocam</span>
+            </label>
+            <label class="flex items-center justify-between cursor-pointer p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-sm">
+              <span class="flex items-center gap-2">
+                <input type="checkbox" name="amenities" value="No Curfew" <%= isAmenityChecked('No Curfew') ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+                <span>No Curfew / Flexible Entry</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-primary">schedule</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 8. Live Availability Filter -->
+        <div class="pt-1 pb-1">
+          <label class="flex items-center justify-between cursor-pointer p-2 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors">
+            <span class="flex items-center gap-2 text-sm font-semibold text-on-surface">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Beds Available Now</span>
+            </span>
+            <input type="checkbox" name="availableOnly" value="true" <%= curFilters.availableOnly === 'true' ? 'checked' : '' %> class="w-4 h-4 rounded text-primary accent-primary"/>
+          </label>
+        </div>
+
+        <!-- Apply & Reset Buttons -->
+        <div class="pt-space-xs space-y-2">
+          <button type="submit" class="w-full py-2.5 px-4 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow hover:bg-on-primary-fixed-variant transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-[18px]">tune</span>
+            <span>Apply Filters (<%= properties.length %>)</span>
+          </button>
+          <a href="/stays" class="block w-full py-2 text-center rounded-xl bg-surface-container text-on-surface font-label-md text-label-md font-semibold hover:bg-surface-container-high transition-colors">
+            Reset All
+          </a>
+        </div>
+      </form>
+    </aside>
+
+    <!-- Listings Grid (Right, 9 cols on desktop) -->
+    <main class="lg:col-span-9">
+      <% if (properties && properties.length) { %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+          <% properties.forEach(property => { %>
+            <article class="group bg-surface-container-lowest rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden relative border border-outline-variant/30">
+              <!-- Card Image Header -->
+              <div class="relative w-full aspect-[16/10] overflow-hidden bg-surface-container">
+                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="<%= property.title %>" src="<%= property.images && property.images.length ? property.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
+                
+                <!-- Floating Badges -->
+                <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-primary font-label-sm text-label-sm font-bold shadow-sm">
+                    <span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                    Verified Stay
+                  </span>
+                  <span class="px-2 py-1 rounded-full bg-secondary text-on-secondary font-label-sm text-label-sm font-semibold">
+                    <%= property.genderPreference %>
+                  </span>
+                </div>
+
+                <!-- Floating Bookmark Save Button (Top Right) -->
+                <div class="absolute top-3 right-3 z-10">
+                  <% const isSavedInIndex = typeof currentUser !== 'undefined' && currentUser && currentUser.savedProperties && currentUser.savedProperties.some(id => id.toString() === property._id.toString()); %>
+                  <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+                    <form action="<%= isSavedInIndex ? '/stays/' + property._id + '/unsave' : '/stays/' + property._id + '/save' %>" method="POST" class="inline">
+                      <button type="submit" class="w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md <%= isSavedInIndex ? 'text-primary' : 'text-on-surface-variant hover:text-primary' %> flex items-center justify-center shadow-sm transition-colors" title="<%= isSavedInIndex ? 'Remove from saved' : 'Save stay' %>">
+                        <span class="material-symbols-outlined text-[20px]" style="<%= isSavedInIndex ? 'font-variation-settings: \'FILL\' 1;' : '' %>"><%= isSavedInIndex ? 'bookmark' : 'bookmark_border' %></span>
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <a href="/login" class="w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface-variant hover:text-primary flex items-center justify-center shadow-sm transition-colors" title="Log in to save stay">
+                      <span class="material-symbols-outlined text-[20px]">bookmark_border</span>
+                    </a>
+                  <% } %>
+                </div>
+
+                <!-- Beds Left Indicator -->
+                <div class="absolute bottom-3 left-3">
+                  <span class="px-2.5 py-1 rounded-lg bg-surface-container-lowest/95 backdrop-blur-md text-on-surface font-label-sm text-label-sm font-medium shadow-sm flex items-center gap-1">
+                    <span class="w-2 h-2 rounded-full <%= property.availableBeds > 0 ? 'bg-emerald-500 animate-pulse' : 'bg-red-500' %>"></span>
+                    <%= property.availableBeds > 0 ? property.availableBeds + ' Beds Left' : 'Full' %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Card Body Content -->
+              <div class="p-space-md flex-1 flex flex-col justify-between space-y-space-md">
+                <div>
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h3 class="font-title-lg text-title-lg text-on-surface font-bold group-hover:text-primary transition-colors line-clamp-1">
+                        <a href="/stays/<%= property._id %>"><%= property.title %></a>
+                      </h3>
+                      <p class="flex items-center gap-1 font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                        <span class="material-symbols-outlined text-[16px] text-secondary">near_me</span>
+                        <span><%= property.locality %>, <%= property.city %> • <strong class="font-semibold text-on-surface"><%= property.campusDistance %></strong></span>
+                      </p>
+                    </div>
+                    <div class="flex items-center gap-1 px-2 py-1 rounded-lg bg-surface-container font-label-md text-label-md font-bold text-on-surface shrink-0">
+                      <span class="material-symbols-outlined text-amber-500 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                      <span><%= property.rating || 4.8 %></span>
+                    </div>
+                  </div>
+
+                  <!-- Amenities Chips -->
+                  <% if (property.amenities && property.amenities.length) { %>
+                    <div class="flex flex-wrap items-center gap-1.5 mt-space-sm">
+                      <% property.amenities.slice(0, 3).forEach(amenity => { %>
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm">
+                          <span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+                          <%= amenity %>
+                        </span>
+                      <% }) %>
+                    </div>
+                  <% } %>
+                </div>
+
+                <!-- Price and CTA Button -->
+                <div class="pt-space-sm border-t border-surface-container flex items-center justify-between gap-2">
+                  <div>
+                    <span class="font-label-sm text-label-sm text-outline uppercase block"><%= property.roomSharing %> Sharing</span>
+                    <div class="flex items-baseline gap-1">
+                      <span class="font-headline-sm text-headline-sm font-bold text-tertiary-container">₹<%= property.price.toLocaleString('en-IN') %></span>
+                      <span class="font-body-sm text-body-sm text-on-surface-variant">/ mo</span>
+                    </div>
+                  </div>
+                  <a href="/stays/<%= property._id %>" class="px-4 py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-semibold transition-all shadow-sm">
+                    View Details
+                  </a>
+                </div>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <!-- Empty State -->
+        <div class="bg-surface-container-lowest p-space-2xl rounded-2xl text-center space-y-space-md border border-outline-variant/30">
+          <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center text-primary mx-auto">
+            <span class="material-symbols-outlined text-[32px]">apartment</span>
+          </div>
+          <h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">No student stays found</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+            We couldn't find any accommodations matching your search filters. Try adjusting your filters or be the first to list a stay!
+          </p>
+          <div class="pt-2 flex justify-center gap-3">
+            <a href="/stays" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">Clear All Filters</a>
+            <a href="/stays/new" class="px-4 py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-colors">List Your Stay</a>
+          </div>
+        </div>
+      <% } %>
+    </main>
+  </div>
+</div>

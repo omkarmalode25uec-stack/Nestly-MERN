@@ -1,0 +1,377 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Breadcrumb & Fast Action Bar -->
+<section class="w-full bg-surface-container-lowest border-b border-outline-variant/30 sticky top-20 z-40 shadow-sm">
+  <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+    <nav aria-label="Breadcrumbs" class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+      <a href="/" class="hover:text-primary transition-colors flex items-center gap-1">
+        <span class="material-symbols-outlined text-[16px] text-primary">home</span>
+        <span>Home</span>
+      </a>
+      <span class="text-outline-variant">/</span>
+      <a href="/stays?city=<%= property.city %>" class="hover:text-primary transition-colors"><%= property.city %></a>
+      <span class="text-outline-variant">/</span>
+      <span class="text-on-surface font-semibold truncate max-w-[200px] sm:max-w-none"><%= property.title %></span>
+    </nav>
+
+    <!-- Owner Actions (if current user is owner) or Student Actions -->
+    <div class="flex items-center gap-space-xs">
+      <% if (typeof currentUser !== 'undefined' && currentUser && property.owner && property.owner._id.equals(currentUser._id)) { %>
+        <a href="/stays/<%= property._id %>/edit" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md flex items-center gap-1.5 transition-colors font-semibold">
+          <span class="material-symbols-outlined text-[18px]">edit</span>
+          <span>Edit Listing</span>
+        </a>
+        <form action="/stays/<%= property._id %>/delete" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this listing? This action cannot be undone.');">
+          <button type="submit" class="px-3 py-1.5 rounded-lg bg-error-container hover:opacity-90 text-on-error-container font-label-md text-label-md flex items-center gap-1.5 transition-colors font-semibold">
+            <span class="material-symbols-outlined text-[18px]">delete</span>
+            <span>Delete</span>
+          </button>
+        </form>
+      <% } else { %>
+        <% const isSavedInShow = typeof currentUser !== 'undefined' && currentUser && currentUser.savedProperties && currentUser.savedProperties.some(id => id.toString() === property._id.toString()); %>
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <form action="<%= isSavedInShow ? '/stays/' + property._id + '/unsave' : '/stays/' + property._id + '/save' %>" method="POST" class="inline">
+            <button type="submit" class="px-3 py-1.5 rounded-lg <%= isSavedInShow ? 'bg-secondary-container text-on-secondary-container font-semibold' : 'bg-surface-container-low hover:bg-surface-container text-on-surface' %> font-label-md text-label-md flex items-center gap-1.5 transition-colors" title="<%= isSavedInShow ? 'Remove from shortlist' : 'Save to shortlist' %>">
+              <span class="material-symbols-outlined text-[18px] text-primary" style="<%= isSavedInShow ? 'font-variation-settings: \'FILL\' 1;' : '' %>"><%= isSavedInShow ? 'bookmark' : 'bookmark_border' %></span>
+              <span class="hidden sm:inline"><%= isSavedInShow ? 'Shortlisted' : 'Shortlist' %></span>
+            </button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" title="Sign in to shortlist">
+            <span class="material-symbols-outlined text-[18px] text-secondary">bookmark_border</span>
+            <span class="hidden sm:inline">Shortlist</span>
+          </a>
+        <% } %>
+        <button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" onclick="navigator.clipboard && navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!');">
+          <span class="material-symbols-outlined text-[18px] text-secondary">share</span>
+          <span class="hidden sm:inline">Share</span>
+        </button>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin w-full py-space-md">
+  <!-- Property Header Info -->
+  <header class="mb-space-lg">
+    <div class="flex flex-wrap items-center gap-2 mb-2">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider font-bold">
+        <span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+        Nestly Verified Audit
+      </span>
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+        <span class="material-symbols-outlined text-[15px]">meeting_room</span>
+        <%= property.propertyType %> • <%= property.genderPreference %>
+      </span>
+      <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+        <span class="material-symbols-outlined text-[15px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+        <%= property.rating || 4.8 %> <span class="font-normal opacity-80">(<%= property.reviewCount || 24 %> Verified Reviews)</span>
+      </span>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
+      <div>
+        <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">
+          <%= property.title %>
+        </h1>
+        <p class="mt-1 flex items-center gap-1 text-on-surface-variant font-body-md text-body-md flex-wrap">
+          <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+          <span><%= property.address %>, <%= property.locality %>, <%= property.city %></span>
+          <span class="text-outline mx-1">•</span>
+          <span class="text-secondary font-medium"><%= property.campusDistance %></span>
+        </p>
+      </div>
+      <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+        <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+        <span>Admissions Open for Semester</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Photo Gallery Bento Grid -->
+  <section class="relative mb-space-2xl">
+    <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-[360px] sm:h-[440px] md:h-[480px] rounded-2xl overflow-hidden bg-surface-container-high">
+      <!-- Main Large Photo -->
+      <div class="md:col-span-2 md:row-span-2 relative overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="<%= property.title %> main" src="<%= property.images && property.images[0] ? property.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
+        <span class="absolute bottom-3 left-3 px-3 py-1 bg-surface/90 backdrop-blur-md rounded-lg font-label-sm text-label-sm text-primary font-semibold">
+          <%= property.roomSharing %> Room Suite
+        </span>
+      </div>
+      <!-- Secondary Photos -->
+      <div class="hidden md:block relative overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Room bath" src="<%= property.images && property.images[1] ? property.images[1] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg7qGDgoE-L4O5XEb65do0kjcLNoTvCJ_3x-8bSrA78i4Zaj57Nd_PfrLzvK9k8XI9oXYd1YBUbac4mlThC38kGiSZRRcnb_ijOPfYiMAp_QF8-3h03j5kagGZqwcIrQoicOOjG_s1AWVwgEHhvEwV2ao7af3mYfcQiNnLmLbnnb71RXuBRxEbAFkMkwqAHn2YAJwFAF23OuqnbxIprPjdCgSn6zNE4wJGiEJ3lD6XFI2WDwA_OVIE' %>"/>
+        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Ensuite Washroom</span>
+      </div>
+      <div class="hidden md:block relative overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Dining mess" src="<%= property.images && property.images[2] ? property.images[2] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwDASJnBO1Sa-xAVAqF_Dq7JnYOsdbZQD6iVjgQ8sN7KgyRnmLPZr6ea7tfEgC_r_z_D2dnWsHv6dC23GiN8q5sTZK4LQRI7rLhiuHBHqZryRytUWm0IGX9a3-c28gsd1wCMDjDc_VZ4lO-0IpjMZnjwZln0MD6ikO0ti1NL73huChu-JpuALOGb1M2dZrVOpFV80KV1z8nA-iwm0TQvwp_TqL-VhMVRaRrWz0tP74VRX2nx0V0LHi' %>"/>
+        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Mess & Dining</span>
+      </div>
+      <div class="hidden md:block relative overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Study lounge" src="<%= property.images && property.images[3] ? property.images[3] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2hKNomyCs5fjlQhiTjlB_hXehvJEPXcnmcPeLlQqMe-rRR_g2Wbf2ZtG2A-MMtFxUVPzO4Z7wBeIzvxWQ7mnR1D01L2N9c6Z9aUF8d3WA_Ch2pDume7sXQ4RlSbRNhL0xl9qPKzDdXvspYliTj9Ou4shZ5TcCsFq8cKbh5-gGVSxRhCykUTjEd4lqCJOuxOkiNqzr3KQYzYWLtdvaMwBI2sxpIgRBlcgwgXWS9MnUmzr4UDIYKUIB' %>"/>
+        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Study Lounge</span>
+      </div>
+      <div class="hidden md:block relative overflow-hidden group">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Building grounds" src="<%= property.images && property.images[4] ? property.images[4] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAa1q3GQSPa4SIFj03WUkL4mDjKuQUA452NLCmCwUMKInHPlMqO_7nBoSez87T9HRPEQZmqTYWiuqTCkvOsdiMd3dV4ylaJBcX1orP-xGO2wbG5KgGQluot5RTZM9LeK7TNt3fTcJGQ5HQOmtTS1RQ5J5rskPkCacQ1a_moFnViZ5gZdRemW8ODgYEQbzF6SQYKZUJSddbV8KDJcH4XvTorBevNSUXDbvB9P--VyI0X4YWwgmRHbW5F' %>"/>
+        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Biometric Gate</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two-Column Main Content -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+    <!-- Left Column (Overview, Amenities, Details) -->
+    <div class="lg:col-span-8 space-y-space-xl">
+      <!-- Residency Narrative -->
+      <section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-md">
+        <div class="flex items-center justify-between pb-space-sm border-b border-surface-container-low">
+          <div>
+            <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Residency Overview</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              Managed by <%= property.owner ? property.owner.name : 'Nestly Partner Host' %>
+            </p>
+          </div>
+          <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">
+            <span class="material-symbols-outlined text-[22px]">school</span>
+          </div>
+        </div>
+
+        <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed whitespace-pre-line">
+          <%= property.description %>
+        </p>
+
+        <!-- Key Highlights Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-space-sm bg-surface-container-low p-4 rounded-xl">
+          <div class="flex flex-col items-center text-center p-2">
+            <span class="material-symbols-outlined text-primary text-[28px] mb-1">wifi</span>
+            <span class="font-label-md text-label-md font-bold text-on-surface">Wi-Fi</span>
+            <span class="font-body-sm text-body-sm text-outline">High Speed</span>
+          </div>
+          <div class="flex flex-col items-center text-center p-2">
+            <span class="material-symbols-outlined text-primary text-[28px] mb-1">restaurant</span>
+            <span class="font-label-md text-label-md font-bold text-on-surface">Meals</span>
+            <span class="font-body-sm text-body-sm text-outline">Hygienic Mess</span>
+          </div>
+          <div class="flex flex-col items-center text-center p-2">
+            <span class="material-symbols-outlined text-primary text-[28px] mb-1">local_laundry_service</span>
+            <span class="font-label-md text-label-md font-bold text-on-surface">Laundry</span>
+            <span class="font-body-sm text-body-sm text-outline">Washer Facility</span>
+          </div>
+          <div class="flex flex-col items-center text-center p-2">
+            <span class="material-symbols-outlined text-primary text-[28px] mb-1">shield_person</span>
+            <span class="font-label-md text-label-md font-bold text-on-surface">24/7 Security</span>
+            <span class="font-body-sm text-body-sm text-outline">Biometric & CCTV</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Amenities Section -->
+      <section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-md">
+        <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Included Amenities</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          <% (property.amenities || []).forEach(amenity => { %>
+            <div class="flex items-center gap-2.5 p-3 rounded-xl bg-surface-container-low text-on-surface">
+              <span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+              <span class="font-label-md text-label-md font-semibold"><%= amenity %></span>
+            </div>
+          <% }) %>
+        </div>
+      </section>
+
+      <!-- Stitch Reviews & Ratings Section -->
+      <section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-lg" id="reviews">
+        <!-- Reviews Header & Overall Rating -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm border-b border-surface-container">
+          <div>
+            <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Student Reviews &amp; Ratings</h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Verified student feedback on food, Wi-Fi, safety and accommodation</p>
+          </div>
+          <div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-secondary-container/40">
+            <span class="material-symbols-outlined text-amber-500 text-[22px]" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="font-headline-sm text-headline-sm font-bold text-on-surface"><%= property.rating || '4.8' %></span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">
+              (<%= (typeof reviews !== 'undefined' && reviews ? reviews.length : 0) || property.reviewCount || 0 %> <%= (typeof reviews !== 'undefined' && reviews && reviews.length === 1) ? 'Review' : 'Reviews' %>)
+            </span>
+          </div>
+        </div>
+
+        <!-- Submit Review Form Container -->
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <div class="p-space-md rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-space-sm">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[20px]">rate_review</span>
+              <h3 class="font-title-md text-title-md text-on-surface font-bold">Write a Student Review</h3>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Share your experience to help fellow students find their ideal stay.</p>
+
+            <form action="/stays/<%= property._id %>/reviews" method="POST" class="space-y-space-sm pt-1" id="addReviewForm">
+              <!-- Star Rating Selection -->
+              <div>
+                <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold mb-1">Your Rating</label>
+                <div class="flex items-center gap-2 flex-wrap">
+                  <% [5, 4, 3, 2, 1].forEach(starVal => { %>
+                    <label class="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-surface-container-lowest hover:bg-secondary-container/30 cursor-pointer border border-outline-variant/30 text-xs font-semibold text-on-surface transition-all has-[:checked]:bg-secondary-container has-[:checked]:border-primary">
+                      <input type="radio" name="rating" value="<%= starVal %>" class="accent-primary" <%= starVal === 5 ? 'checked' : '' %> required/>
+                      <span><%= starVal %></span>
+                      <span class="material-symbols-outlined text-amber-500 text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                    </label>
+                  <% }) %>
+                </div>
+              </div>
+
+              <!-- Comment Textarea -->
+              <div>
+                <label class="block font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold mb-1" for="reviewComment">Your Feedback</label>
+                <textarea name="comment" id="reviewComment" rows="3" required minlength="3" placeholder="How was the room, cleanliness, Wi-Fi stability, mess food, and curfew policy?" class="w-full p-3 rounded-xl bg-surface-container-lowest text-on-surface font-body-sm text-body-sm border border-outline-variant/30 focus:outline-none focus:ring-1 focus:ring-primary"></textarea>
+              </div>
+
+              <div class="flex justify-end">
+                <button type="submit" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm">
+                  <span class="material-symbols-outlined text-[18px]">send</span>
+                  <span>Post Verified Review</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        <% } else { %>
+          <!-- Guest Prompt -->
+          <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-[22px]">lock</span>
+              <span class="text-on-surface font-medium">Have you stayed at <%= property.title %>? Sign in to post a verified resident review.</span>
+            </div>
+            <a href="/login" class="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-on-primary-fixed-variant transition-colors self-start sm:self-auto shrink-0">
+              <span>Sign In to Review</span>
+            </a>
+          </div>
+        <% } %>
+
+        <!-- Review Cards Feed -->
+        <div class="space-y-4">
+          <% if (typeof reviews !== 'undefined' && reviews && reviews.length > 0) { %>
+            <% reviews.forEach(review => { %>
+              <article class="p-4 rounded-xl bg-surface border border-outline-variant/20 space-y-2">
+                <div class="flex items-start justify-between gap-2">
+                  <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-full bg-secondary-container text-primary font-bold flex items-center justify-center font-label-md text-label-md uppercase">
+                      <%= (review.author && review.author.name) ? review.author.name.split(' ').map(n => n[0]).join('').slice(0, 2) : 'VR' %>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-1.5">
+                        <h4 class="font-label-md text-label-md font-bold text-on-surface">
+                          <%= review.author ? review.author.name : 'Verified Resident' %>
+                        </h4>
+                        <span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        <span class="font-label-sm text-label-sm text-secondary">Verified Resident</span>
+                      </div>
+                      <p class="font-body-sm text-body-sm text-outline">
+                        <%= (review.author && review.author.college) ? review.author.college : 'Student Resident' %>
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Star Rating Display -->
+                  <div class="flex text-amber-500 shrink-0">
+                    <% for (let i = 1; i <= 5; i++) { %>
+                      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' <%= i <= review.rating ? 1 : 0 %>;">star</span>
+                    <% } %>
+                  </div>
+                </div>
+
+                <!-- Comment Body -->
+                <p class="font-body-md text-body-md text-on-surface-variant pt-1">
+                  "<%= review.comment %>"
+                </p>
+
+                <!-- Review Meta & Authorized Delete -->
+                <div class="flex items-center justify-between pt-1 border-t border-surface-container text-outline font-body-sm text-body-sm">
+                  <span>Reviewed on <%= new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+
+                  <% if (typeof currentUser !== 'undefined' && currentUser && review.author && (review.author.equals ? review.author.equals(currentUser._id) : review.author._id.toString() === currentUser._id.toString())) { %>
+                    <form action="/stays/<%= property._id %>/reviews/<%= review._id %>/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete your review?');" class="inline-block">
+                      <button type="submit" class="text-error hover:underline font-label-sm text-label-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[15px]">delete</span>
+                        <span>Delete</span>
+                      </button>
+                    </form>
+                  <% } %>
+                </div>
+              </article>
+            <% }) %>
+          <% } else { %>
+            <!-- Empty Reviews State -->
+            <div class="p-space-lg rounded-xl bg-surface text-center space-y-2 border border-outline-variant/20">
+              <span class="material-symbols-outlined text-primary text-[32px]">rate_review</span>
+              <p class="font-title-md text-title-md font-bold text-on-surface">No student reviews yet</p>
+              <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mx-auto">
+                Be the first verified resident to share your experience living at <%= property.title %>!
+              </p>
+            </div>
+          <% } %>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Sticky Reservation & Booking Column -->
+    <aside class="lg:col-span-4 sticky top-36 space-y-space-md">
+      <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-md border border-outline-variant/30 space-y-space-md">
+        <div class="flex items-baseline justify-between">
+          <div>
+            <span class="font-label-sm text-label-sm text-outline uppercase block"><%= property.roomSharing %> Room</span>
+            <div class="flex items-baseline gap-1">
+              <span class="font-headline-lg text-headline-lg font-bold text-primary">₹<%= property.price.toLocaleString('en-IN') %></span>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">
+            Zero Brokerage
+          </span>
+        </div>
+
+        <div class="space-y-2 text-body-sm border-t border-b border-surface-container py-3">
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Refundable Deposit</span>
+            <span class="font-semibold text-on-surface">₹<%= property.securityDeposit.toLocaleString('en-IN') %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Token Hold Deposit</span>
+            <span class="font-bold text-primary">₹2,000</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-on-surface-variant">Available Beds</span>
+            <span class="font-semibold text-secondary"><%= property.availableBeds %> Beds Remaining</span>
+          </div>
+        </div>
+
+        <!-- Reservation CTA Button -> Leads to Booking & Unit Reservation Request -->
+        <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+          <a href="/stays/<%= property._id %>/book" class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <span>Reserve Bed &amp; Hold Unit</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </a>
+        <% } else { %>
+          <a href="/login" class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+            <span>Sign In to Reserve Unit</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </a>
+        <% } %>
+
+        <!-- Warden Contact -->
+        <% if (property.contactPhone || (property.owner && property.owner.phone)) { %>
+          <div class="p-3 bg-surface-container-low rounded-xl flex items-center gap-3">
+            <span class="material-symbols-outlined text-primary text-[24px]">call</span>
+            <div class="leading-tight">
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Contact Warden / Host</span>
+              <p class="font-label-md text-label-md text-on-surface font-bold"><%= property.contactPhone || property.owner.phone %></p>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="flex items-center justify-center gap-2 text-outline text-label-sm font-label-sm pt-1">
+          <span class="material-symbols-outlined text-[14px] text-primary">shield</span>
+          <span>100% Escrow Protection Guarantee</span>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

@@ -1,0 +1,187 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="w-full min-h-[calc(100vh-5rem)] flex flex-col lg:flex-row items-stretch justify-center p-4 lg:p-8 max-w-[1400px] mx-auto">
+  <!-- Left Hero & Social Proof Column (45% on Desktop) -->
+  <div class="lg:w-[45%] flex flex-col justify-between p-8 lg:p-12 rounded-3xl bg-surface-container-low shadow-sm relative overflow-hidden mb-6 lg:mb-0 lg:mr-6">
+    <div class="absolute -right-20 -top-20 w-96 h-96 rounded-full bg-secondary-container/30 blur-3xl pointer-events-none"></div>
+    <div class="absolute -left-12 -bottom-12 w-80 h-80 rounded-full bg-primary-fixed/20 blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10">
+      <div class="flex items-center space-x-3 mb-10">
+        <img alt="Nestly Logo" class="w-12 h-12 rounded-xl object-contain shadow-sm bg-surface-container-lowest p-1.5" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/>
+        <div class="flex flex-col">
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight font-bold">Nestly</span>
+          <span class="font-label-sm text-label-sm text-secondary font-semibold uppercase tracking-wider">Student Stays Verified</span>
+        </div>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/50 text-secondary mb-6">
+        <span class="material-symbols-outlined text-base" style="font-variation-settings: 'FILL' 1;">verified</span>
+        <span class="font-label-md text-label-md">Join 45,000+ Verified Students</span>
+      </div>
+
+      <h1 class="font-display text-display-mobile lg:text-display text-on-surface font-bold tracking-tight leading-tight mb-5">
+        Zero broker scams. Just verified stays for <span class="text-primary-container">students.</span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mb-8 leading-relaxed">
+        Create your free student profile to unlock campus-audited rooms, transparent mess menus, and instant video tours.
+      </p>
+
+      <div class="space-y-4 mb-10">
+        <div class="flex items-center gap-3.5 group">
+          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">verified_user</span>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-surface font-semibold block">100% On-Campus Verified</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Inspected for safety, food hygiene, and curfew transparency</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-3.5 group">
+          <div class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-xl">savings</span>
+          </div>
+          <div>
+            <span class="font-title-md text-title-md text-on-surface font-semibold block">Zero Brokerage Guarantee</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant">Connect directly with hostel owners and campus wardens</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Verified Badge Footnote -->
+    <div class="relative z-10 bg-surface-container-lowest p-5 rounded-2xl shadow-sm flex items-center gap-3">
+      <span class="material-symbols-outlined text-primary text-[28px]" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+      <div class="leading-tight">
+        <p class="font-label-md text-label-md text-on-surface font-bold">Encrypted Student Pass</p>
+        <p class="font-body-sm text-body-sm text-secondary">Your details are only shared with wardens upon scheduled visits.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Side Registration Form Container (55% on Desktop) -->
+  <div class="lg:w-[55%] flex flex-col justify-between p-6 lg:p-12 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-4 mb-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-secondary-container"></span>
+        <span class="font-label-md text-label-md text-secondary font-semibold">Student Sign Up</span>
+      </div>
+      <a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-primary hover:text-primary-container transition-colors font-semibold" href="/owner/register">
+        <span>Property Owner? Partner Registration</span>
+        <span class="material-symbols-outlined text-base">arrow_forward</span>
+      </a>
+    </div>
+
+    <div class="max-w-md w-full mx-auto my-auto py-2">
+      <div class="mb-6">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight mb-1.5">
+          Join Nestly today
+        </h2>
+        <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Find your ideal PG or student flat near campus in minutes.
+        </p>
+      </div>
+
+      <!-- Segmented Tab Switcher -->
+      <div class="grid grid-cols-2 p-1 bg-surface-container rounded-xl mb-6">
+        <a href="/login" class="py-2.5 text-center font-label-lg text-label-lg font-medium rounded-lg text-on-surface-variant hover:text-on-surface transition-all">
+          Student Login
+        </a>
+        <a href="/signup" class="py-2.5 text-center font-label-lg text-label-lg font-semibold rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all">
+          Create Account
+        </a>
+      </div>
+
+      <!-- Signup Form (POST /signup) -->
+      <form action="/signup" method="POST" class="space-y-3.5">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="name">
+            Full Name
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-xl">person</span>
+            <input name="name" class="w-full pl-11 pr-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="name" placeholder="e.g. Ananya Sharma" type="text" required autofocus/>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="college">
+            College / University Name
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-xl">school</span>
+            <input name="college" class="w-full pl-11 pr-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="college" placeholder="e.g. Symbiosis, MIT-WPU, COEP" type="text"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="email">
+              Email Address
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">alternate_email</span>
+              <input name="email" class="w-full pl-10 pr-3 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="email" placeholder="ananya@mail.com" type="email" required/>
+            </div>
+          </div>
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="phone">
+              Mobile Number
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">call</span>
+              <input name="phone" class="w-full pl-10 pr-3 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="phone" placeholder="98765 43210" type="tel"/>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="password">
+            Create Password
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-xl">lock</span>
+            <input name="password" class="w-full pl-11 pr-12 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all placeholder:text-on-surface-variant/60" id="password" placeholder="At least 6 characters" type="password" minlength="6" required/>
+            <button aria-label="Show or hide password" class="absolute right-3.5 p-1 rounded text-on-surface-variant hover:text-on-surface transition-colors" id="toggle-password" type="button">
+              <span class="material-symbols-outlined text-xl" id="eye-icon">visibility</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pt-3">
+          <button class="w-full py-3.5 px-6 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-on-primary-fixed-variant transition-all duration-200 transform active:scale-[0.99] flex items-center justify-center gap-2" type="submit">
+            <span>Create Free Student Account</span>
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="pt-4 mt-2 text-center space-y-2">
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Already have an account? 
+        <a class="text-primary font-semibold hover:underline" href="/login">Log in here</a>
+      </p>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Looking to list a hostel or PG? 
+        <a class="text-secondary font-semibold hover:underline" href="/owner/register">Register as Property Owner</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const passwordInput = document.getElementById('password');
+    const toggleBtn = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    if (toggleBtn && passwordInput && eyeIcon) {
+      toggleBtn.addEventListener('click', function() {
+        const isPassword = passwordInput.getAttribute('type') === 'password';
+        passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+        eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+    }
+  })();
+</script>

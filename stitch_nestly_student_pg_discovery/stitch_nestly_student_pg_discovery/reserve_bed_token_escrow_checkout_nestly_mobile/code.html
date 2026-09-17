@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;background-color:#f0fcf7;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "on-primary-fixed-variant": "#005143", "on-tertiary-fixed-variant": "#6a3c00", "tertiary-fixed": "#ffdcbe", "primary": "#005144", "surface-container-highest": "#d9e5e0", "error": "#ba1a1a", "surface-container-lowest": "#ffffff", "on-secondary": "#ffffff", "primary-container": "#176b5b", "secondary-container": "#b1ebdc", "secondary": "#30685c", "surface-container": "#e4f1eb", "on-tertiary": "#ffffff", "surface-dim": "#d0ddd8", "on-error": "#ffffff", "surface-bright": "#f0fcf7", "surface-variant": "#d9e5e0", "outline": "#6f7975", "surface-container-low": "#eaf6f1", "on-secondary-fixed": "#00201a", "secondary-fixed-dim": "#99d2c3", "outline-variant": "#bec9c4", "secondary-fixed": "#b4eedf", "on-primary-fixed": "#00201a", "on-secondary-fixed-variant": "#135044", "background": "#f0fcf7", "surface-container-high": "#deebe6", "tertiary-container": "#8c5100", "primary-fixed-dim": "#89d5c1", "tertiary-fixed-dim": "#ffb872", "on-primary": "#ffffff", "on-surface": "#131e1b", "on-primary-container": "#9ce9d4", "on-background": "#131e1b", "inverse-surface": "#27332f", "inverse-primary": "#89d5c1", "on-secondary-container": "#346c60", "primary-fixed": "#a5f1dd", "inverse-on-surface": "#e7f4ee", "on-tertiary-container": "#ffd1a8", "on-tertiary-fixed": "#2d1600", "tertiary": "#6b3c00", "error-container": "#ffdad6", "surface-tint": "#166a5a", "surface": "#f0fcf7", "on-surface-variant": "#3f4945", "on-error-container": "#93000a" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-xs": "0.25rem", "gutter": "1.5rem", "space-md": "1rem", "margin": "2rem", "gutter-mobile": "1rem", "space-sm": "0.5rem", "space-2xl": "3rem", "space-xl": "2rem", "space-lg": "1.5rem", "margin-mobile": "1rem" }, fontFamily: { "body-md": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "title-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"] }, fontSize: { "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "title-lg": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col selection:bg-secondary-container selection:text-on-secondary-container"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(23,107,91,0.05)]"><div class="h-16 px-gutter-mobile flex items-center justify-between"><div class="flex items-center gap-space-xs"><button aria-label="Go Back" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors focus:outline-none focus:ring-2 focus:ring-primary" onclick="history.back()" type="button"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="Modern minimalist logo for Nestly - an elegant stylized bird nest and house roof shelter icon in deep emerald green #176B5B with a fresh mint accent #55B89A, accompanied by the clean wordmark 'Nestly'. Brand logo" class="h-7 w-auto object-contain hidden sm:block" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/></div><div class="flex-1 px-space-xs text-center flex flex-col items-center justify-center min-w-0"><h1 class="font-title-md text-title-md text-on-surface truncate w-full text-center">Reserve Bed &amp; Hold Unit</h1><div class="flex items-center justify-center gap-1 text-primary-container"><span class="material-symbols-outlined text-[13px]">verified_user</span><span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">256-Bit Escrow Vault</span></div></div><div class="flex items-center gap-space-xs shrink-0"><div class="hidden xs:flex items-center gap-1 bg-surface-container px-2.5 py-1 rounded-full text-primary"><span class="material-symbols-outlined text-[14px]">lock</span><span class="font-label-sm text-label-sm font-semibold">SSL</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-surface-container-highest" src="https://lh3.googleusercontent.com/aida/AEtjO1X8UESVKar4q8r2qztHLCsX09Je4ZGvVxWhmdNyh8VGzKBVd--wIR0cowdZFQoPF2BU-08qgd9fMF7a-CmW4tII_IT3OSPdv8ZkW5H4Rqc1pEenmuII5Bx7JTJPnnUWJf-yXaprySd_5DZNp6rQlKX3aiPJChZf5SrnuTjfqgBNtTpGgK296zoW5TH74hNvQhUjrSjDuF8LCxPA4WDXaHl4WDI5QGJldXJjcYmbrcfZgWXAzu6S8ZT-uxA"/></div></div></header><main class="flex flex-col relative w-full pt-16 pb-safe bg-surface min-h-screen"><div class="flex flex-col w-full pb-36 space-y-space-md">
+<!-- 1. Top Urgency & Hold Card -->
+<div class="px-gutter-mobile pt-space-xs">
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm overflow-hidden relative">
+<div class="flex items-center justify-between gap-space-xs">
+<div class="inline-flex items-center gap-1.5 bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold tracking-wide">
+<span class="material-symbols-outlined text-[15px] animate-pulse text-primary">bolt</span>
+<span>PRIORITY BED HOLD ACTIVE</span>
+</div>
+<div class="flex items-center gap-1 text-tertiary-container font-label-md text-label-md bg-tertiary-fixed/60 px-2 py-0.5 rounded-full">
+<span class="material-symbols-outlined text-[14px]">timer</span>
+<span class="font-bold tracking-tight" id="countdown-timer">26:14:08</span>
+</div>
+</div>
+<div class="space-y-1">
+<p class="font-title-md text-title-md text-on-surface">Bed #304-B withheld from public pool</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Early-bird semester rate of ₹11,500/mo is reserved under your student token session.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest/80 p-2.5 rounded-lg text-secondary">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0" style="font-variation-settings: 'FILL' 1;">verified</span>
+<p class="font-body-sm text-body-sm text-on-surface leading-tight">
+<span class="font-semibold text-primary">Visit Verified on 8 Jul</span> by Warden Rajesh Deshmukh <span class="text-outline-variant">•</span> Clean Bill Audit
+        </p>
+</div>
+</div>
+</div>
+<!-- 2. Property & Room Reservation Summary -->
+<div class="px-gutter-mobile">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex gap-space-md items-start">
+<img class="w-20 h-20 rounded-lg object-cover shrink-0 bg-surface-container" data-alt="Bright, serene, modern Scandinavian-inspired student studio suite bedroom with a tailored minimalist bed frame dressed in crisp sage linen, an ergonomic oak study desk bathed in soft natural afternoon daylight from floor-to-ceiling glass balcony doors, potted jade plants, and warm interior architectural photography with mint green accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0VElJyMeK-Gjr7YFbG98rPMT1ZLTkNqv8tDAOFyp9dQrVHULE2C_eEMRVmVs8PZcoRtO9HhOsBWdYmPfxVV3O_FR_30zb-SrEiHS0TI0GYajICnyqIhbQ1ZEpctCdY3M5VTp_bVo6inRhxo0eoKP5G7ScYQqRpVgzOeAKdm1XGqHMktWLXfvtqew3rj_1fcMFDfiGgd-4Go5Ot1XViJJnEEUeFiIU4uXJmp2KkOTlDW4f5cc0vH1t"/>
+<div class="flex-1 min-w-0">
+<div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-label-sm text-label-sm mb-1">
+<span class="material-symbols-outlined text-[12px]">apartment</span>
+<span>Co-Living Residence</span>
+</div>
+<h2 class="font-title-md text-title-md text-on-surface font-semibold truncate">CozyNest Student Co-living</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px] shrink-0 text-secondary">location_on</span>
+<span class="truncate">Baner Rd, near Symbiosis &amp; MIT-WPU Transit hub, Pune</span>
+</p>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-sm space-y-space-xs">
+<div class="flex justify-between items-center text-on-surface">
+<span class="font-label-md text-label-md text-on-surface-variant">Allocated Unit</span>
+<span class="font-label-md text-label-md font-bold text-primary">Studio Suite • Room #304-B</span>
+</div>
+<div class="flex justify-between items-center text-on-surface">
+<span class="font-label-md text-label-md text-on-surface-variant">Balcony Orientation</span>
+<span class="font-label-md text-label-md">Private East Garden View</span>
+</div>
+<div class="flex justify-between items-center text-on-surface">
+<span class="font-label-md text-label-md text-on-surface-variant">Contract Term</span>
+<span class="font-label-md text-label-md">10 Months Academic Term</span>
+</div>
+</div>
+<!-- Inclusions Chips -->
+<div class="space-y-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Included in Semester Rent</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[14px]">desk</span> Desk &amp; Ergonomic Chair
+          </span>
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[14px]">restaurant</span> 3x Chef Meals
+          </span>
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[14px]">wifi</span> 200 Mbps Wi-Fi
+          </span>
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[14px]">cleaning_services</span> Daily Housekeeping
+          </span>
+<span class="inline-flex items-center gap-1 bg-surface-container px-2 py-1 rounded text-primary font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[14px]">percent</span> 0% Brokerage
+          </span>
+</div>
+</div>
+<!-- Move-in Pill -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-high/60 rounded-lg">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-primary">event_available</span>
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Planned Move-In</div>
+<div class="font-label-md text-label-md font-semibold text-on-surface">1 Aug 2025 (Autumn Semester)</div>
+</div>
+</div>
+<button class="font-label-sm text-label-sm font-semibold text-primary px-2.5 py-1 rounded hover:bg-surface-container transition-colors" type="button">Change</button>
+</div>
+</div>
+</div>
+<!-- 3. Nestly Escrow Protection Guarantee Banner -->
+<div class="px-gutter-mobile">
+<div class="bg-surface-container-low rounded-xl p-space-md shadow-sm space-y-space-sm relative overflow-hidden">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0 text-primary">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h3 class="font-title-md text-title-md font-bold text-primary">100% Escrow Protection Protocol</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Your ₹2,000 token is deposited into an <strong class="text-on-surface font-semibold">RBI-regulated ICICI Trustee Escrow vault</strong>. It is transferred to property management ONLY after you step into room #304-B, verify inventory, and sign your digital agreement.
+          </p>
+</div>
+</div>
+<div class="space-y-1.5 pt-1 pl-1">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[17px] text-primary shrink-0 mt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Full 100% instant refund</span> if you cancel within 48 hours with 1-tap</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[17px] text-primary shrink-0 mt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Room discrepancy pledge:</span> instant relocation or full escrow reversal</p>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[17px] text-primary shrink-0 mt-0.5">check_circle</span>
+<p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Zero brokerage &amp; zero hidden ledger fees</span> guaranteed</p>
+</div>
+</div>
+</div>
+</div>
+<!-- 4. Transparent Payment Breakdown -->
+<div class="px-gutter-mobile">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Settlement Ledger</h3>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded text-secondary font-semibold">Clear-Split Policy</span>
+</div>
+<div class="space-y-2.5">
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Monthly Room Rent (Aug)</span>
+<span class="text-on-surface font-medium">₹11,500</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Refundable Security Deposit (1 Mo)</span>
+<span class="text-on-surface font-medium">₹11,500</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span>Nestly Escrow &amp; Trust Fee</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">info</span>
+</div>
+<span class="text-primary font-medium flex items-center gap-1">
+<span class="line-through text-outline text-body-sm font-body-sm">₹999</span>
+<span>₹0 (Student Pass)</span>
+</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>GST (18% on platform services)</span>
+<span class="text-on-surface font-medium">₹0.00</span>
+</div>
+<div class="h-px bg-surface-container-highest my-1"></div>
+<div class="flex justify-between items-center pt-0.5">
+<div>
+<div class="font-title-md text-title-md font-bold text-on-surface">Token Hold Deposit Payable Today</div>
+<div class="font-body-sm text-body-sm text-secondary">Adjusted against your 1st month rent on check-in</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">₹2,000</span>
+<div class="font-label-sm text-label-sm text-secondary font-semibold">100% Refundable</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-high/50 p-space-sm rounded-lg flex items-start gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary-container mt-0.5 shrink-0">calendar_clock</span>
+<p class="font-body-sm text-body-sm">
+          Remaining balance of <strong class="text-on-surface font-semibold">₹21,000</strong> (Balance rent ₹9,500 + Deposit ₹11,500) is due only on <strong class="text-on-surface font-semibold">1 Aug 2025</strong> upon keys handover.
+        </p>
+</div>
+</div>
+</div>
+<!-- 5. Student Resident & Academic Details (Pre-filled) -->
+<div class="px-gutter-mobile">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">badge</span>
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Resident Credentials</h3>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-0.5 bg-secondary-container/50 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[13px]">verified</span> Verified Student
+        </span>
+</div>
+<div class="grid grid-cols-1 gap-2.5">
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Primary Resident</span>
+<div class="flex items-center justify-between mt-0.5">
+<p class="font-label-md text-label-md text-on-surface font-bold">Ananya Sharma</p>
+<span class="font-label-sm text-label-sm text-secondary font-medium">SCIT-2024-8841</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Contact &amp; Alerts</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">mark_chat_read</span> WhatsApp Enabled
+            </span>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-medium mt-0.5">+91 98765 43210</p>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Parent / Co-Signer Notification</span>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Dual SMS Linked</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface font-medium mt-0.5">Dr. K. Sharma (+91 98450 11223)</p>
+</div>
+<div class="bg-surface-container-low p-space-sm rounded-lg flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mess &amp; Dietary Plan</span>
+<p class="font-label-md text-label-md text-on-surface font-medium mt-0.5">Pure Vegetarian (Jain prep enabled)</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[20px]">eco</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 6. Flexible Payment Methods Selection -->
+<div class="px-gutter-mobile space-y-space-sm">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Select Escrow Transfer Mode</h3>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Instant Clearance</span>
+</div>
+<!-- Payment Accordion Options -->
+<div class="space-y-2">
+<!-- Method 1: Instant UPI (Selected by default) -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm transition-all cursor-pointer ring-2 ring-primary" id="method-upi">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Instant UPI</span>
+<span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-1.5 py-0.2 rounded font-semibold">0% Surcharge</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Google Pay, PhonePe, Paytm, BHIM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[22px]">radio_button_checked</span>
+</div>
+<!-- UPI Quick Form -->
+<div class="pt-2 border-t border-surface-container-highest space-y-2">
+<div class="relative">
+<input class="w-full h-11 bg-surface-container-low px-3 pr-20 rounded-lg text-body-md font-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-1 focus:ring-primary" placeholder="Enter Virtual Payment Address (UPI ID)" type="text" value="ananya.sharma@okaxis"/>
+<button class="absolute right-2 top-2 px-2.5 py-1 bg-primary text-on-primary rounded text-label-sm font-label-sm font-semibold" type="button">Verify</button>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary px-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shield</span> ICICI Instant Escrow Mandate
+            </span>
+<span class="font-medium text-primary">Pre-Approved</span>
+</div>
+</div>
+</div>
+<!-- Method 2: Cards -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm cursor-pointer hover:bg-surface-container-low/40 transition-colors" id="method-cards">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[18px]">credit_card</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Credit / Debit Card</span>
+<span class="font-label-sm text-label-sm bg-surface-container px-1.5 py-0.2 rounded text-secondary font-medium">Zero Student Fee</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Visa, MasterCard, RuPay, Corporate</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[22px]">radio_button_unchecked</span>
+</div>
+</div>
+<!-- Method 3: Net Banking -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm cursor-pointer hover:bg-surface-container-low/40 transition-colors" id="method-netbanking">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</div>
+<div>
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Net Banking</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">HDFC, ICICI, SBI, Axis, Kotak &amp; 40+ banks</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[22px]">radio_button_unchecked</span>
+</div>
+</div>
+<!-- Method 4: Split with Roommate / Edu-Loan -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm cursor-pointer hover:bg-surface-container-low/40 transition-colors" id="method-split">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline">
+<span class="material-symbols-outlined text-[18px]">group</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-label-lg text-label-lg font-semibold text-on-surface">Split with Roommate / Parent</span>
+<span class="font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed-variant px-1.5 py-0.2 rounded font-semibold">New</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Generate a secure 50/50 token payment link</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[22px]">radio_button_unchecked</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Micro Delight Proof of Inspection Card -->
+<div class="px-gutter-mobile">
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center gap-3">
+<img class="w-12 h-12 rounded-lg object-cover bg-surface-container" data-alt="Close up photo of an official green stamped student hostel inspection checklist card with physical signature, clean water and electrical test indicators, and high gloss paper texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqzlWSRMa3ZCbpqKaDd4eXhJ_Or-Z7q1g-K-bx-1dt8zxYIOukPyV1UZqsBi4xyAYIMsz0wIyc6Vjr2gWmPYPF_KBSjRCOa282Coex-LPwa2iTGHNn84on2Y25AB1u-4cgrCo25R7et_Eaa3LusiBNZmhJ1YXqP_Oiv3tu7sLJ4rMBmEDIyz-RvTzBSapntesbW7RP7hxvxjQZj-RVFesm4URYzJnBJo5d9X5usryBZIkqbb1GeQHa"/>
+<div class="flex-1 min-w-0">
+<div class="font-label-md text-label-md font-bold text-on-surface truncate">Digital Move-In Pass Ready</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Your gate pass &amp; smart door keypad PIN will instantly generate post token escrow hold.</p>
+</div>
+</div>
+</div>
+<!-- 7. Fixed Bottom Sticky Action Bar -->
+<div class="fixed bottom-0 inset-x-0 bg-surface-container-lowest/95 backdrop-blur-md shadow-2xl z-40 pb-safe">
+<div class="p-space-md max-w-md mx-auto space-y-2">
+<div class="flex items-center justify-between gap-space-md">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold block">Token Deposit</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-md text-headline-md font-bold text-primary">₹2,000</span>
+<span class="font-label-sm text-label-sm text-secondary">(Refundable)</span>
+</div>
+</div>
+<button class="flex-1 h-12 bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all text-on-primary rounded-xl font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-lg shadow-primary/20" id="pay-escrow-btn" type="button">
+<span>Lock Bed #304-B</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Trust Badges -->
+<div class="flex items-center justify-center gap-2 text-outline text-label-sm font-label-sm">
+<span class="material-symbols-outlined text-[13px] text-primary">lock</span>
+<span>256-Bit Escrow Vault</span>
+<span>•</span>
+<span>Powered by ICICI Trustee &amp; Razorpay</span>
+</div>
+</div>
+</div>
+<!-- Interactive script for Delight & Timer countdown -->
+<script>
+    (function () {
+      let secondsRemaining = 26 * 3600 + 14 * 60 + 8;
+      const timerElement = document.getElementById('countdown-timer');
+
+      if (timerElement) {
+        setInterval(() => {
+          if (secondsRemaining <= 0) return;
+          secondsRemaining--;
+          const hrs = Math.floor(secondsRemaining / 3600);
+          const mins = Math.floor((secondsRemaining % 3600) / 60);
+          const secs = secondsRemaining % 60;
+          timerElement.textContent = 
+            String(hrs).padStart(2, '0') + ':' + 
+            String(mins).padStart(2, '0') + ':' + 
+            String(secs).padStart(2, '0');
+        }, 1000);
+      }
+
+      // Simple click delight on CTA
+      const payBtn = document.getElementById('pay-escrow-btn');
+      if (payBtn) {
+        payBtn.addEventListener('click', function() {
+          const originalHTML = this.innerHTML;
+          this.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">progress_activity</span><span>Securing Room Escrow...</span>';
+          this.classList.add('opacity-90');
+          setTimeout(() => {
+            this.innerHTML = '<span class="material-symbols-outlined text-[18px]">check_circle</span><span>Bed #304-B Held!</span>';
+            this.classList.remove('bg-primary');
+            this.classList.add('bg-secondary');
+          }, 1400);
+        });
+      }
+    })();
+  </script>
+</div></main></body></html>

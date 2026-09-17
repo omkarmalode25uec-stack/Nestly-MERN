@@ -1,0 +1,260 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <!-- Subtle Ambient Glow Canvas Decorator -->
+  <div class="absolute -top-24 right-10 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none -z-10"></div>
+  <div class="absolute top-1/2 -left-20 w-80 h-80 rounded-full bg-tertiary-fixed/30 blur-3xl pointer-events-none -z-10"></div>
+
+  <div class="max-w-7xl mx-auto px-margin-mobile md:px-margin">
+    <!-- Breadcrumb & Status Tracker -->
+    <nav class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md mb-space-md">
+      <a class="hover:text-primary transition-colors flex items-center gap-1" href="/">
+        <span class="material-symbols-outlined text-[16px]">home</span>
+        <span>Home</span>
+      </a>
+      <span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+      <a class="hover:text-primary transition-colors" href="/profile">Student Dashboard</a>
+      <span class="material-symbols-outlined text-[14px] text-outline">chevron_right</span>
+      <span class="text-primary font-semibold">Saved Stays</span>
+    </nav>
+
+    <!-- Header Section -->
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-lg mb-space-xl pb-space-lg border-b border-outline-variant/30">
+      <div class="max-w-2xl">
+        <div class="flex items-center gap-space-sm mb-space-xs">
+          <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">Saved Stays</h1>
+          <span class="px-space-sm py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-md text-label-md font-semibold flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-secondary"></span>
+            <%= savedStays.length %> <%= savedStays.length === 1 ? 'Property' : 'Properties' %> Saved
+          </span>
+        </div>
+        <p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+          Review your shortlisted accommodations, compare them side-by-side, or schedule physical &amp; virtual visits with verified owners.
+        </p>
+      </div>
+
+      <!-- Action Cluster -->
+      <% if (savedStays && savedStays.length > 0) { %>
+        <div class="flex flex-wrap items-center gap-space-sm shrink-0">
+          <a href="/compare" class="flex items-center gap-space-xs px-space-md py-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg shadow-sm transition-all active:scale-[0.98]" id="compareAllBtn">
+            <span class="material-symbols-outlined text-[18px]">compare_arrows</span>
+            <span>Compare Stays (<%= savedStays.length %>)</span>
+          </a>
+          <a href="/stays" class="flex items-center gap-space-xs px-space-md py-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-lg text-label-lg transition-colors">
+            <span class="material-symbols-outlined text-[18px]">search</span>
+            <span>Explore More</span>
+          </a>
+        </div>
+      <% } %>
+    </div>
+
+    <% if (savedStays && savedStays.length > 0) { %>
+      <!-- Filter / Quick Tabs -->
+      <div class="flex items-center justify-between gap-space-md mb-space-xl overflow-x-auto pb-space-xs">
+        <div class="flex items-center gap-space-xs min-w-max">
+          <span class="px-space-md py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md flex items-center gap-2 shadow-sm">
+            <span>All Saved Stays</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] bg-primary-container text-on-primary"><%= savedStays.length %></span>
+          </span>
+          <a href="/stays" class="px-space-md py-2 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant font-label-md text-label-md flex items-center gap-2 transition-all">
+            <span class="material-symbols-outlined text-[16px]">add</span>
+            <span>Browse More Accommodations</span>
+          </a>
+        </div>
+        <div class="hidden md:flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md shrink-0">
+          <span class="material-symbols-outlined text-[18px]">swap_vert</span>
+          <span>Verified listings updated regularly</span>
+        </div>
+      </div>
+
+      <!-- Main Stays Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg mb-space-2xl">
+        <% savedStays.forEach(stay => { %>
+          <div class="stay-card group bg-surface-container-lowest rounded-xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col overflow-hidden relative border border-outline-variant/30">
+            <!-- Property Image & Floating Overlays -->
+            <div class="relative aspect-[16/10] overflow-hidden bg-surface-container">
+              <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="<%= stay.title %>" src="<%= stay.images && stay.images.length ? stay.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBOrNw175WzCkuvMlm7sMt5Z4gVl6ARPGmEgQC8v1iwv5LJRVBBjSTESxd7PYZU-yZzTolNfcwTk-9GIE93IL5_qDIAA9zQd7dxG-s9HI82Vc-p5WnsZ5etSnzag4KQ8BxGKvJGDqePA5IxfzV_R9qqj9LPS50NNkVnFLx1yvUhXgBDhOMjV1usCrHirZzktItO7FRYKxz1OINOPj_c3zp6AduahZbvjX4XI-pNEo1pKEpp2-NuwHLQ' %>"/>
+              
+              <!-- Badges (Top-Left) -->
+              <div class="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                <span class="px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-primary font-label-sm text-label-sm font-semibold flex items-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-[14px] text-secondary" style="font-variation-settings: 'FILL' 1;">verified</span>
+                  Verified Stay
+                </span>
+                <% if (stay.genderPreference) { %>
+                  <span class="px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold shadow-sm">
+                    <%= stay.genderPreference %>
+                  </span>
+                <% } %>
+              </div>
+
+              <!-- Top-Right Actions (Remove / Favorite) -->
+              <div class="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+                <form action="/saved/<%= stay._id %>/delete" method="POST" class="inline" onsubmit="return confirm('Remove <%= stay.title %> from your saved shortlist?');">
+                  <button type="submit" class="w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md text-on-surface-variant hover:text-error flex items-center justify-center shadow-sm transition-colors" title="Remove from shortlist">
+                    <span class="material-symbols-outlined text-[18px]">delete</span>
+                  </button>
+                </form>
+              </div>
+
+              <!-- Beds Status Indicator (Bottom-Left) -->
+              <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-on-surface-variant">
+                <span class="px-2.5 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold shadow-sm">
+                  <%= stay.availableBeds > 0 ? stay.availableBeds + ' beds left' : 'Check Availability' %>
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body Content -->
+            <div class="p-space-md flex flex-col flex-grow justify-between gap-space-md">
+              <div>
+                <div class="flex items-start justify-between gap-2 mb-1">
+                  <h3 class="font-title-lg text-title-lg text-on-surface group-hover:text-primary transition-colors font-bold">
+                    <a href="/stays/<%= stay._id %>"><%= stay.title %></a>
+                  </h3>
+                  <div class="flex items-center gap-1 shrink-0 bg-surface-container-high px-2 py-0.5 rounded font-label-md text-label-md font-semibold text-on-surface">
+                    <span class="material-symbols-outlined text-[14px] text-tertiary-container" style="font-variation-settings: 'FILL' 1;">star</span>
+                    <span><%= stay.rating || 4.8 %></span>
+                    <span class="text-on-surface-variant font-normal text-[11px]">(<%= stay.reviewCount || 24 %>)</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-sm">
+                  <span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+                  <span><%= stay.locality %>, <%= stay.city %></span>
+                  <span class="w-1 h-1 rounded-full bg-outline"></span>
+                  <span class="font-semibold text-primary"><%= stay.campusDistance || 'Near Campus' %></span>
+                </div>
+
+                <!-- Amenities Row -->
+                <% if (stay.amenities && stay.amenities.length) { %>
+                  <div class="flex flex-wrap gap-1.5 mb-space-sm">
+                    <% stay.amenities.slice(0, 3).forEach(amenity => { %>
+                      <span class="px-2.5 py-1 rounded bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px] text-primary">check_circle</span>
+                        <%= amenity %>
+                      </span>
+                    <% }) %>
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Bottom Pricing & Action Section -->
+              <div>
+                <div class="flex items-baseline justify-between pt-space-xs mb-space-sm">
+                  <div>
+                    <span class="font-headline-md text-headline-md text-tertiary font-bold">₹<%= stay.price.toLocaleString('en-IN') %></span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant">/month</span>
+                    <div class="font-label-sm text-label-sm text-on-surface-variant"><%= stay.roomSharing %> Sharing • Verified Hostel</div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <a href="/stays/<%= stay._id %>" class="w-full py-2.5 px-3 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md font-semibold transition-colors text-center flex items-center justify-center gap-1">
+                    <span class="material-symbols-outlined text-[16px]">visibility</span>
+                    <span>View Stay</span>
+                  </a>
+                  <form action="/saved/<%= stay._id %>/delete" method="POST" class="w-full">
+                    <button type="submit" class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-error font-label-md text-label-md font-medium transition-colors text-center flex items-center justify-center gap-1">
+                      <span class="material-symbols-outlined text-[16px]">bookmark_remove</span>
+                      <span>Remove</span>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+
+        <!-- Helper Slot (Stitch Slot 5) -->
+        <div class="group bg-surface-container-low/60 hover:bg-surface-container-low rounded-xl p-space-lg flex flex-col justify-between items-center text-center transition-all duration-300 min-h-[380px] border border-dashed border-outline-variant/60">
+          <div class="flex flex-col items-center justify-center my-auto max-w-xs">
+            <div class="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mb-space-md group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-[32px]">add_home_work</span>
+            </div>
+            <h4 class="font-title-lg text-title-lg text-on-surface font-semibold mb-space-xs">Add More Options?</h4>
+            <p class="font-body-md text-body-md text-on-surface-variant mb-space-lg">
+              Compare multiple properties simultaneously to find the best match for campus proximity, mess quality, and budgets.
+            </p>
+            <a class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm" href="/stays">
+              <span class="material-symbols-outlined text-[18px]">search</span>
+              <span>Explore More Stays</span>
+            </a>
+          </div>
+          <div class="w-full pt-space-md flex items-center justify-center gap-2 text-on-surface-variant font-label-sm text-label-sm border-t border-outline-variant/30">
+            <span class="material-symbols-outlined text-[16px] text-secondary">cloud_sync</span>
+            <span>Synced across your Mobile &amp; Laptop</span>
+          </div>
+        </div>
+
+        <!-- Shortlist Health Micro-Widget (Stitch Slot 6) -->
+        <div class="bg-surface-container rounded-xl p-space-lg flex flex-col justify-between relative overflow-hidden border border-outline-variant/30">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-primary/5 rounded-full blur-xl pointer-events-none"></div>
+          <div>
+            <div class="flex items-center gap-2 mb-space-sm text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider">
+              <span class="material-symbols-outlined text-[16px]">insights</span>
+              Shortlist Summary
+            </div>
+            <h4 class="font-title-md text-title-md text-on-surface font-semibold mb-space-xs">Shortlist Proximity</h4>
+            <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+              You have shortlisted <span class="font-bold text-on-surface"><%= savedStays.length %> student accommodations</span>. All verified by Nestly audit checks.
+            </p>
+            <div class="space-y-2 mb-space-md">
+              <div class="flex justify-between text-on-surface font-label-sm text-label-sm">
+                <span>Verification Ratio</span>
+                <span class="text-secondary font-bold">100% Verified</span>
+              </div>
+              <div class="w-full h-2 rounded-full bg-surface-container-highest overflow-hidden">
+                <div class="h-full bg-secondary rounded-full" style="width: 100%;"></div>
+              </div>
+            </div>
+            <div class="space-y-1.5 text-on-surface-variant font-body-sm text-body-sm">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                <span>Verified by Nestly Student Housing Quality Team</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+                <span>Zero brokerage direct contact with verified hosts</span>
+              </div>
+            </div>
+          </div>
+          <div class="pt-space-md">
+            <a href="/profile" class="w-full py-2 rounded-lg bg-surface-container-highest hover:bg-surface-dim text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">person</span>
+              <span>Back to Student Profile</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Synchronized Devices Tip Footnote -->
+      <div class="mt-space-lg flex items-center justify-center gap-2 text-center text-on-surface-variant font-body-sm text-body-sm">
+        <span class="material-symbols-outlined text-[16px] text-primary">info</span>
+        <span><strong>Tip:</strong> Saved stays are synced with your student account across all your devices in real-time.</span>
+      </div>
+
+    <% } else { %>
+      <!-- Empty State (Stitch design aligned) -->
+      <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-space-2xl text-center max-w-xl mx-auto my-space-xl shadow-sm">
+        <div class="w-20 h-20 mx-auto rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mb-space-md">
+          <span class="material-symbols-outlined text-[40px] text-secondary">bookmark_border</span>
+        </div>
+        <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-space-xs">Your Shortlist is Empty</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-space-lg leading-relaxed">
+          You haven't saved any hostels or PGs yet. Explore verified student accommodations near your campus and click the bookmark icon to save them for easy comparison.
+        </p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-space-sm">
+          <a href="/stays" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-xl py-3 rounded-xl bg-primary hover:bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold shadow-sm transition-all">
+            <span class="material-symbols-outlined text-[18px]">search</span>
+            <span>Explore Stays</span>
+          </a>
+          <a href="/profile" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-all">
+            <span class="material-symbols-outlined text-[18px]">person</span>
+            <span>My Profile</span>
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>

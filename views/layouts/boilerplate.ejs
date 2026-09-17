@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title><%= typeof title !== 'undefined' ? title + ' | Nestly' : 'Nestly - Student Stays & PG Discovery' %></title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+  
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <!-- Base Styles & Smooth Natural Scrolling -->
+  <style>
+    html {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: #bec9c4 #f0fcf7;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+    }
+
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+
+    /* Custom elegant scrollbar matching Nestly Stitch palette */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f0fcf7;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #bec9c4;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6f7975;
+    }
+
+    /* Keep hidden scrollbars only on specific horizontal scrollable areas */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Custom Tailwind Design Tokens from Stitch Warm Modern Sanctuary -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f0fcf7",
+            "surface-dim": "#d0ddd8",
+            "surface-bright": "#f0fcf7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#eaf6f1",
+            "surface-container": "#e4f1eb",
+            "surface-container-high": "#deebe6",
+            "surface-container-highest": "#d9e5e0",
+            "on-surface": "#131e1b",
+            "on-surface-variant": "#3f4945",
+            "inverse-surface": "#27332f",
+            "inverse-on-surface": "#e7f4ee",
+            "outline": "#6f7975",
+            "outline-variant": "#bec9c4",
+            "surface-tint": "#166a5a",
+            "primary": "#005144",
+            "on-primary": "#ffffff",
+            "primary-container": "#176b5b",
+            "on-primary-container": "#9ce9d4",
+            "inverse-primary": "#89d5c1",
+            "secondary": "#30685c",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#b1ebdc",
+            "on-secondary-container": "#346c60",
+            "tertiary": "#6b3c00",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#8c5100",
+            "on-tertiary-container": "#ffd1a8",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#a5f1dd",
+            "primary-fixed-dim": "#89d5c1",
+            "on-primary-fixed": "#00201a",
+            "on-primary-fixed-variant": "#005143",
+            "secondary-fixed": "#b4eedf",
+            "secondary-fixed-dim": "#99d2c3",
+            "on-secondary-fixed": "#00201a",
+            "on-secondary-fixed-variant": "#135044",
+            "tertiary-fixed": "#ffdcbe",
+            "tertiary-fixed-dim": "#ffb872",
+            "on-tertiary-fixed": "#2d1600",
+            "on-tertiary-fixed-variant": "#6a3c00",
+            "background": "#f0fcf7",
+            "on-background": "#131e1b",
+            "surface-variant": "#d9e5e0"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "2xl": "1rem",
+            "3xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "space-2xl": "3rem",
+            "gutter": "1.5rem",
+            "gutter-mobile": "1rem",
+            "margin": "2rem",
+            "margin-mobile": "1rem"
+          },
+          fontFamily: {
+            "body": ["Plus Jakarta Sans", "sans-serif"],
+            "display": ["Plus Jakarta Sans", "sans-serif"]
+          },
+          fontSize: {
+            "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+            "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }],
+            "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+            "title-lg": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+            "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }]
+          }
+        }
+      }
+    };
+  </script>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body class="bg-surface font-body text-body-md text-on-surface">
+  <%- include('../partials/navbar') %>
+
+  <main class="w-full pt-20 min-h-screen bg-surface">
+    <%- include('../partials/flash') %>
+    <%- body %>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

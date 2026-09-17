@@ -1,0 +1,193 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <div class="max-w-2xl mx-auto px-margin-mobile md:px-margin space-y-space-lg">
+
+    <!-- Top Badge & Celebration Header (Stitch Component) -->
+    <div class="flex flex-col items-center text-center space-y-space-sm pt-space-xs">
+      <div class="w-16 h-16 rounded-full bg-secondary-container flex items-center justify-center shadow-md relative">
+        <span class="material-symbols-outlined text-[36px] text-primary" style="font-variation-settings: 'FILL' 1;">
+          <%= booking.status === 'confirmed' ? 'verified' : (booking.status === 'rejected' ? 'cancel' : 'pending_actions') %>
+        </span>
+      </div>
+
+      <div class="space-y-1 max-w-md">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full <%= booking.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' : (booking.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800') %> text-label-sm font-label-sm uppercase font-bold tracking-wider">
+          <span class="w-2 h-2 rounded-full <%= booking.status === 'confirmed' ? 'bg-emerald-600' : (booking.status === 'rejected' ? 'bg-red-600' : 'bg-amber-600 animate-pulse') %>"></span>
+          <span>Status: <%= booking.status %></span>
+        </div>
+
+        <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">
+          <%= booking.status === 'confirmed' ? 'Bed Reserved & Confirmed!' : (booking.status === 'rejected' ? 'Booking Request Declined' : 'Reservation Request Placed') %>
+        </h1>
+        <p class="font-body-md text-body-md text-on-surface-variant">
+          <% if (booking.status === 'confirmed') { %>
+            Your accommodation request has been officially accepted by the host. Your bed is secured!
+          <% } else if (booking.status === 'rejected') { %>
+            This request was declined by the property owner. You may explore other available student stays.
+          <% } else if (booking.status === 'cancelled') { %>
+            This accommodation request was cancelled.
+          <% } else { %>
+            Your unit hold is active in the Nestly system. Token deposit of ₹<%= booking.amount.toLocaleString('en-IN') %> is protected under Escrow.
+          <% } %>
+        </p>
+      </div>
+
+      <!-- Escrow / Booking Reference Panel -->
+      <div class="w-full bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex items-center justify-between border border-outline-variant/30">
+        <div class="flex items-center gap-space-xs text-left">
+          <span class="material-symbols-outlined text-secondary text-[22px]">receipt_long</span>
+          <div>
+            <span class="font-label-sm text-label-sm text-on-surface-variant uppercase block">Booking Reference ID</span>
+            <span class="font-title-md text-title-md text-primary font-mono font-bold"><%= booking.referenceCode %></span>
+          </div>
+        </div>
+        <button type="button" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-sm text-label-sm font-semibold transition-colors flex items-center gap-1" onclick="navigator.clipboard && navigator.clipboard.writeText('<%= booking.referenceCode %>'); alert('Reference ID copied to clipboard!');">
+          <span class="material-symbols-outlined text-[16px]">content_copy</span>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Official Digital Allotment Pass Certificate (Stitch Design) -->
+    <div class="relative bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm border border-outline-variant/30 space-y-space-md overflow-hidden">
+      <!-- Watermark aesthetic stamp -->
+      <div class="absolute -right-8 -bottom-8 w-40 h-40 rounded-full bg-secondary-container/20 pointer-events-none flex items-center justify-center">
+        <span class="material-symbols-outlined text-secondary/20 text-[110px]">workspace_premium</span>
+      </div>
+
+      <!-- Certificate Header -->
+      <div class="flex items-start justify-between gap-space-xs pb-space-xs border-b border-outline-variant/20">
+        <div>
+          <span class="font-label-sm text-label-sm text-primary font-bold uppercase tracking-wider block">Official Allocation Pass</span>
+          <h2 class="font-title-lg text-title-lg text-on-surface font-bold">
+            <a href="/stays/<%= booking.property._id %>" class="hover:text-primary transition-colors"><%= booking.property ? booking.property.title : 'Accommodation' %></a>
+          </h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+            <span class="material-symbols-outlined text-[15px] text-secondary">location_on</span>
+            <span><%= booking.property ? (booking.property.locality + ', ' + booking.property.city) : 'Pune' %></span>
+          </p>
+        </div>
+        <span class="px-2.5 py-1 rounded-full bg-surface-container text-primary font-label-sm text-label-sm font-semibold shrink-0">
+          <%= booking.property ? booking.property.roomSharing : 'Double' %> Sharing
+        </span>
+      </div>
+
+      <!-- Resident & Tenancy Grid -->
+      <div class="bg-surface-container-low rounded-xl p-space-sm space-y-2 text-sm">
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">Primary Resident</span>
+          <span class="font-bold"><%= booking.user ? booking.user.name : 'Student Member' %></span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">Resident Contact</span>
+          <span class="font-semibold"><%= booking.user ? (booking.user.phone || booking.user.email) : 'Provided' %></span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">College / Institution</span>
+          <span class="font-semibold"><%= booking.user ? (booking.user.college || 'Verified Student') : 'Verified' %></span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">Scheduled Move-in</span>
+          <span class="font-bold text-primary"><%= new Date(booking.moveInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">Lease Term</span>
+          <span class="font-semibold"><%= booking.durationMonths %> Months Academic Term</span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface">
+          <span class="text-on-surface-variant">Meal Plan</span>
+          <span class="font-semibold text-secondary"><%= booking.dietaryPreference || 'Veg' %> Included</span>
+        </div>
+        <% if (booking.studentNotes) { %>
+          <div class="pt-1 border-t border-outline-variant/20">
+            <span class="text-on-surface-variant text-xs font-semibold uppercase block">Special Notes</span>
+            <p class="font-body-sm text-body-sm text-on-surface italic">"<%= booking.studentNotes %>"</p>
+          </div>
+        <% } %>
+      </div>
+
+      <!-- Settlement Ledger Summary -->
+      <div class="space-y-1.5 text-body-sm pt-space-xs">
+        <div class="flex justify-between text-on-surface-variant">
+          <span>Monthly Rent</span>
+          <span class="font-semibold text-on-surface">₹<%= booking.monthlyRent.toLocaleString('en-IN') %>/mo</span>
+        </div>
+        <div class="flex justify-between text-on-surface-variant">
+          <span>Security Deposit</span>
+          <span class="font-semibold text-on-surface">₹<%= booking.securityDeposit.toLocaleString('en-IN') %></span>
+        </div>
+        <div class="flex justify-between text-on-surface-variant">
+          <span>Token Hold Deposit (Escrow)</span>
+          <span class="font-bold text-primary">₹<%= booking.amount.toLocaleString('en-IN') %></span>
+        </div>
+        <div class="flex justify-between items-center text-on-surface-variant">
+          <span>Escrow Payment Status</span>
+          <div class="flex items-center gap-2">
+            <span class="font-semibold uppercase text-xs px-2 py-0.5 rounded <%= booking.paymentStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container text-secondary' %>"><%= booking.paymentStatus %></span>
+            <% if (isStudent && booking.paymentStatus !== 'completed' && booking.status !== 'cancelled' && booking.status !== 'rejected') { %>
+              <a href="/checkout?bookingId=<%= booking._id %>" class="px-2.5 py-1 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition-all">
+                Pay Token
+              </a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Host Contact -->
+      <% if (booking.owner) { %>
+        <div class="p-space-sm rounded-xl bg-surface-container flex items-center justify-between text-sm">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">person</span>
+            <div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Accommodation Host</span>
+              <p class="font-semibold text-on-surface"><%= booking.owner.name %></p>
+            </div>
+          </div>
+          <% if (booking.owner.phone) { %>
+            <a href="tel:<%= booking.owner.phone %>" class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-primary font-label-sm text-label-sm font-semibold hover:bg-primary hover:text-on-primary transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-[16px]">call</span>
+              <span><%= booking.owner.phone %></span>
+            </a>
+          <% } %>
+        </div>
+      <% } %>
+
+      <!-- Action Controls -->
+      <div class="pt-space-sm flex flex-col sm:flex-row items-center gap-space-sm">
+        <button type="button" class="w-full sm:flex-1 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm flex items-center justify-center gap-2" onclick="window.print()">
+          <span class="material-symbols-outlined text-[18px]">print</span>
+          <span>Print / Save Pass</span>
+        </button>
+
+        <a href="/bookings" class="w-full sm:w-auto py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors text-center">
+          View All My Bookings
+        </a>
+
+        <!-- Cancel option for pending/confirmed student bookings -->
+        <% if (isStudent && (booking.status === 'pending' || booking.status === 'confirmed')) { %>
+          <form action="/bookings/<%= booking._id %>/cancel" method="POST" class="w-full sm:w-auto" onsubmit="return confirm('Are you sure you want to cancel this booking request?');">
+            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-surface-container hover:bg-error-container text-error font-label-md text-label-md font-semibold transition-colors">
+              Cancel Request
+            </button>
+          </form>
+        <% } %>
+
+        <!-- Owner controls if viewed by property owner -->
+        <% if (isOwner && booking.status === 'pending') { %>
+          <form action="/owner/bookings/<%= booking._id %>/accept" method="POST" class="w-full sm:w-auto">
+            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-label-md text-label-md font-bold transition-colors">
+              Accept Request
+            </button>
+          </form>
+          <form action="/owner/bookings/<%= booking._id %>/reject" method="POST" class="w-full sm:w-auto">
+            <button type="submit" class="w-full py-3 px-4 rounded-xl bg-error-container text-error font-label-md text-label-md font-semibold transition-colors">
+              Decline
+            </button>
+          </form>
+        <% } %>
+      </div>
+    </div>
+
+  </div>
+</div>

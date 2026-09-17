@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container": "#e4f1eb", "background": "#f0fcf7", "on-secondary-container": "#346c60", "on-error": "#ffffff", "on-secondary-fixed": "#00201a", "outline-variant": "#bec9c4", "surface-container-highest": "#d9e5e0", "on-primary-container": "#9ce9d4", "secondary-fixed-dim": "#99d2c3", "surface-dim": "#d0ddd8", "on-tertiary-fixed": "#2d1600", "on-tertiary": "#ffffff", "tertiary-fixed": "#ffdcbe", "on-background": "#131e1b", "on-surface-variant": "#3f4945", "secondary-fixed": "#b4eedf", "inverse-primary": "#89d5c1", "primary-fixed": "#a5f1dd", "tertiary-fixed-dim": "#ffb872", "surface": "#f0fcf7", "primary": "#005144", "secondary": "#30685c", "on-surface": "#131e1b", "secondary-container": "#b1ebdc", "on-primary-fixed-variant": "#005143", "outline": "#6f7975", "on-tertiary-fixed-variant": "#6a3c00", "primary-fixed-dim": "#89d5c1", "tertiary": "#6b3c00", "surface-container-low": "#eaf6f1", "inverse-surface": "#27332f", "on-secondary-fixed-variant": "#135044", "surface-bright": "#f0fcf7", "surface-variant": "#d9e5e0", "surface-container-lowest": "#ffffff", "surface-tint": "#166a5a", "inverse-on-surface": "#e7f4ee", "tertiary-container": "#8c5100", "primary-container": "#176b5b", "on-primary": "#ffffff", "error-container": "#ffdad6", "on-secondary": "#ffffff", "error": "#ba1a1a", "on-error-container": "#93000a", "on-primary-fixed": "#00201a", "surface-container-high": "#deebe6", "on-tertiary-container": "#ffd1a8" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "gutter-mobile": "1rem", "space-2xl": "3rem", "margin": "2rem", "space-xl": "2rem", "space-sm": "0.5rem", "margin-mobile": "1rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "gutter": "1.5rem" }, fontFamily: { "display": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "title-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"] }, fontSize: { "display": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "700" }], "body-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }], "label-sm": ["10px", { lineHeight: "14px", letterSpacing: "0.03em", fontWeight: "600" }], "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" }], "body-md": ["14px", { lineHeight: "22px", fontWeight: "400" }], "display-mobile": ["32px", { lineHeight: "40px", letterSpacing: "-0.015em", fontWeight: "700" }], "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }], "label-lg": ["14px", { lineHeight: "20px", fontWeight: "600" }], "body-lg": ["16px", { lineHeight: "26px", fontWeight: "400" }], "headline-lg-mobile": ["26px", { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "600" }], "title-lg": ["18px", { lineHeight: "26px", fontWeight: "600" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "title-md": ["16px", { lineHeight: "24px", fontWeight: "600" }] } } } };</script><style>@layer base { html, body { min-height: 100%; margin: 0; padding: 0; } .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen antialiased"><header class="fixed top-0 w-full z-50 pt-safe bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-gutter-mobile flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0 flex-1"><img alt="Modern minimalist logo for Nestly - an elegant stylized bird nest and house roof shelter icon in deep emerald green #176B5B with a fresh mint accent #55B89A, accompanied by the clean wordmark 'Nestly'. Brand logo" class="h-8 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/><div class="flex flex-col min-w-0"><span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-space-xs"><span class="material-symbols-outlined text-[12px] text-primary">location_on</span>Pune, MH</span><h1 class="font-title-md text-title-md text-on-surface truncate leading-none">Explore</h1></div></div><div class="flex items-center gap-space-sm flex-shrink-0"><button aria-label="Notifications" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[22px]">notifications</span></button><button aria-label="User Profile" class="w-11 h-11 flex items-center justify-center rounded-full focus:outline-none"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1X8UESVKar4q8r2qztHLCsX09Je4ZGvVxWhmdNyh8VGzKBVd--wIR0cowdZFQoPF2BU-08qgd9fMF7a-CmW4tII_IT3OSPdv8ZkW5H4Rqc1pEenmuII5Bx7JTJPnnUWJf-yXaprySd_5DZNp6rQlKX3aiPJChZf5SrnuTjfqgBNtTpGgK296zoW5TH74hNvQhUjrSjDuF8LCxPA4WDXaHl4WDI5QGJldXJjcYmbrcfZgWXAzu6S8ZT-uxA"/></button></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-20 bg-surface"><div class="flex flex-col w-full relative">
+<!-- Search & Filter Controls Header Panel -->
+<section class="sticky top-0 z-30 bg-surface/95 backdrop-blur-md px-margin-mobile pt-space-sm pb-space-sm shadow-sm flex flex-col gap-space-sm">
+<!-- Search Bar Input Box -->
+<div class="relative flex items-center bg-surface-container-lowest rounded-xl shadow-sm px-space-md py-space-xs h-12">
+<span class="material-symbols-outlined text-primary text-[20px] mr-space-xs flex-shrink-0">search</span>
+<input aria-label="Search destination or college" class="w-full bg-transparent text-on-surface font-body-md text-body-md focus:outline-none truncate" id="search-input" type="text" value="Hinjewadi, Pune • Symbiosis"/>
+<button aria-label="Clear query" class="w-7 h-7 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary transition-colors flex-shrink-0" id="clear-search-btn">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</div>
+<!-- Quick Horizontal Filter Chips -->
+<div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-0.5" style="-webkit-overflow-scrolling: touch;">
+<!-- Main Filter Trigger Pill (Active state with counter) -->
+<button aria-expanded="true" aria-haspopup="dialog" class="flex items-center gap-1.5 bg-primary text-on-primary font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 shadow-sm active:scale-95 transition-transform" id="open-filters-btn">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+<span>Filters</span>
+<span class="bg-primary-container text-on-primary-container text-[11px] font-bold px-1.5 py-0.2 rounded-full">3</span>
+</button>
+<button class="filter-chip active flex items-center gap-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 transition-colors">
+<span>Girls Only</span>
+<span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+<button class="filter-chip active flex items-center gap-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 transition-colors">
+<span>Under ₹9k</span>
+<span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+<button class="filter-chip active flex items-center gap-1 bg-secondary-container text-on-secondary-container font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 transition-colors">
+<span>Meals Included</span>
+<span class="material-symbols-outlined text-[14px]">check</span>
+</button>
+<button class="filter-chip flex items-center gap-1 bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 shadow-sm transition-colors">
+<span>&lt; 1 km</span>
+</button>
+<button class="filter-chip flex items-center gap-1 bg-surface-container-lowest text-on-surface-variant font-label-md text-label-md px-3 py-1.5 rounded-full flex-shrink-0 shadow-sm transition-colors">
+<span>AC Fitted</span>
+</button>
+</div>
+<!-- Results Count, Map/List Toggle & Sort -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-baseline gap-1.5 min-w-0">
+<span class="font-title-md text-title-md text-on-surface">124 stays</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">around Symbiosis Pune</span>
+</div>
+<div class="flex items-center gap-space-xs flex-shrink-0">
+<!-- View Segment -->
+<div class="flex items-center bg-surface-container rounded-lg p-0.5">
+<button aria-label="List view active" class="p-1 px-2 rounded-md bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-xs flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">view_list</span>
+<span>List</span>
+</button>
+<button aria-label="Switch to map view" class="p-1 px-2 rounded-md text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">map</span>
+<span>Map</span>
+</button>
+</div>
+<!-- Sort dropdown pill -->
+<button class="flex items-center gap-0.5 text-on-surface-variant bg-surface-container-lowest px-2 py-1 rounded-lg shadow-xs font-label-sm text-label-sm">
+<span>Sort</span>
+<span class="material-symbols-outlined text-[16px]">arrow_drop_down</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Accommodation Stays Listing -->
+<div class="flex flex-col gap-space-md px-margin-mobile py-space-md">
+<!-- Card 1: Green Valley Premier PG -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm flex flex-col transition-all duration-200 hover:shadow-md">
+<!-- Media Frame -->
+<div class="relative w-full h-48 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Sunlit aesthetic student room in modern Pune hostel with sleek wooden desk, ergonomic chair, neatly arranged twin beds, large window overlooking lush trees, botanical potted plants, warm emerald linen accents, and clean architectural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChIyGG9trwLdjmbTC9qmq_h1n8y5TxN8T4iFLhmvch3_k1SlbNDD_193kOoBVqhe0P0DGT1PyBUGZpvQhSEvMZfxI1DHZhQ1-r21Mk_W7fic-sFMRT2_VJN38v1KWbz_xp-dCuOk4jwXuVcR9RzNlox76qCX9nESmufkCEaz2caeiiDg3C5uYDcVc7lqfXgYaqs29JzVNZwbjWUkz-n1FE_RCoIQvcq-GQqzLevItkNOQ49aSP4xqQ"/>
+<!-- Top Floating Badges & Save -->
+<div class="absolute top-space-sm left-space-sm flex items-center gap-1.5">
+<span class="bg-surface-container-lowest/95 backdrop-blur-md text-primary font-label-sm text-label-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>Nestly Verified</span>
+</span>
+<span class="bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm px-2 py-1 rounded-full">
+            2 beds left
+          </span>
+</div>
+<button aria-label="Save Green Valley PG to favorites" class="save-toggle-btn absolute top-space-sm right-space-sm w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md flex items-center justify-center text-error shadow-sm transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</button>
+<!-- Distance & Area Pill -->
+<div class="absolute bottom-space-sm left-space-sm bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface px-2.5 py-1 rounded-md font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+<span>0.8 km from Symbiosis (Phase 1)</span>
+</div>
+</div>
+<!-- Card Details Content -->
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex flex-col">
+<h2 class="font-title-lg text-title-lg text-on-surface leading-tight">Green Valley Premier PG</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hinjewadi Phase 1, Pune</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface">4.8</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(142)</span>
+</div>
+</div>
+<!-- Amenity Badges Row -->
+<div class="flex flex-wrap gap-1.5 py-1">
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">restaurant</span> 3x Meals
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">wifi</span> 200 Mbps Wi-Fi
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">shower</span> Attached Bath
+          </span>
+</div>
+<!-- Pricing & CTAs -->
+<div class="pt-space-xs mt-1 flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Double Sharing</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-sm text-headline-sm text-primary">₹8,500</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 rounded-xl active:scale-95 transition-transform">
+              Enquire
+            </button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-xl shadow-xs active:scale-95 transition-transform flex items-center gap-1">
+<span>View</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Scholar Haven Girls Hostel -->
+<article class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm flex flex-col transition-all duration-200 hover:shadow-md">
+<!-- Media Frame -->
+<div class="relative w-full h-48 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Cozy boutique student residence interior with stylish Scandinavian wood furniture, mint green soft furnishings, warm ambient floor lamps, study cubicles, bright clean private room with floor-to-ceiling balcony windows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8j-gl0fOWFK5K3uqR1RFof_tWW_kE2_YhoHrRSa4PxrSbz_uiKDkIdV_mhSzg_Cs0apHvRewApZsHWfVaRP-gMlf4C5WRoZDFAJPPDO7WWN6gu9PS_B_dimte7brwORNHIFRrE5oSfZKEK5J8ATDgRJqqg0gRehO_9CYw3SDOx4j62ADR9vZZA7b8TA_jXYy3Lw1N91cgBQEIdvrV1v3vV1uHwM37pJEhLfr9DbMXqpXR-DZKbM-D"/>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-1.5">
+<span class="bg-secondary text-on-secondary font-label-sm text-label-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[14px]">female</span>
+<span>Girls Only</span>
+</span>
+<span class="bg-surface-container-lowest/90 backdrop-blur-md text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-full flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[14px] text-primary">security</span>
+<span>Biometric Safe</span>
+</span>
+</div>
+<button aria-label="Save Scholar Haven to favorites" class="save-toggle-btn absolute top-space-sm right-space-sm w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md flex items-center justify-center text-outline transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="absolute bottom-space-sm left-space-sm bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface px-2.5 py-1 rounded-md font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+<span>0.4 km from Symbiosis (Viman Nagar)</span>
+</div>
+</div>
+<!-- Card Details Content -->
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex flex-col">
+<h2 class="font-title-lg text-title-lg text-on-surface leading-tight">Scholar Haven Girls Hostel</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Viman Nagar Campus Lane, Pune</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface">4.9</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(184)</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5 py-1">
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">menu_book</span> Study Lounge
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">flatware</span> 2 Healthy Meals
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">security</span> 24/7 Warden
+          </span>
+</div>
+<div class="pt-space-xs mt-1 flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Single / Double</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-sm text-headline-sm text-primary">₹9,200</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 rounded-xl active:scale-95 transition-transform">
+              Enquire
+            </button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-xl shadow-xs active:scale-95 transition-transform flex items-center gap-1">
+<span>View</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: CozyNest Co-Living -->
+<article class="bg-surface-container-lowest rounded-2xl border-0 overflow-hidden shadow-sm flex flex-col transition-all duration-200 hover:shadow-md">
+<div class="relative w-full h-48 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Vibrant modern co-living space with young students collaborating at a high wooden communal table, indoor leafy plants, warm sunny courtyard view, ping pong area visible in background, minimalist emerald green accent walls" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsnqfEfVy_NwqOMXufaYJ4mZsYLSPGwMX-IqOePbK0crczAwJ7o-9mXmFaeQxtYnjWAV651uVW66HA09fbspv54VbcfqwaO_cJbrcKWZ3bm1mQU2ZKC8XBRQyAQ_X1D_Gt91gN6dQhCzjLxsYcfkdnw2cldSwS0cnmrt59iDmvMdaMK8xf-YS5iNj95Xp522R0NfP1B-3GE_rytOkGWvsp6hRxtaiXzdWDpAxU09Bn9lG32Fbn_ssV"/>
+<div class="absolute top-space-sm left-space-sm flex items-center gap-1.5">
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2.5 py-1 rounded-full flex items-center gap-1 shadow-xs">
+<span class="material-symbols-outlined text-[14px]">groups</span>
+<span>Co-Living</span>
+</span>
+<span class="bg-surface-container-lowest/90 backdrop-blur-md text-primary font-label-sm text-label-sm px-2 py-1 rounded-full">
+            Available Now
+          </span>
+</div>
+<button aria-label="Save CozyNest to favorites" class="save-toggle-btn absolute top-space-sm right-space-sm w-9 h-9 rounded-full bg-surface-container-lowest/90 backdrop-blur-md flex items-center justify-center text-outline transition-transform active:scale-90">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</button>
+<div class="absolute bottom-space-sm left-space-sm bg-inverse-surface/85 backdrop-blur-md text-inverse-on-surface px-2.5 py-1 rounded-md font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+<span>1.2 km from Balewadi High St</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-space-xs">
+<div class="flex items-start justify-between gap-space-xs">
+<div class="flex flex-col">
+<h2 class="font-title-lg text-title-lg text-on-surface leading-tight">CozyNest Co-living</h2>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Baner Road, Pune</span>
+</div>
+<div class="flex items-center gap-1 bg-surface-container-low px-2 py-1 rounded-lg flex-shrink-0">
+<span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md text-label-md text-on-surface">4.6</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">(95)</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5 py-1">
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">battery_charging_full</span> Power Backup
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">fitness_center</span> Gym Studio
+          </span>
+<span class="bg-surface-container-low text-on-surface font-label-sm text-label-sm px-2 py-1 rounded-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-primary">local_laundry_service</span> Laundry Included
+          </span>
+</div>
+<div class="pt-space-xs mt-1 flex items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Triple Sharing</span>
+<div class="flex items-baseline gap-1">
+<span class="font-headline-sm text-headline-sm text-primary">₹7,800</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ month</span>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="bg-surface-container-high text-primary font-label-md text-label-md px-3 py-2 rounded-xl active:scale-95 transition-transform">
+              Enquire
+            </button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-4 py-2 rounded-xl shadow-xs active:scale-95 transition-transform flex items-center gap-1">
+<span>View</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Interactive Filter Bottom Sheet Modal & Scrim -->
+<div aria-labelledby="filter-sheet-title" aria-modal="true" class="fixed inset-0 z-50 flex flex-col justify-end transition-opacity duration-300 pointer-events-auto" id="filter-drawer-container" role="dialog">
+<!-- Scrim Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-[2px] transition-opacity duration-300" id="drawer-backdrop">
+</div>
+<!-- Sheet Content Container (Rounded Top, Anchored at Bottom) -->
+<div class="relative w-full max-h-[751px] bg-surface-container-lowest rounded-t-3xl shadow-xl flex flex-col overflow-hidden z-10 transform transition-transform duration-300 ease-out translate-y-0" id="drawer-surface">
+<!-- Drag Grab Handle -->
+<div class="pt-3 pb-1 flex justify-center items-center cursor-pointer" id="drag-handle-bar">
+<div class="w-12 h-1.5 bg-outline-variant rounded-full"></div>
+</div>
+<!-- Drawer Header Bar -->
+<div class="px-gutter-mobile py-space-xs flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="font-title-lg text-title-lg text-on-surface" id="filter-sheet-title">Filters</h2>
+<span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 rounded-full">3 active</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="font-label-md text-label-md text-primary hover:underline" id="reset-filters-btn">
+            Reset all
+          </button>
+<button aria-label="Close filters" class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-on-surface-variant hover:text-on-surface" id="close-drawer-btn">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+</div>
+<!-- Scrollable Filter Options Body -->
+<div class="px-gutter-mobile py-space-sm overflow-y-auto flex flex-col gap-space-lg flex-1 max-h-[calc(85vh-140px)]">
+<!-- Filter Section: Monthly Budget -->
+<section class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Monthly Budget</span>
+<span class="font-title-md text-title-md text-primary font-bold" id="budget-val-display">₹5,000 – ₹12,000</span>
+</div>
+<div class="pt-2 px-1">
+<!-- Simulated Visual Budget Track -->
+<div class="relative w-full h-2 bg-surface-container-high rounded-full flex items-center">
+<div class="absolute left-[15%] right-[25%] h-2 bg-primary rounded-full"></div>
+<!-- Min Thumb -->
+<div class="absolute left-[15%] w-5 h-5 bg-surface-container-lowest shadow-md rounded-full -translate-x-1/2 cursor-grab flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<!-- Max Thumb -->
+<div class="absolute right-[25%] w-5 h-5 bg-surface-container-lowest shadow-md rounded-full translate-x-1/2 cursor-grab flex items-center justify-center">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+</div>
+<div class="flex justify-between text-on-surface-variant font-label-sm text-label-sm pt-2">
+<span>₹4,000</span>
+<span>₹20,000+</span>
+</div>
+</div>
+</section>
+<!-- Filter Section: Gender / Type Preference -->
+<section class="flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface">Stay Type</span>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              All Stays
+            </button>
+<button class="sheet-toggle active py-2 px-3 rounded-xl font-label-md text-label-md bg-secondary-container text-on-secondary-container text-center flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Girls Only</span>
+</button>
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              Boys Only
+            </button>
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              Co-Living / Mixed
+            </button>
+</div>
+</section>
+<!-- Filter Section: Room Sharing Tier -->
+<section class="flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface">Sharing Preference</span>
+<div class="grid grid-cols-2 gap-space-xs">
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              Single Room
+            </button>
+<button class="sheet-toggle active py-2 px-3 rounded-xl font-label-md text-label-md bg-secondary-container text-on-secondary-container text-center flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Double Sharing</span>
+</button>
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              Triple Sharing
+            </button>
+<button class="sheet-toggle py-2 px-3 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              4+ Dormitory
+            </button>
+</div>
+</section>
+<!-- Filter Section: Food & Meal Plans -->
+<section class="flex flex-col gap-space-xs">
+<span class="font-label-lg text-label-lg text-on-surface">Meals &amp; Food</span>
+<div class="flex flex-wrap gap-space-xs">
+<button class="sheet-toggle active py-2 px-3.5 rounded-xl font-label-md text-label-md bg-secondary-container text-on-secondary-container flex items-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>3 Meals Included</span>
+</button>
+<button class="sheet-toggle py-2 px-3.5 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant transition-colors">
+              Breakfast Only
+            </button>
+<button class="sheet-toggle py-2 px-3.5 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant transition-colors">
+              Kitchen for Self-Cooking
+            </button>
+</div>
+</section>
+<!-- Filter Section: Maximum Distance to Campus -->
+<section class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-label-lg text-label-lg text-on-surface">Max Distance to Campus</span>
+<span class="font-body-sm text-body-sm text-primary font-medium">Walking distance preferred</span>
+</div>
+<div class="grid grid-cols-3 gap-space-xs">
+<button class="sheet-toggle active py-2 rounded-xl font-label-md text-label-md bg-secondary-container text-on-secondary-container text-center flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[14px]">directions_walk</span>
+<span>&lt; 1 km</span>
+</button>
+<button class="sheet-toggle py-2 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              &lt; 2.5 km
+            </button>
+<button class="sheet-toggle py-2 rounded-xl font-label-md text-label-md bg-surface-container-low text-on-surface-variant text-center transition-colors">
+              &lt; 5 km
+            </button>
+</div>
+</section>
+<!-- Filter Section: Must-Have Amenities -->
+<section class="flex flex-col gap-space-xs pb-4">
+<span class="font-label-lg text-label-lg text-on-surface">Must-Have Amenities</span>
+<div class="flex flex-wrap gap-2">
+<button class="sheet-toggle active py-1.5 px-3 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">wifi</span>
+<span>Gigabit Wi-Fi</span>
+<span class="material-symbols-outlined text-[12px]">check</span>
+</button>
+<button class="sheet-toggle py-1.5 px-3 rounded-full font-label-sm text-label-sm bg-surface-container-low text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">ac_unit</span>
+<span>AC in Room</span>
+</button>
+<button class="sheet-toggle active py-1.5 px-3 rounded-full font-label-sm text-label-sm bg-secondary-container text-on-secondary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">shower</span>
+<span>Attached Bath</span>
+<span class="material-symbols-outlined text-[12px]">check</span>
+</button>
+<button class="sheet-toggle py-1.5 px-3 rounded-full font-label-sm text-label-sm bg-surface-container-low text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>No Curfew / Late Entry</span>
+</button>
+<button class="sheet-toggle py-1.5 px-3 rounded-full font-label-sm text-label-sm bg-surface-container-low text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">battery_charging_full</span>
+<span>24/7 Power Backup</span>
+</button>
+</div>
+</section>
+</div>
+<!-- Sticky Bottom Action Footer Bar inside Sheet -->
+<div class="p-gutter-mobile bg-surface-container-lowest shadow-[0_-4px_16px_rgba(0,0,0,0.05)] flex items-center gap-space-sm z-20">
+<button class="flex-1 py-3 px-4 rounded-xl bg-surface-container-low text-on-surface font-label-lg text-label-lg active:scale-98 transition-transform" id="clear-all-btn">
+          Clear
+        </button>
+<button class="flex-[2] py-3 px-4 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-sm flex items-center justify-center gap-2 active:scale-98 transition-transform" id="apply-filters-btn">
+<span>Show 42 Stays</span>
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function initExploreScreen() {
+    const container = document.getElementById('filter-drawer-container');
+    const surface = document.getElementById('drawer-surface');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const openBtn = document.getElementById('open-filters-btn');
+    const closeBtn = document.getElementById('close-drawer-btn');
+    const applyBtn = document.getElementById('apply-filters-btn');
+    const resetBtn = document.getElementById('reset-filters-btn');
+    const clearAllBtn = document.getElementById('clear-all-btn');
+    const clearSearchBtn = document.getElementById('clear-search-btn');
+    const searchInput = document.getElementById('search-input');
+
+    // Close bottom sheet
+    function closeDrawer() {
+      surface.classList.remove('translate-y-0');
+      surface.classList.add('translate-y-full');
+      container.classList.add('opacity-0', 'pointer-events-none');
+      openBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    // Open bottom sheet
+    function openDrawer() {
+      container.classList.remove('opacity-0', 'pointer-events-none');
+      surface.classList.remove('translate-y-full');
+      surface.classList.add('translate-y-0');
+      openBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+    if (openBtn) openBtn.addEventListener('click', openDrawer);
+    if (applyBtn) applyBtn.addEventListener('click', closeDrawer);
+
+    // Interactive Toggle Pills inside drawer
+    document.querySelectorAll('.sheet-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isGroup = btn.parentElement.classList.contains('grid') || btn.parentElement.classList.contains('flex-wrap');
+        const hasCheck = btn.querySelector('.material-symbols-outlined');
+        
+        // Single select for stay type and distance grids
+        if (btn.parentElement.classList.contains('grid-cols-2') || btn.parentElement.classList.contains('grid-cols-3')) {
+          Array.from(btn.parentElement.children).forEach(sibling => {
+            sibling.classList.remove('active', 'bg-secondary-container', 'text-on-secondary-container');
+            sibling.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+            const icon = sibling.querySelector('.material-symbols-outlined');
+            if (icon && icon.textContent === 'check') icon.remove();
+          });
+          btn.classList.add('active', 'bg-secondary-container', 'text-on-secondary-container');
+          btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+          if (!btn.querySelector('.material-symbols-outlined[textContent="check"]')) {
+            const span = document.createElement('span');
+            span.className = 'material-symbols-outlined text-[16px]';
+            span.textContent = 'check';
+            btn.prepend(span);
+          }
+        } else {
+          // Multi toggle for amenities & food
+          btn.classList.toggle('active');
+          if (btn.classList.contains('active')) {
+            btn.classList.add('bg-secondary-container', 'text-on-secondary-container');
+            btn.classList.remove('bg-surface-container-low', 'text-on-surface-variant');
+          } else {
+            btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+            btn.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+          }
+        }
+      });
+    });
+
+    // Reset buttons
+    function resetSelection() {
+      document.querySelectorAll('.sheet-toggle').forEach(btn => {
+        btn.classList.remove('active', 'bg-secondary-container', 'text-on-secondary-container');
+        btn.classList.add('bg-surface-container-low', 'text-on-surface-variant');
+        const checkIcon = btn.querySelector('.material-symbols-outlined');
+        if (checkIcon && checkIcon.textContent === 'check') checkIcon.remove();
+      });
+    }
+
+    if (resetBtn) resetBtn.addEventListener('click', resetSelection);
+    if (clearAllBtn) clearAllBtn.addEventListener('click', resetSelection);
+
+    // Save toggle favorite heart
+    document.querySelectorAll('.save-toggle-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const icon = btn.querySelector('.material-symbols-outlined');
+        const isFavorited = btn.classList.contains('text-error');
+        if (isFavorited) {
+          btn.classList.remove('text-error');
+          btn.classList.add('text-outline');
+          icon.style.fontVariationSettings = "'FILL' 0";
+        } else {
+          btn.classList.add('text-error');
+          btn.classList.remove('text-outline');
+          icon.style.fontVariationSettings = "'FILL' 1";
+        }
+      });
+    });
+
+    // Clear search bar
+    if (clearSearchBtn && searchInput) {
+      clearSearchBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+      });
+    }
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/85 backdrop-blur-xl shadow-[0_-2px_12px_rgba(23,107,91,0.06)]" data-active-classes="text-primary font-label-md"><div class="flex items-center justify-around h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-space-xs min-w-[44px] min-h-[44px] px-space-xs py-space-xs text-on-surface-variant hover:text-primary transition-colors" data-path="home" href="#"><span class="material-symbols-outlined text-[22px]">home</span><span class="font-label-sm text-label-sm">Home</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-space-xs min-w-[44px] min-h-[44px] px-space-xs py-space-xs transition-colors text-primary font-label-md" data-path="explore" href="#"><span class="material-symbols-outlined text-[22px]">search</span><span class="font-label-sm text-label-sm">Explore</span></a><a class="flex flex-col items-center justify-center gap-space-xs min-w-[44px] min-h-[44px] px-space-xs py-space-xs text-on-surface-variant hover:text-primary transition-colors" data-path="saved" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="font-label-sm text-label-sm">Saved</span></a><a class="flex flex-col items-center justify-center gap-space-xs min-w-[44px] min-h-[44px] px-space-xs py-space-xs text-on-surface-variant hover:text-primary transition-colors" data-path="enquiries" href="#"><span class="material-symbols-outlined text-[22px]">chat_bubble</span><span class="font-label-sm text-label-sm">Enquiries</span></a><a class="flex flex-col items-center justify-center gap-space-xs min-w-[44px] min-h-[44px] px-space-xs py-space-xs text-on-surface-variant hover:text-primary transition-colors" data-path="profile" href="#"><span class="material-symbols-outlined text-[22px]">person</span><span class="font-label-sm text-label-sm">Profile</span></a></div></nav></body></html>

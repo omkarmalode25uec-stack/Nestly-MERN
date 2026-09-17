@@ -1,0 +1,90 @@
+<% 
+  const successList = (typeof success !== 'undefined' && success) ? (Array.isArray(success) ? success : [success]).filter(Boolean) : [];
+  const errorList = (typeof error !== 'undefined' && error) ? (Array.isArray(error) ? error : [error]).filter(Boolean) : [];
+  const infoList = (typeof info !== 'undefined' && info) ? (Array.isArray(info) ? info : [info]).filter(Boolean) : [];
+%>
+
+<% if (successList.length || errorList.length || infoList.length) { %>
+  <div id="flash-container" class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin pt-space-md space-y-space-xs transition-all duration-300">
+    
+    <% /* 1. Success Alerts */ %>
+    <% successList.forEach(function(msg) { %>
+      <div class="flash-alert flex items-center justify-between p-space-sm sm:p-space-md rounded-2xl bg-secondary-container/80 border border-secondary/20 text-on-secondary-container shadow-sm transition-all duration-300" role="alert">
+        <div class="flex items-center gap-space-sm min-w-0">
+          <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+          </div>
+          <p class="font-label-lg text-label-lg font-semibold text-on-secondary-container truncate-multiline">
+            <%= msg %>
+          </p>
+        </div>
+        <button type="button" class="text-on-secondary-container/70 hover:text-on-secondary-container transition-opacity focus:outline-none p-1.5 rounded-lg hover:bg-secondary/10 shrink-0 ml-2" aria-label="Close notification" onclick="closeFlashAlert(this)">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+    <% }); %>
+
+    <% /* 2. Error Alerts */ %>
+    <% errorList.forEach(function(msg) { %>
+      <div class="flash-alert flex items-center justify-between p-space-sm sm:p-space-md rounded-2xl bg-error-container/85 border border-error/25 text-on-error-container shadow-sm transition-all duration-300" role="alert">
+        <div class="flex items-center gap-space-sm min-w-0">
+          <div class="w-8 h-8 rounded-full bg-error/10 text-error flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">error</span>
+          </div>
+          <p class="font-label-lg text-label-lg font-semibold text-on-error-container truncate-multiline">
+            <%= msg %>
+          </p>
+        </div>
+        <button type="button" class="text-on-error-container/70 hover:text-on-error-container transition-opacity focus:outline-none p-1.5 rounded-lg hover:bg-error/10 shrink-0 ml-2" aria-label="Close error notice" onclick="closeFlashAlert(this)">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+    <% }); %>
+
+    <% /* 3. Info Alerts */ %>
+    <% infoList.forEach(function(msg) { %>
+      <div class="flash-alert flex items-center justify-between p-space-sm sm:p-space-md rounded-2xl bg-tertiary-container/80 border border-tertiary/25 text-on-tertiary-container shadow-sm transition-all duration-300" role="alert">
+        <div class="flex items-center gap-space-sm min-w-0">
+          <div class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">info</span>
+          </div>
+          <p class="font-label-lg text-label-lg font-semibold text-on-tertiary-container truncate-multiline">
+            <%= msg %>
+          </p>
+        </div>
+        <button type="button" class="text-on-tertiary-container/70 hover:text-on-tertiary-container transition-opacity focus:outline-none p-1.5 rounded-lg hover:bg-tertiary/10 shrink-0 ml-2" aria-label="Close information" onclick="closeFlashAlert(this)">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+    <% }); %>
+
+  </div>
+
+  <script>
+    function closeFlashAlert(button) {
+      const alertEl = button.closest('.flash-alert');
+      if (alertEl) {
+        alertEl.style.opacity = '0';
+        alertEl.style.transform = 'translateY(-6px)';
+        setTimeout(() => alertEl.remove(), 250);
+      }
+    }
+
+    // Auto-dismiss flash notifications smoothly after 4.5 seconds
+    document.addEventListener('DOMContentLoaded', function () {
+      const alerts = document.querySelectorAll('.flash-alert');
+      if (alerts.length) {
+        setTimeout(function () {
+          alerts.forEach(function (el) {
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(-6px)';
+            setTimeout(function () {
+              el.remove();
+            }, 400);
+          });
+        }, 4500);
+      }
+    });
+  </script>
+<% } %>

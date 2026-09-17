@@ -1,0 +1,26 @@
+﻿<% layout('layouts/boilerplate') %>
+
+<div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-md text-center">
+  <div class="w-16 h-16 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-space-md">
+    <span class="material-symbols-outlined text-[36px]">error</span>
+  </div>
+
+  <h2 class="font-headline-lg text-headline-lg font-bold text-on-surface">Payment Incomplete</h2>
+  <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+    <%= typeof errorMessage !== 'undefined' ? errorMessage : 'The transaction could not be verified or was cancelled.' %>
+  </p>
+
+  <div class="bg-surface-container-low p-space-md rounded-xl max-w-sm mx-auto text-left space-y-1">
+    <p class="font-label-sm text-label-sm text-outline uppercase">Order Reference</p>
+    <p class="font-title-md text-title-md font-mono text-on-surface font-semibold"><%= orderId %></p>
+  </div>
+
+  <div class="pt-space-md flex flex-col sm:flex-row items-center justify-center gap-space-sm">
+    <a href="/checkout" class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold">
+      Try Again
+    </a>
+    <a href="/" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold">
+      Back to Home
+    </a>
+  </div>
+</div>

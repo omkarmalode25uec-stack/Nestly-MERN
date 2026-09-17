@@ -1,0 +1,176 @@
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(23,107,91,0.06)]">
+  <div class="h-20 max-w-[1280px] mx-auto px-margin-mobile md:px-margin flex items-center justify-between gap-space-md lg:gap-space-lg">
+    <!-- Brand Logo -->
+    <div class="flex items-center gap-space-sm">
+      <a class="flex items-center gap-space-sm focus:outline-none" href="/">
+        <img alt="Nestly Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/>
+        <span class="font-title-lg text-title-lg tracking-tight text-primary font-bold">Nestly</span>
+      </a>
+    </div>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-space-xs">
+      <a class="px-space-md py-space-sm transition-all <%= typeof activePage !== 'undefined' && activePage === 'explore' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface' %> font-label-lg text-label-lg rounded-lg" href="/stays">Explore Stays</a>
+      <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" href="/#how-it-works">How It Works</a>
+      <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" href="/compare">Compare</a>
+      
+      <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'admin') { %>
+        <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'admin-dashboard' ? 'bg-primary text-on-primary font-bold' : 'text-primary font-semibold hover:bg-surface-container-low' %> transition-all inline-flex items-center gap-1" href="/admin/dashboard">
+          <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+          <span>Admin Desk</span>
+        </a>
+      <% } %>
+
+      <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin')) { %>
+        <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'owner-dashboard' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface' %> transition-all inline-flex items-center gap-space-xs" href="/owner/dashboard">
+          <span>Owner Hub</span>
+          <span class="font-label-sm text-label-sm uppercase bg-surface-container text-secondary px-space-xs py-0.5 rounded">Owner</span>
+        </a>
+      <% } else if (!currentUser || currentUser.role === 'student') { %>
+        <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'saved' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface' %> transition-all" href="/saved">Saved Stays</a>
+        <a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-secondary hover:bg-surface-container-low hover:text-primary transition-all inline-flex items-center gap-1" href="/owner/register">
+          <span>List A Stay</span>
+          <span class="font-label-sm text-[10px] text-primary bg-primary-fixed/60 px-1.5 py-0.5 rounded font-bold">Partner</span>
+        </a>
+      <% } %>
+    </nav>
+
+    <!-- Right Header Actions -->
+    <div class="flex items-center gap-space-xs sm:gap-space-md">
+      <!-- Saved Bookmarks (Students / Guests) -->
+      <a class="relative flex items-center justify-center w-10 h-10 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors" href="/saved" title="Saved stays">
+        <span class="material-symbols-outlined text-[22px]">bookmark</span>
+        <span class="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">
+          <%= (typeof currentUser !== 'undefined' && currentUser && currentUser.savedProperties) ? currentUser.savedProperties.length : 0 %>
+        </span>
+      </a>
+
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <!-- Logged-in User Profile Dropdown Pill -->
+        <div class="relative" id="userMenuContainer">
+          <button class="flex items-center gap-space-sm p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-left focus:outline-none cursor-pointer" type="button" id="userMenuToggle">
+            <img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="<%= currentUser.avatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAqpTMQUCkhceotbCDpxAeWqtXHfAaUd_MvLbHpoUKqbSReNrdROy2OxJ61b2HqePtFbEMVR10ceaXifCBtpESiztRrvm8YE-x5_CI3jGo4SfPWrOHiQ8ZEMQWrK4aFi6A_w_5fYZW8xVmq0M2Wfi2nQl26KqZ1Y9c-Gd9B8S9ay1POG96lryJev6l73TDl0uvnogfOth_Tx2LfXvMyBHZr4hxiN1CYSdO86eYigQFE-EKDCs9yeUs' %>"/>
+            <div class="hidden xl:block leading-tight">
+              <p class="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[90px]"><%= currentUser.name %></p>
+              <p class="font-label-sm text-label-sm text-secondary truncate capitalize flex items-center gap-1">
+                <span><%= currentUser.role %></span>
+                <% if (currentUser.role === 'owner' && currentUser.verificationStatus === 'pending') { %>
+                  <span class="w-2 h-2 rounded-full bg-amber-500 inline-block" title="Pending Verification"></span>
+                <% } %>
+              </p>
+            </div>
+            <span class="material-symbols-outlined text-[18px] text-outline hidden xl:block">expand_more</span>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div class="hidden absolute right-0 mt-2 w-56 bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant/30 py-1.5 z-50" id="userDropdownMenu">
+            <div class="px-4 py-2 border-b border-outline-variant/20">
+              <p class="font-label-md text-label-md text-on-surface font-bold truncate"><%= currentUser.name %></p>
+              <p class="font-label-sm text-label-sm text-on-surface-variant truncate"><%= currentUser.email %></p>
+              <% if (currentUser.role === 'owner') { %>
+                <div class="mt-1">
+                  <span class="font-label-sm text-[11px] text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded-full font-semibold">Verified Partner</span>
+                </div>
+              <% } %>
+            </div>
+
+            <% if (currentUser.role === 'admin') { %>
+              <a href="/admin/dashboard" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-primary font-bold hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                <span>Admin Moderation Desk</span>
+              </a>
+            <% } %>
+
+            <% if (currentUser.role === 'owner' || currentUser.role === 'admin') { %>
+              <a href="/owner/dashboard" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors font-semibold">
+                <span class="material-symbols-outlined text-[18px] text-primary">domain</span>
+                <span>Owner Dashboard</span>
+              </a>
+              <a href="/owner/settlement" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors font-semibold">
+                <span class="material-symbols-outlined text-[18px] text-primary">account_balance_wallet</span>
+                <span>Payouts &amp; Settlements</span>
+              </a>
+              <a href="/owner/verification" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-[18px] text-secondary">verified_user</span>
+                <span>Verification Status</span>
+              </a>
+              <% if (currentUser.verificationStatus === 'verified' || currentUser.role === 'admin') { %>
+                <a href="/stays/new" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+                  <span class="material-symbols-outlined text-[18px] text-secondary">add_circle</span>
+                  <span>List A Stay</span>
+                </a>
+              <% } %>
+            <% } %>
+
+            <a href="/profile" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="material-symbols-outlined text-[18px] text-secondary">person</span>
+              <span>My Profile</span>
+            </a>
+
+            <% if (currentUser.role === 'student') { %>
+              <a href="/saved" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-[18px] text-secondary">bookmark</span>
+                <span>Saved Stays</span>
+              </a>
+              <a href="/bookings" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-[18px] text-secondary">calendar_month</span>
+                <span>My Bookings</span>
+              </a>
+            <% } %>
+
+            <div class="border-t border-outline-variant/20 my-1"></div>
+            <a href="/logout" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-error hover:bg-error-container/30 transition-colors">
+              <span class="material-symbols-outlined text-[18px]">logout</span>
+              <span>Log Out</span>
+            </a>
+          </div>
+        </div>
+      <% } else { %>
+        <!-- Guest: Sign In Button & Register -->
+        <a class="hidden sm:inline-flex items-center justify-center px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" href="/login">Sign In</a>
+        <a class="hidden sm:inline-flex items-center justify-center px-space-md py-space-sm font-label-lg text-label-lg bg-primary text-on-primary rounded-lg font-bold shadow-sm hover:bg-on-primary-fixed-variant transition-colors" href="/signup">Sign Up</a>
+      <% } %>
+
+      <!-- Mobile Menu Toggle Button (lg:hidden) -->
+      <button class="lg:hidden w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors focus:outline-none" id="mobileMenuToggle" type="button" aria-label="Toggle Navigation">
+        <span class="material-symbols-outlined text-[24px]">menu</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Collapsible Navigation Drawer -->
+  <div class="hidden lg:hidden border-t border-outline-variant/30 bg-surface-container-lowest px-margin-mobile py-space-md space-y-space-xs shadow-lg transition-all" id="mobileNavMenu">
+    <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'explore' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/stays">Explore Stays</a>
+    <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low" href="/#how-it-works">How It Works</a>
+    <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'compare' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/compare">Compare Stays</a>
+
+    <% if (typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'admin') { %>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg bg-primary text-on-primary font-bold" href="/admin/dashboard">Admin Desk</a>
+    <% } %>
+
+    <% if (typeof currentUser !== 'undefined' && currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin')) { %>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'owner-dashboard' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/owner/dashboard">Owner Hub</a>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'owner-settlement' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/owner/settlement">Payouts &amp; Settlements</a>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low" href="/owner/verification">Verification Status</a>
+    <% } else { %>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'saved' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/saved">Saved Stays</a>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg text-secondary hover:bg-surface-container-low" href="/owner/register">Partner With Us (Owner)</a>
+    <% } %>
+
+    <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'profile' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/profile">My Profile</a>
+      <% if (currentUser.role === 'student') { %>
+        <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'bookings' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/bookings">My Bookings</a>
+      <% } %>
+    <% } %>
+
+    <div class="pt-2 border-t border-outline-variant/20 flex gap-2">
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <a class="flex-1 text-center py-2 px-3 rounded-lg bg-error-container text-on-error-container font-label-md text-label-md" href="/logout">Log Out</a>
+      <% } else { %>
+        <a class="flex-1 text-center py-2 px-3 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md" href="/login">Sign In</a>
+        <a class="flex-1 text-center py-2 px-3 rounded-lg bg-primary text-on-primary font-label-md text-label-md" href="/signup">Student Sign Up</a>
+      <% } %>
+    </div>
+  </div>
+</header>

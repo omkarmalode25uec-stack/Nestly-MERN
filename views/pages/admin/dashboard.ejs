@@ -1,0 +1,350 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-xl">
+  <!-- Admin Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+    <div>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed-variant font-label-md text-label-md font-bold mb-2">
+        <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+        <span>Campus Administration &amp; Moderation</span>
+      </div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">
+        Owner Verification Desk
+      </h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Audit and verify hostel owners and PG operators across Kopargaon before listings appear in student searches.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-space-sm">
+      <a href="/owner/dashboard" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+        <span class="material-symbols-outlined text-[18px]">domain</span>
+        <span>Owner Hub</span>
+      </a>
+      <a href="/stays" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold shadow-sm hover:bg-on-primary-fixed-variant transition-colors">
+        <span class="material-symbols-outlined text-[18px]">explore</span>
+        <span>Public Directory</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- KPI Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Total Owners</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-on-surface"><%= stats.totalOwners %></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Registered partner accounts</p>
+    </div>
+
+    <div class="p-space-lg rounded-2xl bg-amber-50 shadow-sm border border-amber-200 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-800 font-bold">Pending Audits</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-amber-900"><%= stats.pendingOwners %></div>
+      <p class="font-body-sm text-body-sm text-amber-800">Awaiting campus verification</p>
+    </div>
+
+    <div class="p-space-lg rounded-2xl bg-secondary-container/40 shadow-sm border border-secondary/20 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Verified Partners</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-on-secondary-container"><%= stats.verifiedOwners %></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Authorized to publish stays</p>
+    </div>
+
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Accommodations</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-primary"><%= stats.totalProperties %></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Total student stays</p>
+    </div>
+  </div>
+
+  <!-- Owners Table Container -->
+  <div class="bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/30 overflow-hidden">
+    <div class="p-space-lg border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+      <div>
+        <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Registered Property Partners</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Review credentials and toggle verification status</p>
+      </div>
+      <span class="font-label-sm text-label-sm text-outline">Kopargaon Campus Service Area</span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-surface-container-low border-b border-outline-variant/20 text-on-surface-variant font-label-md text-label-md">
+            <th class="py-3 px-space-md">Owner / Business</th>
+            <th class="py-3 px-space-md">Role</th>
+            <th class="py-3 px-space-md">Contact</th>
+            <th class="py-3 px-space-md">Listings</th>
+            <th class="py-3 px-space-md">Status</th>
+            <th class="py-3 px-space-md text-right">Moderation Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/10 text-body-md font-body-md">
+          <% if (owners && owners.length > 0) { %>
+            <% owners.forEach(owner => { %>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="py-4 px-space-md">
+                  <div class="font-semibold text-on-surface"><%= owner.name %></div>
+                  <div class="font-body-sm text-body-sm text-on-surface-variant"><%= owner.businessName || 'Independent Host' %></div>
+                </td>
+                <td class="py-4 px-space-md capitalize">
+                  <span class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-secondary font-medium">
+                    <%= (owner.ownerType || 'individual').replace('_', ' ') %>
+                  </span>
+                </td>
+                <td class="py-4 px-space-md text-on-surface-variant font-body-sm text-body-sm">
+                  <div><%= owner.email %></div>
+                  <div><%= owner.phone || 'No phone' %></div>
+                </td>
+                <td class="py-4 px-space-md font-semibold text-on-surface">
+                  <%= owner.propertyCount || 0 %>
+                </td>
+                <td class="py-4 px-space-md">
+                  <% if (owner.verificationStatus === 'verified') { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">verified</span>
+                      <span>Verified</span>
+                    </span>
+                  <% } else if (owner.verificationStatus === 'rejected') { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">cancel</span>
+                      <span>Rejected</span>
+                    </span>
+                  <% } else { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+                      <span>Pending</span>
+                    </span>
+                  <% } %>
+                </td>
+                <td class="py-4 px-space-md text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <% if (owner.verificationStatus !== 'verified') { %>
+                      <form action="/admin/owners/<%= owner._id %>/verify" method="POST" class="inline">
+                        <button type="submit" class="px-3 py-1.5 rounded-lg bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-sm text-label-sm font-bold transition-all shadow-sm flex items-center gap-1">
+                          <span class="material-symbols-outlined text-[14px]">check</span>
+                          <span>Verify</span>
+                        </button>
+                      </form>
+                    <% } %>
+
+                    <% if (owner.verificationStatus !== 'rejected') { %>
+                      <form action="/admin/owners/<%= owner._id %>/reject" method="POST" class="inline" onsubmit="return confirm('Decline verification for <%= owner.name %>?');">
+                        <button type="submit" class="px-2.5 py-1.5 rounded-lg bg-surface-container hover:bg-error-container hover:text-on-error-container text-on-surface-variant font-label-sm text-label-sm font-medium transition-colors">
+                          <span>Reject</span>
+                        </button>
+                      </form>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="6" class="py-12 text-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[36px] text-outline mb-2">group_off</span>
+                <p class="font-body-md text-body-md">No property owner partner accounts found.</p>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Escrow Settlements & Owner Disbursements Table Container -->
+  <div class="bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/30 overflow-hidden space-y-0">
+    <div class="p-space-lg border-b border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-lowest">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[22px]">account_balance_wallet</span>
+          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Escrow Settlements &amp; Owner Disbursements</h2>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Audit student token deposits (₹2,000) collected via ZapUPI PayIn and record banking disbursements (UTR proof) to verified owners.
+        </p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="text-right">
+          <span class="font-label-sm text-label-sm text-outline block">Pending Clearance</span>
+          <span class="font-title-md text-title-md font-bold text-amber-800">₹<%= ((stats && stats.totalPendingSettlement) || 0).toLocaleString('en-IN') %></span>
+        </div>
+        <div class="text-right pl-3 border-l border-outline-variant/30">
+          <span class="font-label-sm text-label-sm text-outline block">Total Settled</span>
+          <span class="font-title-md text-title-md font-bold text-secondary">₹<%= ((stats && stats.totalSettledAmount) || 0).toLocaleString('en-IN') %></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-surface-container-low border-b border-outline-variant/20 text-on-surface-variant font-label-md text-label-md">
+            <th class="py-3 px-space-md">Settlement ID / Date</th>
+            <th class="py-3 px-space-md">Owner / Payee</th>
+            <th class="py-3 px-space-md">Student / Stay</th>
+            <th class="py-3 px-space-md">Amount (Gross / Net)</th>
+            <th class="py-3 px-space-md">Destination Account</th>
+            <th class="py-3 px-space-md">Status</th>
+            <th class="py-3 px-space-md text-right">Settlement Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/10 text-body-md font-body-md">
+          <% if (settlements && settlements.length > 0) { %>
+            <% settlements.forEach(settlement => { %>
+              <tr class="hover:bg-surface-container-low/50 transition-colors">
+                <td class="py-4 px-space-md font-mono text-body-sm text-on-surface-variant">
+                  <div class="font-bold text-on-surface"><%= settlement.settlementId %></div>
+                  <div class="text-[11px] text-outline"><%= new Date(settlement.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                </td>
+                <td class="py-4 px-space-md">
+                  <div class="font-semibold text-on-surface"><%= settlement.owner ? settlement.owner.name : 'Unknown Owner' %></div>
+                  <div class="text-body-sm text-on-surface-variant"><%= settlement.owner ? (settlement.owner.businessName || settlement.owner.email) : '' %></div>
+                </td>
+                <td class="py-4 px-space-md">
+                  <div class="font-medium text-on-surface"><%= settlement.property ? settlement.property.title : 'Accommodation' %></div>
+                  <div class="text-body-sm text-on-surface-variant">Student: <%= settlement.student ? settlement.student.name : 'Verified Student' %></div>
+                </td>
+                <td class="py-4 px-space-md">
+                  <div class="font-bold text-on-surface">₹<%= (settlement.netAmount || 2000).toLocaleString('en-IN') %></div>
+                  <div class="text-[11px] text-outline">Fee: ₹<%= settlement.platformFee || 0 %></div>
+                </td>
+                <td class="py-4 px-space-md">
+                  <% if (settlement.destinationUpiId) { %>
+                    <div class="inline-flex items-center gap-1 font-mono text-body-sm text-primary">
+                      <span class="material-symbols-outlined text-[14px]">qr_code</span>
+                      <span><%= settlement.destinationUpiId %></span>
+                    </div>
+                  <% } else if (settlement.destinationAccountNumber) { %>
+                    <div class="text-body-sm text-on-surface">
+                      <div>A/C: <%= settlement.destinationAccountNumber %></div>
+                      <div class="text-[11px] text-outline">IFSC: <%= settlement.destinationIfscCode %></div>
+                    </div>
+                  <% } else { %>
+                    <span class="inline-flex items-center gap-1 text-[12px] text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                      <span class="material-symbols-outlined text-[13px]">warning</span>
+                      <span>Awaiting Owner Details</span>
+                    </span>
+                  <% } %>
+                </td>
+                <td class="py-4 px-space-md">
+                  <% if (settlement.status === 'settled') { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">verified</span>
+                      <span>Disbursed</span>
+                    </span>
+                  <% } else if (settlement.status === 'on_hold') { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">pause_circle</span>
+                      <span>On Hold</span>
+                    </span>
+                  <% } else { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200 font-label-sm text-label-sm font-bold">
+                      <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+                      <span>Pending Release</span>
+                    </span>
+                  <% } %>
+                </td>
+                <td class="py-4 px-space-md text-right">
+                  <% if (settlement.status === 'settled') { %>
+                    <div class="text-right">
+                      <span class="font-mono text-[11px] font-semibold text-secondary block">UTR: <%= settlement.settlementReference %></span>
+                      <span class="text-[10px] text-outline"><%= settlement.settledAt ? new Date(settlement.settledAt).toLocaleDateString('en-IN') : '' %></span>
+                    </div>
+                  <% } else { %>
+                    <button type="button" onclick="openDisburseModal('<%= settlement._id %>', '<%= settlement.settlementId %>', '<%= settlement.owner ? settlement.owner.name : 'Owner' %>', '<%= settlement.netAmount %>', '<%= settlement.destinationUpiId || settlement.destinationAccountNumber || 'Not set' %>')" class="px-3 py-1.5 rounded-lg bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-sm text-label-sm font-bold transition-all shadow-sm inline-flex items-center gap-1">
+                      <span class="material-symbols-outlined text-[14px]">send</span>
+                      <span>Disburse (UTR)</span>
+                    </button>
+                  <% } %>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="py-12 text-center text-on-surface-variant">
+                <span class="material-symbols-outlined text-[36px] text-outline mb-2">savings</span>
+                <p class="font-body-md text-body-md">No Escrow settlement records found yet. Token payments made via ZapUPI will appear here.</p>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Settlement Disbursement Modal -->
+<div id="disburseModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+  <div class="bg-surface-container-lowest max-w-md w-full rounded-2xl shadow-xl border border-outline-variant/30 p-6 space-y-4">
+    <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-[22px]">payments</span>
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">Record Owner Disbursement</h3>
+      </div>
+      <button type="button" onclick="closeDisburseModal()" class="text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined text-xl">close</span>
+      </button>
+    </div>
+
+    <form id="disburseForm" action="" method="POST" class="space-y-4">
+      <div class="p-3 bg-surface-container-low rounded-xl text-body-sm text-on-surface space-y-1">
+        <div class="flex justify-between">
+          <span class="text-outline">Settlement:</span>
+          <span id="modalSettlementId" class="font-mono font-bold"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-outline">Payee:</span>
+          <span id="modalOwnerName" class="font-semibold"></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-outline">Net Payout:</span>
+          <span class="font-bold text-primary">₹<span id="modalAmount"></span></span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-outline">Payout Destination:</span>
+          <span id="modalDestination" class="font-mono text-xs"></span>
+        </div>
+      </div>
+
+      <div>
+        <label for="settlementReference" class="block font-label-sm text-label-sm font-bold text-on-surface mb-1">
+          Bank UTR / UPI Reference Number *
+        </label>
+        <input type="text" id="settlementReference" name="settlementReference" required placeholder="e.g. 423589123049 or IMPS389102" class="w-full px-3 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-sm text-body-sm rounded-xl outline-none focus:border-primary"/>
+        <p class="text-[11px] text-outline mt-1">
+          Enter the banking transaction UTR or IMPS reference confirming the escrow release.
+        </p>
+      </div>
+
+      <div>
+        <label for="notes" class="block font-label-sm text-label-sm font-bold text-on-surface mb-1">
+          Internal Notes (Optional)
+        </label>
+        <input type="text" id="notes" name="notes" placeholder="e.g. Cleared after student check-in verification" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-sm text-body-sm rounded-xl outline-none focus:border-primary"/>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+        <button type="button" onclick="closeDisburseModal()" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+          Cancel
+        </button>
+        <button type="submit" class="px-5 py-2 rounded-xl bg-primary text-on-primary hover:bg-on-primary-fixed-variant font-label-md text-label-md font-bold transition-all shadow-sm">
+          Confirm Disbursement
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openDisburseModal(id, settlementId, ownerName, amount, destination) {
+    document.getElementById('disburseForm').action = '/admin/settlements/' + id + '/disburse';
+    document.getElementById('modalSettlementId').textContent = settlementId;
+    document.getElementById('modalOwnerName').textContent = ownerName;
+    document.getElementById('modalAmount').textContent = Number(amount).toLocaleString('en-IN');
+    document.getElementById('modalDestination').textContent = destination;
+    document.getElementById('disburseModal').classList.remove('hidden');
+  }
+
+  function closeDisburseModal() {
+    document.getElementById('disburseModal').classList.add('hidden');
+  }
+</script>

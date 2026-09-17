@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-primary": "#ffffff", "on-surface-variant": "#3f4945", "on-tertiary-container": "#ffd1a8", "primary-fixed-dim": "#89d5c1", "surface-container-high": "#deebe6", "secondary-fixed-dim": "#99d2c3", "secondary-container": "#b1ebdc", "inverse-primary": "#89d5c1", "surface-bright": "#f0fcf7", "surface": "#f0fcf7", "tertiary-fixed-dim": "#ffb872", "tertiary-fixed": "#ffdcbe", "on-surface": "#131e1b", "secondary": "#30685c", "surface-dim": "#d0ddd8", "error": "#ba1a1a", "on-primary-fixed": "#00201a", "on-secondary": "#ffffff", "on-tertiary": "#ffffff", "surface-variant": "#d9e5e0", "tertiary": "#6b3c00", "on-tertiary-fixed-variant": "#6a3c00", "surface-container": "#e4f1eb", "secondary-fixed": "#b4eedf", "surface-tint": "#166a5a", "error-container": "#ffdad6", "on-tertiary-fixed": "#2d1600", "primary-fixed": "#a5f1dd", "primary-container": "#176b5b", "inverse-on-surface": "#e7f4ee", "on-primary-container": "#9ce9d4", "surface-container-highest": "#d9e5e0", "on-error-container": "#93000a", "background": "#f0fcf7", "primary": "#005144", "on-error": "#ffffff", "surface-container-lowest": "#ffffff", "outline-variant": "#bec9c4", "on-secondary-fixed": "#00201a", "inverse-surface": "#27332f", "on-secondary-container": "#346c60", "tertiary-container": "#8c5100", "on-secondary-fixed-variant": "#135044", "outline": "#6f7975", "on-background": "#131e1b", "on-primary-fixed-variant": "#005143", "surface-container-low": "#eaf6f1" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-md": "1rem", "gutter": "1.5rem", "space-xs": "0.25rem", "space-2xl": "3rem", "space-lg": "1.5rem", "space-sm": "0.5rem", "margin": "2rem", "margin-mobile": "1rem", "gutter-mobile": "1rem", "space-xl": "2rem" }, "fontFamily": { "body-md": ["Plus Jakarta Sans"], "display": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "display-mobile": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "title-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"] }, "fontSize": { "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "label-sm": ["10px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "600" }], "body-sm": ["12px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "title-lg": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest shadow-[0_1px_8px_rgba(23,107,91,0.06)]"><div class="h-20 max-w-[1280px] mx-auto px-margin flex items-center justify-between gap-space-lg"><div class="flex items-center gap-space-sm"><a class="flex items-center gap-space-sm focus:outline-none" data-path="explore-stays" href="#"><img alt="Nestly Brand Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/><span class="font-title-lg text-title-lg tracking-tight text-primary font-bold">Nestly</span></a></div><nav class="hidden lg:flex items-center gap-space-xs" data-active-classes="bg-secondary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg"><a aria-current="page" class="px-space-md py-space-sm transition-all bg-secondary-container text-on-secondary-container font-label-lg text-label-lg rounded-lg" data-path="explore-stays" href="#">Explore Stays</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="how-it-works" href="#">How It Works</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all" data-path="compare-stays" href="#">Compare</a><a class="px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-all inline-flex items-center gap-space-xs" data-path="list-your-property" href="#">List Your Property <span class="font-label-sm text-label-sm uppercase bg-surface-container text-secondary px-space-xs py-0.5 rounded">Owner</span></a></nav><div class="flex items-center gap-space-md"><a class="relative flex items-center justify-center w-10 h-10 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors" data-path="saved-properties" href="#"><span class="material-symbols-outlined text-[22px]">bookmark</span><span class="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-on-primary font-label-sm text-label-sm">3</span></a><a class="hidden sm:inline-flex items-center justify-center px-space-md py-space-sm font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg transition-colors" data-path="sign-in" href="#">Sign In</a><div class="flex items-center gap-space-sm pl-space-xs"><button class="flex items-center gap-space-sm p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-left focus:outline-none" type="button"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAqpTMQUCkhceotbCDpxAeWqtXHfAaUd_MvLbHpoUKqbSReNrdROy2OxJ61b2HqePtFbEMVR10ceaXifCBtpESiztRrvm8YE-x5_CI3jGo4SfPWrOHiQ8ZEMQWrK4aFi6A_w_5fYZW8xVmq0M2Wfi2nQl26KqZ1Y9c-Gd9B8S9ay1POG96lryJev6l73TDl0uvnogfOth_Tx2LfXvMyBHZr4hxiN1CYSdO86eYigQFE-EKDCs9yeUs"/><div class="hidden xl:block leading-tight"><p class="font-label-md text-label-md text-on-surface font-semibold truncate max-w-[90px]">Ananya S.</p><p class="font-label-sm text-label-sm text-secondary truncate">Student</p></div><span class="material-symbols-outlined text-[18px] text-outline hidden xl:block">expand_more</span></button></div></div></div></header><main class="w-full pt-20 min-h-screen bg-surface"><div class="flex flex-col w-full">
+<!-- Sticky Sub-Nav / Breadcrumb & Fast Action Bar -->
+<section class="w-full bg-surface-container-lowest/80 backdrop-blur-md sticky top-20 z-40 shadow-sm">
+<div class="max-w-[1280px] mx-auto px-margin py-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<!-- Breadcrumb Navigation -->
+<nav aria-label="Breadcrumbs" class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px] text-primary">home</span>
+<span>Home</span>
+</a>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors" href="#">Pune</a>
+<span class="text-outline-variant">/</span>
+<a class="hover:text-primary transition-colors" href="#">Hinjewadi Phase 1</a>
+<span class="text-outline-variant">/</span>
+<span class="text-on-surface font-semibold truncate max-w-[200px] sm:max-w-none">Green Valley Premier PG</span>
+</nav>
+<!-- Action Quick Bar -->
+<div class="flex items-center gap-space-xs">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" id="bookmarkBtn">
+<span class="material-symbols-outlined text-[18px] text-secondary">bookmark_border</span>
+<span class="hidden sm:inline">Shortlist</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[18px] text-secondary">balance</span>
+<span class="hidden sm:inline">Compare</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface font-label-md text-label-md flex items-center gap-1.5 transition-colors" id="shareBtn">
+<span class="material-symbols-outlined text-[18px] text-secondary">share</span>
+<span class="hidden sm:inline">Share</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Main Showcase Container -->
+<div class="max-w-[1280px] mx-auto px-margin w-full py-space-md">
+<!-- Property Header Info -->
+<header class="mb-space-lg">
+<div class="flex flex-wrap items-center gap-2 mb-2">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+          Nestly Verified Audit (March 2025)
+        </span>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-high text-secondary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[15px]">meeting_room</span>
+          Separate Female &amp; Male Wings
+        </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[15px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+          4.8 <span class="font-normal opacity-80">(142 Verified Reviews)</span>
+</span>
+</div>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-sm">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight font-bold">
+            Green Valley Premier PG &amp; Student Residency
+          </h1>
+<p class="mt-1 flex items-center gap-1 text-on-surface-variant font-body-md text-body-md">
+<span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+<span>Sector 2, Phase 1, Hinjewadi, Pune</span>
+<span class="text-outline mx-1">•</span>
+<span class="text-secondary font-medium">0.8 km from Rajiv Gandhi Infotech Park</span>
+<span class="text-outline mx-1">•</span>
+<span class="text-secondary font-medium">1.4 km from Symbiosis Tech</span>
+</p>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Open for 2025-26 Academic Admissions</span>
+</div>
+</div>
+</header>
+<!-- 5-Photo Bento Gallery -->
+<section class="relative mb-space-2xl">
+<div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-[380px] sm:h-[460px] md:h-[500px] rounded-2xl overflow-hidden bg-surface-container-high">
+<!-- Main Large Photo (Span 2x2) -->
+<div class="md:col-span-2 md:row-span-2 relative overflow-hidden group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Sunlit, spacious premium double sharing student room in Hinjewadi Pune with warm natural oakwood study desks, ergonomic chairs, modern beige linen bedding, modular wardrobes, and a peaceful green terrace balcony view in soft natural daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none"></div>
+<span class="absolute bottom-3 left-3 px-3 py-1 bg-surface/90 backdrop-blur-md rounded-lg font-label-sm text-label-sm text-primary font-semibold">
+            Spacious Double Suite with Study Pods
+          </span>
+</div>
+<!-- Secondary Photo 1: Attached Bathroom -->
+<div class="hidden md:block relative overflow-hidden group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Modern sparkling clean ensuite bathroom inside a luxury student residence featuring beige stone tiling, western commode, vanity mirror with warm LED backlighting, and chrome instant water geyser fixtures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg7qGDgoE-L4O5XEb65do0kjcLNoTvCJ_3x-8bSrA78i4Zaj57Nd_PfrLzvK9k8XI9oXYd1YBUbac4mlThC38kGiSZRRcnb_ijOPfYiMAp_QF8-3h03j5kagGZqwcIrQoicOOjG_s1AWVwgEHhvEwV2ao7af3mYfcQiNnLmLbnnb71RXuBRxEbAFkMkwqAHn2YAJwFAF23OuqnbxIprPjdCgSn6zNE4wJGiEJ3lD6XFI2WDwA_OVIE"/>
+<span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">
+            Attached Clean Bath
+          </span>
+</div>
+<!-- Secondary Photo 2: Dining Hall / Mess -->
+<div class="hidden md:block relative overflow-hidden group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Vibrant clean student cafeteria and dining hall with Scandinavian style communal wooden dining tables, hygienic stainless steel food counters, fresh plant pots, and bright recessed ceiling lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwDASJnBO1Sa-xAVAqF_Dq7JnYOsdbZQD6iVjgQ8sN7KgyRnmLPZr6ea7tfEgC_r_z_D2dnWsHv6dC23GiN8q5sTZK4LQRI7rLhiuHBHqZryRytUWm0IGX9a3-c28gsd1wCMDjDc_VZ4lO-0IpjMZnjwZln0MD6ikO0ti1NL73huChu-JpuALOGb1M2dZrVOpFV80KV1z8nA-iwm0TQvwp_TqL-VhMVRaRrWz0tP74VRX2nx0V0LHi"/>
+<span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">
+            Hygienic Mess &amp; Cafe
+          </span>
+</div>
+<!-- Secondary Photo 3: Common Room / Study Lounge -->
+<div class="hidden md:block relative overflow-hidden group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Quiet student co-working library and study hub with comfortable bean bags, high speed networking docks, warm task lamps, curated book racks, and indoor ficus plants." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2hKNomyCs5fjlQhiTjlB_hXehvJEPXcnmcPeLlQqMe-rRR_g2Wbf2ZtG2A-MMtFxUVPzO4Z7wBeIzvxWQ7mnR1D01L2N9c6Z9aUF8d3WA_Ch2pDume7sXQ4RlSbRNhL0xl9qPKzDdXvspYliTj9Ou4shZ5TcCsFq8cKbh5-gGVSxRhCykUTjEd4lqCJOuxOkiNqzr3KQYzYWLtdvaMwBI2sxpIgRBlcgwgXWS9MnUmzr4UDIYKUIB"/>
+<span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">
+            24/7 Silent Study Lounge
+          </span>
+</div>
+<!-- Secondary Photo 4: Exterior & Biometric Access -->
+<div class="hidden md:block relative overflow-hidden group cursor-pointer">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Contemporary gated student building exterior in Hinjewadi with landscaped botanical entrance, digital smart card turnstiles, security desk, and well-lit pathway." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa1q3GQSPa4SIFj03WUkL4mDjKuQUA452NLCmCwUMKInHPlMqO_7nBoSez87T9HRPEQZmqTYWiuqTCkvOsdiMd3dV4ylaJBcX1orP-xGO2wbG5KgGQluot5RTZM9LeK7TNt3fTcJGQ5HQOmtTS1RQ5J5rskPkCacQ1a_moFnViZ5gZdRemW8ODgYEQbzF6SQYKZUJSddbV8KDJcH4XvTorBevNSUXDbvB9P--VyI0X4YWwgmRHbW5F"/>
+<span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">
+            Biometric Gate &amp; Grounds
+          </span>
+</div>
+</div>
+<!-- View All Photos Floating Badge -->
+<button class="absolute bottom-4 right-4 bg-surface-container-lowest/90 hover:bg-surface-container-lowest text-on-surface font-label-md text-label-md px-4 py-2 rounded-xl shadow-md backdrop-blur-md flex items-center gap-2 transition-all">
+<span class="material-symbols-outlined text-[20px] text-primary">photo_library</span>
+<span>View all 24 photos</span>
+</button>
+</section>
+<!-- Two-Column Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- Left Column (65% width approx -> 8 cols) -->
+<div class="lg:col-span-8 space-y-space-2xl">
+<!-- Residency Narrative / Fast Metrics -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="flex items-center justify-between pb-space-md border-b border-surface-container-low mb-space-md">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Residency Overview</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Managed by Green Valley Hospitality Group • Host since 2021</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-label-md text-label-md text-on-surface font-semibold">100% Student Occupancy</p>
+<p class="font-body-sm text-body-sm text-secondary">Zero Non-Student Tenancy</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[22px]">school</span>
+</div>
+</div>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+            Modern, student-centric accommodation specifically tailored for focused academic study and vibrant communal living. Every floor provides fully furnished rooms featuring individual ergonomic study workstations, ultra-high-speed 200 Mbps fiber connectivity with redundant backup, and hygienic home-style meals prepared three times daily by in-house trained chefs.
+          </p>
+<!-- Key Highlights Quick Row -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-space-lg pt-space-md bg-surface-container-low p-4 rounded-xl">
+<div class="flex flex-col items-center text-center p-2">
+<span class="material-symbols-outlined text-primary text-[28px] mb-1">wifi</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">200 Mbps</span>
+<span class="font-body-sm text-body-sm text-outline">Uncapped Fiber</span>
+</div>
+<div class="flex flex-col items-center text-center p-2">
+<span class="material-symbols-outlined text-primary text-[28px] mb-1">restaurant</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">3 Meals Included</span>
+<span class="font-body-sm text-body-sm text-outline">Veg &amp; Non-Veg</span>
+</div>
+<div class="flex flex-col items-center text-center p-2">
+<span class="material-symbols-outlined text-primary text-[28px] mb-1">local_laundry_service</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Free Laundry</span>
+<span class="font-body-sm text-body-sm text-outline">Auto Washers</span>
+</div>
+<div class="flex flex-col items-center text-center p-2">
+<span class="material-symbols-outlined text-primary text-[28px] mb-1">shield_person</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">24/7 Wardens</span>
+<span class="font-body-sm text-body-sm text-outline">Biometric &amp; CCTV</span>
+</div>
+</div>
+</section>
+<!-- Room Options & Pricing Table Section -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-space-md">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Available Room Types</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Lock your bed with verified transparent fees. No hidden brokerage.</p>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold self-start sm:self-auto">
+              Electricity as per sub-meter • Maintenance zero
+            </span>
+</div>
+<!-- Room Selection Radio Cards -->
+<div class="space-y-3" id="roomOptionsContainer">
+<!-- Option 1: Single Private -->
+<label class="relative block p-4 rounded-xl bg-surface hover:bg-surface-container-low transition-colors cursor-pointer" data-room-name="Single Private Room" data-room-price="12000">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-start gap-3">
+<input class="mt-1 w-4 h-4 text-primary focus:ring-0" name="room_selection" type="radio" value="single"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-bold">Single Private Room</span>
+<span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">High Demand</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Ensuite washroom • Private study bay • Balcony</p>
+<div class="flex items-center gap-2 mt-2 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]">timer</span>
+<span>Only 2 beds remaining for July term</span>
+</div>
+</div>
+</div>
+<div class="sm:text-right pl-7 sm:pl-0">
+<div class="text-on-surface font-headline-sm text-headline-sm font-bold">₹12,000<span class="font-body-sm text-body-sm text-outline font-normal">/mo</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Deposit: ₹12,000 (1 mo)</p>
+</div>
+</div>
+</label>
+<!-- Option 2: Double Sharing (Selected Default) -->
+<label class="relative block p-4 rounded-xl bg-secondary-container/40 hover:bg-secondary-container/60 transition-colors cursor-pointer" data-room-name="Double Sharing Room" data-room-price="8500">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-start gap-3">
+<input checked="" class="mt-1 w-4 h-4 text-primary focus:ring-0" name="room_selection" type="radio" value="double"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-bold">Double Sharing Room</span>
+<span class="px-2 py-0.5 rounded bg-primary text-on-primary font-label-sm text-label-sm font-semibold">Most Popular</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Two single wooden beds • Dual study pods • Attached bath</p>
+<div class="flex items-center gap-2 mt-2 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[15px]">check_circle</span>
+<span>4 beds left in Wing B</span>
+</div>
+</div>
+</div>
+<div class="sm:text-right pl-7 sm:pl-0">
+<div class="text-on-surface font-headline-sm text-headline-sm font-bold">₹8,500<span class="font-body-sm text-body-sm text-outline font-normal">/mo</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Deposit: ₹8,500 (1 mo)</p>
+</div>
+</div>
+</label>
+<!-- Option 3: Triple Sharing -->
+<label class="relative block p-4 rounded-xl bg-surface hover:bg-surface-container-low transition-colors cursor-pointer" data-room-name="Triple Sharing Room" data-room-price="6200">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-start gap-3">
+<input class="mt-1 w-4 h-4 text-primary focus:ring-0" name="room_selection" type="radio" value="triple"/>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-bold">Triple Sharing Room</span>
+<span class="px-2 py-0.5 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm font-semibold">Budget Friendly</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Spacious 350 sq ft • 3 Lockable almirahs • Attached bath</p>
+<div class="flex items-center gap-2 mt-2 text-error font-label-sm text-label-sm font-medium">
+<span class="material-symbols-outlined text-[15px]">warning</span>
+<span>1 bed remaining</span>
+</div>
+</div>
+</div>
+<div class="sm:text-right pl-7 sm:pl-0">
+<div class="text-on-surface font-headline-sm text-headline-sm font-bold">₹6,200<span class="font-body-sm text-body-sm text-outline font-normal">/mo</span></div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Deposit: ₹6,200 (1 mo)</p>
+</div>
+</div>
+</label>
+</div>
+</section>
+<!-- 12 Categorized Amenities Grid -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="mb-space-lg">
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Included Amenities &amp; Services</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Everything you need for hassle-free student everyday life, covered in rent.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+<!-- 1 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">speed</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">High-Speed Wi-Fi</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Dual-band 200 Mbps fiber</p>
+</div>
+</div>
+<!-- 2 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">dinner_dining</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">3x Daily Homestyle Food</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Breakfast, Lunch box, Dinner</p>
+</div>
+</div>
+<!-- 3 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">ac_unit</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">AC &amp; Climate Control</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Available in all room tiers</p>
+</div>
+</div>
+<!-- 4 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">cleaning_services</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Daily Housekeeping</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Room sweeping &amp; sanitization</p>
+</div>
+</div>
+<!-- 5 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">local_laundry_service</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Laundry &amp; Drying Area</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Automatic washers &amp; covered lines</p>
+</div>
+</div>
+<!-- 6 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">24/7 Power Backup</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Silent generator support</p>
+</div>
+</div>
+<!-- 7 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">water_drop</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">RO Purified Water</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Cold &amp; normal water taps</p>
+</div>
+</div>
+<!-- 8 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">fingerprint</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Biometric &amp; CCTV</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">24/7 perimeter security</p>
+</div>
+</div>
+<!-- 9 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Dedicated Study Hall</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Silent pod workspace</p>
+</div>
+</div>
+<!-- 10 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">shower</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Geyser / Hot Water</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Individual bathroom heater</p>
+</div>
+</div>
+<!-- 11 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">kitchen</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Microwave &amp; Pantry</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Late night snacks &amp; fridge</p>
+</div>
+</div>
+<!-- 12 -->
+<div class="p-3 rounded-xl bg-surface flex items-start gap-3">
+<div class="p-2 rounded-lg bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[20px]">two_wheeler</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface font-bold">Two-Wheeler Parking</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Covered basement bay</p>
+</div>
+</div>
+</div>
+</section>
+<!-- House Rules & Policy Transparency -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="mb-space-md">
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Residency Rules &amp; Transparency</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Clear policies co-signed by parents and residents for safety and peace of mind.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="p-4 rounded-xl bg-surface flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">lock_clock</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Curfew Timing: 10:30 PM</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Flexible for university submissions, hackathons, and company overtime via Warden App digital slip.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">family_restroom</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Visitor Guidelines</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Parents and day visitors permitted in the Ground Floor reception and cafe from 10:00 AM – 7:00 PM.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">schedule</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">Mess Meal Schedule</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Breakfast: 7:30–9:30 AM | Packed Lunch Available | Dinner: 8:00–10:00 PM. Special Sunday brunch.</p>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-surface flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-[24px]">receipt_long</span>
+<div>
+<p class="font-label-md text-label-md font-bold text-on-surface">30-Day Notice &amp; Escrow Deposit</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">1 month security deposit held via Nestly Escrow. 100% refunded to your bank within 48h of checkout.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Location & Neighborhood Map -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="mb-space-md flex flex-wrap items-center justify-between gap-2">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Location &amp; Commute</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Strategically located within minutes of major tech parks and college campuses.</p>
+</div>
+<a class="font-label-md text-label-md text-primary font-semibold flex items-center gap-1 hover:underline" href="https://maps.google.com" target="_blank">
+              Open in Google Maps
+              <span class="material-symbols-outlined text-[16px]">launch</span>
+</a>
+</div>
+<!-- Simulated Map Canvas Container -->
+<div class="w-full h-64 rounded-xl relative overflow-hidden bg-surface-container-high bg-cover bg-center mb-space-md" data-location="Hinjewadi Phase 1, Pune, Maharashtra" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCh8kf2HTRdbpT995-lYAw5kFMZk7PxpX6G7QdscTQopdME9jQHPkJAdRREJ3kZwE7gLPiXxzLDt7FowAjlWiU4_snynKd_oFYrtKMNZSvn2VYa2hcYiBtyDQ7OCG6sn88KjWnaLEisjWyZa67AJ4pKaQYHrWSxMNioFTWeMwxNJTXwFBsgKp_aL2sZ1K53Xe8ZJ1CcDvQEoeOhs3FeI2_NpFGTwAcuzZDfz-_HF14bmbcOU_W7qnn4')">
+<!-- Map Overlay UI -->
+<div class="absolute inset-0 bg-primary/10 pointer-events-none"></div>
+<div class="absolute top-4 left-4 bg-surface-container-lowest/95 backdrop-blur-md p-3 rounded-xl shadow-md flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-[24px]">pin_drop</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface font-bold leading-tight">Green Valley Residency</p>
+<p class="font-body-sm text-body-sm text-outline">Sector 2, Hinjewadi</p>
+</div>
+</div>
+</div>
+<!-- Transit Pins -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<div class="p-3 bg-surface rounded-xl">
+<p class="font-label-sm text-label-sm uppercase text-secondary font-bold">Colleges</p>
+<p class="font-title-md text-title-md font-bold text-on-surface mt-0.5">6 min</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Symbiosis Tech (1.4 km)</p>
+</div>
+<div class="p-3 bg-surface rounded-xl">
+<p class="font-label-sm text-label-sm uppercase text-secondary font-bold">Tech Park</p>
+<p class="font-title-md text-title-md font-bold text-on-surface mt-0.5">10 min</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Infosys Gate 1 (800m)</p>
+</div>
+<div class="p-3 bg-surface rounded-xl">
+<p class="font-label-sm text-label-sm uppercase text-secondary font-bold">Metro Line</p>
+<p class="font-title-md text-title-md font-bold text-on-surface mt-0.5">3 min</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Hinjewadi Stn (800m)</p>
+</div>
+<div class="p-3 bg-surface rounded-xl">
+<p class="font-label-sm text-label-sm uppercase text-secondary font-bold">Pharmacy &amp; Groceries</p>
+<p class="font-title-md text-title-md font-bold text-on-surface mt-0.5">2 min</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Apollo &amp; DMart (200m)</p>
+</div>
+</div>
+</section>
+<!-- Verified Student Reviews -->
+<section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-space-lg">
+<div>
+<h2 class="font-title-lg text-title-lg text-on-surface font-bold">Verified Student Reviews</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real testimonials from current college students &amp; recent alumni.</p>
+</div>
+<div class="flex items-center gap-2 bg-tertiary-fixed px-3 py-1.5 rounded-xl text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[22px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-headline-sm text-headline-sm font-bold">4.8</span>
+<span class="font-body-sm text-body-sm text-tertiary">out of 5.0</span>
+</div>
+</div>
+<!-- Ratings Category Breakdown Progress Bars -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-3 p-4 bg-surface rounded-xl mb-space-lg">
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Cleanliness</span>
+<span class="font-bold">4.9</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 98%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Food Taste &amp; Variety</span>
+<span class="font-bold">4.7</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 94%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Wi-Fi Reliability</span>
+<span class="font-bold">4.9</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 98%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Safety &amp; Curfew Handling</span>
+<span class="font-bold">5.0</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Value for Money</span>
+<span class="font-bold">4.6</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 92%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1 text-on-surface">
+<span>Warden Responsiveness</span>
+<span class="font-bold">4.8</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 96%;"></div>
+</div>
+</div>
+</div>
+<!-- 3 Student Review Cards -->
+<div class="space-y-4">
+<!-- Review 1 -->
+<div class="p-4 rounded-xl bg-surface">
+<div class="flex items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-secondary-container text-primary font-bold flex items-center justify-center font-label-md text-label-md">
+                    AS
+                  </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Aarav Sharma</h4>
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-secondary">Verified Resident</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">Symbiosis Tech Student (2nd Year B.Tech) • Double Sharing</p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                "Lived here for the entire 2024 academic cycle. The Wi-Fi never drops during late night exam cram sessions, and the mess food feels like home—they actually ask for student inputs in the monthly food committee meeting. 10/10 recommend."
+              </p>
+<p class="font-body-sm text-body-sm text-outline mt-2">Reviewed February 2025 • Stayed 11 months</p>
+</div>
+<!-- Review 2 -->
+<div class="p-4 rounded-xl bg-surface">
+<div class="flex items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-primary-fixed text-on-primary-fixed font-bold flex items-center justify-center font-label-md text-label-md">
+                    RD
+                  </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Rhea Deshmukh</h4>
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-secondary">Verified Resident</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">COEP / Pune Tech Intern • Single Room</p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star_half</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                "Safety was my parents' main concern moving to Hinjewadi. The biometric turnstiles, strict guard log, and digital night permissions made everyone feel completely at ease. Rooms get swept everyday without needing to ask."
+              </p>
+<p class="font-body-sm text-body-sm text-outline mt-2">Reviewed January 2025 • Stayed 8 months</p>
+</div>
+<!-- Review 3 -->
+<div class="p-4 rounded-xl bg-surface">
+<div class="flex items-center justify-between gap-2 mb-2">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold flex items-center justify-center font-label-md text-label-md">
+                    PK
+                  </div>
+<div>
+<div class="flex items-center gap-1.5">
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Pranav Kulkarni</h4>
+<span class="material-symbols-outlined text-[15px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-sm text-label-sm text-secondary">Verified Resident</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">Symbiosis MBA (FinTech) • Triple Sharing</p>
+</div>
+</div>
+<div class="flex text-tertiary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                "Triple sharing is massive value for money. Rooms are high-ceilinged so you never feel cramped. Great study vibe in the common lounge on the 2nd floor when doing group assignments."
+              </p>
+<p class="font-body-sm text-body-sm text-outline mt-2">Reviewed December 2024 • Stayed 1.5 years</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sticky Booking & Visit Scheduler (35% approx -> 4 cols) -->
+<div class="lg:col-span-4 sticky top-36 space-y-space-md">
+<!-- Primary Sticky Conversion Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-xl">
+<!-- Price Header -->
+<div class="flex items-baseline justify-between pb-space-md border-b border-surface-container-low">
+<div>
+<span class="font-body-sm text-body-sm text-outline block">Starting from</span>
+<div class="flex items-baseline gap-1">
+<span class="font-display-mobile text-display-mobile text-on-surface font-bold" id="displayPrice">₹8,500</span>
+<span class="font-body-md text-body-md text-on-surface-variant">/ month</span>
+</div>
+</div>
+<span class="px-2.5 py-1 bg-secondary-container text-on-secondary-container rounded-lg font-label-sm text-label-sm font-semibold">
+              No Brokerage
+            </span>
+</div>
+<!-- Configuration Form -->
+<form class="mt-space-md space-y-space-md" id="bookingForm" onsubmit="event.preventDefault(); alert('Visit scheduled! Nestly Warden will contact you on WhatsApp.');">
+<!-- Selected Tier Indicator -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase font-bold mb-1">Room Preference</label>
+<div class="p-2.5 rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">bed</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold" id="selectedRoomText">Double Sharing Room</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-medium">Selected</span>
+</div>
+</div>
+<!-- Move-in Date Picker -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase font-bold mb-1" for="moveInDate">Expected Move-in Date</label>
+<div class="relative">
+<span class="material-symbols-outlined text-primary absolute left-3 top-3 text-[20px] pointer-events-none">calendar_today</span>
+<input class="w-full h-12 pl-10 pr-3 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer" id="moveInDate" min="2025-05-01" type="date" value="2025-07-01"/>
+</div>
+</div>
+<!-- Stay Duration -->
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant uppercase font-bold mb-1" for="tenureSelect">Preferred Stay Term</label>
+<div class="relative">
+<span class="material-symbols-outlined text-primary absolute left-3 top-3 text-[20px] pointer-events-none">date_range</span>
+<select class="w-full h-12 pl-10 pr-8 rounded-xl bg-surface text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary/20 appearance-none transition-all cursor-pointer" id="tenureSelect">
+<option selected="" value="11">Full Academic Year (11 months)</option>
+<option value="6">Semester Stay (6 months)</option>
+<option value="3">Internship Stay (3 months)</option>
+</select>
+<span class="material-symbols-outlined text-outline absolute right-3 top-3 text-[20px] pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Primary CTAs -->
+<div class="space-y-2 pt-2">
+<button class="w-full py-3.5 px-4 rounded-xl bg-primary hover:bg-[#004237] text-on-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99]" type="submit">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+<span>Schedule Free Visit / Video Tour</span>
+</button>
+<button class="w-full py-3 px-4 rounded-xl bg-surface hover:bg-surface-container-low text-primary font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 transition-all" onclick="alert('Connecting with Resident Warden on WhatsApp...')" type="button">
+<span class="material-symbols-outlined text-[20px] text-primary">chat</span>
+<span>Direct Warden WhatsApp</span>
+</button>
+</div>
+<!-- Fast Assurance Details -->
+<div class="pt-2 flex items-center justify-center gap-2 text-secondary font-label-sm text-label-sm text-center">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Typically responds within 15 minutes</span>
+</div>
+</form>
+</div>
+<!-- Nestly Student Escrow Shield Guarantee Box -->
+<div class="p-4 rounded-2xl bg-surface-container flex items-start gap-3">
+<div class="p-2 rounded-full bg-surface-container-lowest text-primary shadow-xs shrink-0">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md font-bold text-on-surface">Nestly Student Shield Guarantee</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 leading-snug">
+              Deposit held safely in escrow. 100% full money-back guarantee within 3 days if room condition differs from audit photos.
+            </p>
+</div>
+</div>
+<!-- Contact Hostel Admin Direct Line -->
+<div class="p-4 rounded-2xl bg-surface-container-lowest text-center">
+<p class="font-body-sm text-body-sm text-outline">Have customized dietary needs or parent queries?</p>
+<a class="inline-flex items-center gap-1.5 font-label-md text-label-md text-primary font-bold mt-1 hover:underline" href="tel:+919876543210">
+<span class="material-symbols-outlined text-[16px]">call</span>
+<span>+91 98200 12345 (Admin Helpdesk)</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Simple Room Selector Interactive Pricing Logic
+  (function() {
+    const radios = document.querySelectorAll('input[name="room_selection"]');
+    const priceDisplay = document.getElementById('displayPrice');
+    const roomText = document.getElementById('selectedRoomText');
+    const bookmarkBtn = document.getElementById('bookmarkBtn');
+    const shareBtn = document.getElementById('shareBtn');
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        const parentLabel = this.closest('label');
+        if (parentLabel) {
+          const roomName = parentLabel.getAttribute('data-room-name');
+          const roomPrice = parentLabel.getAttribute('data-room-price');
+          
+          if (priceDisplay && roomPrice) {
+            priceDisplay.textContent = '₹' + Number(roomPrice).toLocaleString('en-IN');
+          }
+          if (roomText && roomName) {
+            roomText.textContent = roomName;
+          }
+
+          // Visual focus classes
+          radios.forEach(r => {
+            const l = r.closest('label');
+            if (l) {
+              l.classList.remove('bg-secondary-container/40');
+              l.classList.add('bg-surface');
+            }
+          });
+          parentLabel.classList.remove('bg-surface');
+          parentLabel.classList.add('bg-secondary-container/40');
+        }
+      });
+    });
+
+    if (bookmarkBtn) {
+      bookmarkBtn.addEventListener('click', function() {
+        const icon = this.querySelector('.material-symbols-outlined');
+        if (icon) {
+          if (icon.textContent === 'bookmark_border') {
+            icon.textContent = 'bookmark';
+            icon.style.fontVariationSettings = "'FILL' 1";
+            this.classList.add('text-primary');
+          } else {
+            icon.textContent = 'bookmark_border';
+            icon.style.fontVariationSettings = "'FILL' 0";
+            this.classList.remove('text-primary');
+          }
+        }
+      });
+    }
+
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(window.location.href);
+          alert('Property link copied to clipboard!');
+        } else {
+          alert('Share: Green Valley Premier PG - Pune');
+        }
+      });
+    }
+  })();
+</script></main><footer class="w-full bg-surface-container-low mt-space-2xl"><div class="max-w-[1280px] mx-auto px-margin py-space-2xl"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl"><div class="space-y-space-md"><div class="flex items-center gap-space-xs"><img alt="Nestly Brand Logo" class="h-7 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XLBIdjlCwhQsm14iVWPL4BA8vuEWIrL4mCZhzV_IBld6duoNfbZePWMm84Xbt4KHzUC_mxBa5lUBxy_0OpaNSUoAYrpwmjWTgg0d16lZTFZXGNGOMuAMBZVzetVn-mSYufYmpFikmiydFD5V7AazFoWnIFybcGClPZwzDYFlNZa5tL1DcDA1lRHYXDY64lVR7RKgxfd6vT7BKm-OrWZFmFUsZCjS37KUQ9fRtCp3-FL_9_PjXyxB5vxT4"/><span class="font-title-lg text-title-lg tracking-tight text-primary font-bold">Nestly</span></div><p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">Find a place that feels like home. Verified student hostels, PGs, and shared accommodations across major university hubs.</p><div class="flex items-center gap-space-xs text-secondary font-label-md text-label-md pt-space-xs"><span class="material-symbols-outlined text-[18px]">verified</span><span>100% On-Campus Verified</span></div></div><div class="space-y-space-md"><h3 class="font-title-md text-title-md text-on-surface font-semibold">Quick Discovery</h3><ul class="space-y-space-sm"><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="explore-stays" href="#">Pune Hostels</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="explore-stays" href="#">Mumbai PGs</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="explore-stays" href="#">Bengaluru Stays</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="explore-stays" href="#">Delhi North Campus</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="explore-stays" href="#">Hyderabad Co-living</a></li></ul></div><div class="space-y-space-md"><h3 class="font-title-md text-title-md text-on-surface font-semibold">Student Resources</h3><ul class="space-y-space-sm"><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="roommate-matcher" href="#">Roommate Matcher</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="how-it-works" href="#">Verified Guarantee</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="how-it-works" href="#">Safety Guidelines</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="compare-stays" href="#">Compare Tool</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="how-it-works" href="#">FAQ</a></li></ul></div><div class="space-y-space-md"><h3 class="font-title-md text-title-md text-on-surface font-semibold">Property Owners</h3><ul class="space-y-space-sm"><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="list-your-property" href="#">List Your Hostel</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="list-your-property" href="#">Partner Benefits</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="list-your-property" href="#">Verified Partner Badge</a></li><li class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors"><a data-path="owner-login" href="#">Owner Login</a></li></ul></div></div><div class="mt-space-2xl pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md"><p class="font-body-sm text-body-sm text-outline">Copyright © 2025 Nestly Technologies Pvt. Ltd. All rights reserved.</p><div class="flex flex-wrap items-center gap-space-md"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="how-it-works" href="#">Privacy Policy</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="how-it-works" href="#">Terms of Service</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="how-it-works" href="#">Security</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-primary transition-colors" data-path="how-it-works" href="#">Trust &amp; Verification</a></div></div></div></footer></body></html>

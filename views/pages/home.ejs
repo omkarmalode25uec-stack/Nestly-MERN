@@ -1,0 +1,425 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Basic Landing Setup Verification (Stitch Warm Modern Sanctuary) -->
+<section class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin pt-space-xl pb-space-2xl w-full">
+      <!-- Eyebrow Badge -->
+  <div class="flex items-center justify-center lg:justify-start mb-space-md">
+    <div class="inline-flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container-high text-primary font-label-md text-label-md shadow-sm">
+      <span class="inline-block w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+      <span>Serving Students in <strong>Kopargaon</strong>, Maharashtra</span>
+      <span class="text-outline-variant">|</span>
+      <span class="text-secondary font-medium">Sanjivani Campus Admissions '25</span>
+    </div>
+  </div>
+
+  <!-- Hero Header -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center mb-space-2xl">
+    <div class="lg:col-span-7 space-y-space-md text-center lg:text-left">
+      <h1 class="font-display text-display-mobile lg:text-display text-on-surface tracking-tight leading-tight">
+        Find a place that <br class="hidden sm:inline"/>
+        <span class="text-primary font-extrabold relative inline-block">
+          feels like home in Kopargaon.
+        </span>
+      </h1>
+      <p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl mx-auto lg:mx-0">
+        Discover verified student hostels and PGs near Sanjivani institutions, Sahajanandnagar, and Kopargaon Railway Station with 100% transparent pricing and genuine resident reviews.
+      </p>
+
+      <!-- Campus Shortlink Chips -->
+      <div class="flex flex-wrap items-center justify-center lg:justify-start gap-space-xs pt-space-xs">
+        <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Local Hubs:</span>
+        <a href="/stays?q=Sanjivani" class="px-space-sm py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">Sanjivani College (SCOE)</a>
+        <a href="/stays?locality=Sahajanandnagar" class="px-space-sm py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">Sahajanandnagar</a>
+        <a href="/stays?locality=Sai+City" class="px-space-sm py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">Sai City</a>
+        <a href="/stays?q=Railway+Station" class="px-space-sm py-1 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface font-label-sm text-label-sm transition-colors">Station Road</a>
+      </div>
+    </div>
+
+    <!-- Hero Image Card -->
+    <div class="lg:col-span-5 relative">
+      <div class="relative rounded-3xl overflow-hidden shadow-xl bg-surface-container-lowest p-2">
+        <img class="w-full h-80 lg:h-96 object-cover rounded-2xl" alt="Student Room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUj_9FzDIoTonWwBEYXGFeRR1gl1HnhuBRmdYtC_DNBnQHMNS56NlK_OBkxTC7-5--UbcX2xweQwjv1V6MRzXxWoh_jShjZu2vpdN1pbIHOGdlXMUGIvMzAunV7Oa8Liekksca6I78jEsv51htQ72ncHtx-NMTADu9cLlOcP2sONfbrbCWG0Wm_cCH44XEA76hujlS1uJrLZYwrgoVHSPamEbPFzU2XVgYZc5g94ZHVSzfOhj6qDtA"/>
+        <div class="absolute top-6 left-6 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl p-3 shadow-lg flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center text-primary font-bold">
+            <span class="material-symbols-outlined text-[24px]">verified_user</span>
+          </div>
+          <div class="leading-tight pr-2">
+            <p class="font-label-md text-label-md text-on-surface font-bold">25-Point Campus Audit</p>
+            <p class="font-body-sm text-body-sm text-secondary">Verified by Nestly Crew</p>
+          </div>
+        </div>
+        <div class="absolute bottom-6 right-6 bg-surface-container-lowest/95 backdrop-blur-md rounded-xl py-2 px-3.5 shadow-lg flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary-container text-[20px]" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="font-title-md text-title-md text-on-surface font-bold">4.9</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">(Verified Kopargaon Reviews)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stitch Landing Search Card -->
+  <div class="bg-surface-container-lowest rounded-2xl shadow-xl p-space-md sm:p-space-lg border border-outline-variant/30 mb-space-xl">
+    <form action="/stays" method="GET">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md items-end">
+        <!-- Location / City / College Column -->
+        <div class="lg:col-span-4 space-y-1.5">
+          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span> Locality or College in Kopargaon
+          </label>
+          <div class="relative">
+            <input name="q" class="w-full h-12 pl-4 pr-10 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm" placeholder="e.g. Sanjivani, Sahajanandnagar, Sai City..." type="text" value=""/>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px]">near_me</span>
+          </div>
+        </div>
+
+        <!-- Room Sharing Column -->
+        <div class="lg:col-span-3 space-y-1.5">
+          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">bed</span> Room Sharing
+          </label>
+          <div class="relative">
+            <select name="sharing" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
+              <option value="">Any Sharing Type</option>
+              <option value="Single">Single Private Occupancy</option>
+              <option value="Double" selected>Double Sharing Room</option>
+              <option value="Triple">Triple Sharing (Budget)</option>
+              <option value="Four+">Four+ Sharing</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Property Type Column -->
+        <div class="lg:col-span-2 space-y-1.5">
+          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">apartment</span> Stay Type
+          </label>
+          <div class="relative">
+            <select name="type" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
+              <option value="">All Types</option>
+              <option value="PG" selected>Paying Guest (PG)</option>
+              <option value="Hostel">Student Hostel</option>
+              <option value="Co-Living">Co-Living</option>
+              <option value="Shared Flat">Shared Flat</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        <!-- Budget Range Column -->
+        <div class="lg:col-span-2 space-y-1.5">
+          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-primary">payments</span> Max Budget
+          </label>
+          <div class="relative">
+            <select name="maxPrice" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
+              <option value="">Any Budget</option>
+              <option value="8000">Under ₹8,000 / mo</option>
+              <option value="10000" selected>Under ₹10,000 / mo</option>
+              <option value="15000">Under ₹15,000 / mo</option>
+              <option value="25000">₹25,000+ (Luxury)</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+          </div>
+        </div>
+
+        <!-- CTA Trigger Column -->
+        <div class="lg:col-span-1">
+          <button type="submit" class="w-full h-12 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]" title="Search verified student properties">
+            <span class="material-symbols-outlined text-[22px]">search</span>
+            <span class="lg:hidden">Search</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Trust Bar Directly Beneath Search Box (Stitch Design) -->
+  <div class="bg-surface-container-low rounded-xl px-space-md py-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+    <div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+      <span class="material-symbols-outlined text-secondary text-[18px]">verified</span>
+      <span>100% Physically Verified</span>
+    </div>
+    <div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+      <span class="material-symbols-outlined text-secondary text-[18px]">money_off</span>
+      <span>Zero Brokerage Direct Connect</span>
+    </div>
+    <div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+      <span class="material-symbols-outlined text-secondary text-[18px]">lock_clock</span>
+      <span>Safe &amp; Curfew-Transparent</span>
+    </div>
+    <div class="flex items-center gap-2 text-on-surface font-label-sm text-label-sm">
+      <span class="material-symbols-outlined text-secondary text-[18px]">shield</span>
+      <span>Female-Only &amp; Co-Living Options</span>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: BROWSE BY UNIVERSITY CITY (Stitch 6-City Bento Layout) -->
+<section class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin pb-space-2xl w-full">
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm uppercase font-semibold mb-space-xs">
+        Popular Student Hubs
+      </div>
+  <!-- University Areas & Localities Section (Kopargaon Active Focus) -->
+  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-sm mb-space-lg">
+    <div>
+      <div class="inline-flex items-center gap-1 text-primary font-label-sm text-label-sm font-bold uppercase tracking-wider mb-1">
+        <span class="material-symbols-outlined text-[15px]">location_city</span>
+        Current Service Area
+      </div>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface">Explore Localities in Kopargaon</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">Discover verified accommodations in major student zones across Kopargaon.</p>
+    </div>
+    <a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-primary hover:text-on-primary-fixed-variant font-semibold group transition-all" href="/stays">
+      <span>View all Kopargaon stays</span>
+      <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+    <!-- Sahajanandnagar Card -->
+    <a class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-surface-container-lowest flex flex-col" href="/stays?locality=Sahajanandnagar">
+      <div class="relative h-48 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sahajanandnagar Student Stays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZD9eBgZvMEYCcqYDJpAVIDYIs-QHFO6JVVrebGyecV52CQcmiNQoBq_mWlQ_wK4tpZc_2CjyY--UGYJnizoMdSQU5gYNVQs2qIn7uAfV4-4ufg0InlUwQyvN14ns-xijTpVkVpS1f0F-bA0gBB6wV9wdVKzfzIndRHVaeR8an4_Ylbg9G42z7kV6SROtEVW53DyxURGfZPG3TF3eFOPuFamQmBWHQ46F6QGxXAVpc8CUMrYY1qXcI"/>
+        <span class="absolute top-3 left-3 bg-surface-container-lowest/90 backdrop-blur-sm text-primary font-label-sm text-label-sm px-2.5 py-1 rounded-full font-bold">Closest to Campus</span>
+        <span class="absolute bottom-3 right-3 bg-surface/95 text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-md shadow-sm font-semibold">from ₹5,500/mo</span>
+      </div>
+      <div class="p-space-md flex items-center justify-between">
+        <div>
+          <h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors font-bold">Sahajanandnagar</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Sanjivani College of Engineering, Polytechnic</p>
+        </div>
+        <span class="font-label-md text-label-md text-secondary bg-surface-container px-2.5 py-1 rounded-lg">Active Area</span>
+      </div>
+    </a>
+
+    <!-- Sai City Card -->
+    <a class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-surface-container-lowest flex flex-col" href="/stays?locality=Sai+City">
+      <div class="relative h-48 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Sai City Student Stays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDESwZvz3z0wSlmZGM_KTcP6NZ3lNt5SOCZ54MpxqXDiDgDJxzXnl9Adlpe7Uhm2DEcGP8rsceC9hJNeNTuE3sJaGt5LggLVzQ0cuWvbHwr2K5Pt6n1ln_GzfkD_jAT4JNJNwrauySNLUvP1abRaA_tgVMRe2-hAqaqGOoZtSClUvDLFgPwAkq9bTf-qsGY75HrFNPUuDtlggkz8C2TDZ9MMTr7tH-adruRaaMglF0FzTwNFe_AnDoT"/>
+        <span class="absolute bottom-3 right-3 bg-surface/95 text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-md shadow-sm font-semibold">from ₹5,000/mo</span>
+      </div>
+      <div class="p-space-md flex items-center justify-between">
+        <div>
+          <h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors font-bold">Sai City</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Residential study enclave, quiet & secure</p>
+        </div>
+        <span class="font-label-md text-label-md text-secondary bg-surface-container px-2.5 py-1 rounded-lg">Active Area</span>
+      </div>
+    </a>
+
+    <!-- Station Road & Mewad Card -->
+    <a class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-surface-container-lowest flex flex-col" href="/stays?locality=Mewad">
+      <div class="relative h-48 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Mewad Student Stays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDw0jtf2q9M7ynX5Byfy4H-hL9F_uDc4u-G3brzp2pO43fLJiBrR1BQMADCCf9GfeT40K12dV3SC-NQNDjtmI93kwy8AECBwAofDWElpjKu9BuczVwtlFJlkiJcsOSqy1GJcfTcS1zqDRYaILAoIcwR34hnibKpYC-Ey2XlwZN_n32Mo62F_4rBe40X73LnMDsZ6ztyd2PXJoL-Z8q_85ueNX1vlcOVOcE6CA3XZ-Bku4McEqor-8R"/>
+        <span class="absolute bottom-3 right-3 bg-surface/95 text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-md shadow-sm font-semibold">from ₹4,800/mo</span>
+      </div>
+      <div class="p-space-md flex items-center justify-between">
+        <div>
+          <h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors font-bold">Mewad & Station Road</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Near Kopargaon Junction Railway Station</p>
+        </div>
+        <span class="font-label-md text-label-md text-secondary bg-surface-container px-2.5 py-1 rounded-lg">Active Area</span>
+      </div>
+    </a>
+
+    <!-- Hyderabad Card -->
+    <a class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-surface-container-lowest flex flex-col" href="/stays?city=hyderabad">
+      <div class="relative h-48 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Hyderabad Student Stays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIx96D_VJ-a8aCx4JSd-To3FEAlAj8xafLmIZvGbwmrlz1eGKvwI0-iH_JSVKNa-dy0IIOG4dLWuEtOuCpNONvOai4rmBfy-UVfUJfpVr7_2XfRQlUvwnudxr4WUuHmlm1_ZCiQQlDptlWlnC4FV8gO1iH77Ae0kNJ_sWMlzkl6D8yEVpZXMbSYaBeK-gjaRu3gJcUOHlZc8SB_WaPD4Pil6_3sL0yVt17g-v5nrJiIVnCWsZghKo5"/>
+        <span class="absolute bottom-3 right-3 bg-surface/95 text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-md shadow-sm font-semibold">from ₹6,800/mo</span>
+      </div>
+      <div class="p-space-md flex items-center justify-between">
+        <div>
+          <h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors font-bold">Hyderabad</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">IIIT, HCU, ISB, Osmania Univ</p>
+        </div>
+        <span class="font-label-md text-label-md text-secondary bg-surface-container px-2.5 py-1 rounded-lg">980+ Stays</span>
+      </div>
+    </a>
+
+    <!-- Kota Card -->
+    <a class="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 bg-surface-container-lowest flex flex-col" href="/stays?city=kota">
+      <div class="relative h-48 overflow-hidden">
+        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Kota Student Hostels" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGtz2zHasbIJr2YcLJ602w2iX18s7vb0RfMo7MTJlXgkk_cWntcKNT2FM5XHy5QoAIkZVK7yt7PiYAZM5AK3T1FKw-DC3CPSPUxp8wvyXLb5WmDfpWZY_ExSjISyYsl6NjZ017-fP4XBwA3iAmQWGjW22HbdnOdoAUMGauOK-cJoLaPGsYimGb1bC37s5klJhN8BifKSCq9HxxaaBMFz6d8AJp4zOzBSSU7xaFm1Q8u6rwkk9bCJcN"/>
+        <span class="absolute bottom-3 right-3 bg-surface/95 text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-md shadow-sm font-semibold">from ₹5,000/mo</span>
+      </div>
+      <div class="p-space-md flex items-center justify-between">
+        <div>
+          <h3 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors font-bold">Kota</h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Landmark City, Rajiv Gandhi Nagar</p>
+        </div>
+        <span class="font-label-md text-label-md text-secondary bg-surface-container px-2.5 py-1 rounded-lg">1,150+ Stays</span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- SECTION 3: WHY 45k+ STUDENTS CHOOSE NESTLY (Stitch 4 Value Pillars) -->
+<section class="w-full bg-surface-container-low py-space-2xl" id="how-it-works">
+  <div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin">
+    <div class="text-center max-w-2xl mx-auto mb-space-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm uppercase font-semibold mb-space-xs">
+        Built for Student Peace of Mind
+      </div>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Why 45k+ Students Choose Nestly</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-2">
+        Relocating for college shouldn't feel like a gamble. We replaced questionable brokers with strict physical verification and full cost visibility.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+      <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-secondary-container text-primary flex items-center justify-center mb-space-md">
+            <span class="material-symbols-outlined text-[28px]">fact_check</span>
+          </div>
+          <h3 class="font-title-md text-title-md text-on-surface mb-space-xs font-bold">Verified Information</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Every room undergoes our in-person 25-point audit: plumbing check, mattress condition, Wi-Fi speed test, and fire safety.
+          </p>
+        </div>
+        <div class="mt-space-md pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold">
+          <span>25-point checklist verified</span>
+          <span class="material-symbols-outlined text-[16px]">check_circle</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-secondary-container text-primary flex items-center justify-center mb-space-md">
+            <span class="material-symbols-outlined text-[28px]">compare_arrows</span>
+          </div>
+          <h3 class="font-title-md text-title-md text-on-surface mb-space-xs font-bold">Side-by-Side Comparison</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Directly compare monthly rents, security deposits, breakfast-to-dinner meal plans, curfews, and distance to your lecture halls.
+          </p>
+        </div>
+        <div class="mt-space-md pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold">
+          <span>Zero guessing on rules</span>
+          <span class="material-symbols-outlined text-[16px]">rule</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-secondary-container text-primary flex items-center justify-center mb-space-md">
+            <span class="material-symbols-outlined text-[28px]">receipt_long</span>
+          </div>
+          <h3 class="font-title-md text-title-md text-on-surface mb-space-xs font-bold">100% Transparent Pricing</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            No sudden maintenance surcharges or inflated electricity tariffs. Exact deposit return terms clearly disclosed before booking.
+          </p>
+        </div>
+        <div class="mt-space-md pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold">
+          <span>Zero broker commissions</span>
+          <span class="material-symbols-outlined text-[16px]">savings</span>
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-secondary-container text-primary flex items-center justify-center mb-space-md">
+            <span class="material-symbols-outlined text-[28px]">sentiment_satisfied</span>
+          </div>
+          <h3 class="font-title-md text-title-md text-on-surface mb-space-xs font-bold">Student-First Amenities</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Opt for accommodations with dedicated study rooms, high-speed mesh routers, hygienic home-cooked food, laundry and biometric security.
+          </p>
+        </div>
+        <div class="mt-space-md pt-space-xs flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold">
+          <span>Designed for campus life</span>
+          <span class="material-symbols-outlined text-[16px]">school</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: TRENDING ACCOMMODATIONS IN PUNE (Stitch Featured Loop) -->
+<% if (typeof featuredProperties !== 'undefined' && featuredProperties && featuredProperties.length) { %>
+  <section class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-2xl w-full">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
+      <div>
+        <div class="flex items-center gap-2 text-primary font-label-md text-label-md uppercase tracking-wider mb-1 font-semibold">
+          <span class="material-symbols-outlined text-[18px]">local_fire_department</span>
+          <span>Verified By Nestly Team</span>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface font-bold">Trending Accommodations</h2>
+        <p class="font-body-md text-body-md text-on-surface-variant mt-1">Ready for immediate move-in or priority pre-booking for upcoming academic sessions.</p>
+      </div>
+      <a class="inline-flex items-center gap-1 font-label-lg text-label-lg text-primary hover:text-on-primary-fixed-variant font-semibold group transition-all" href="/stays">
+        <span>Browse all listings</span>
+        <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+      <% featuredProperties.forEach(function(stay) { %>
+        <div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-outline-variant/30 flex flex-col">
+          <div class="relative h-52 overflow-hidden">
+            <img class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" alt="<%= stay.title %>" src="<%= (stay.images && stay.images.length) ? stay.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
+            <div class="absolute top-3 left-3 flex items-center gap-1.5">
+              <span class="bg-surface-container-lowest/95 backdrop-blur-sm text-primary font-label-sm text-label-sm font-bold px-2.5 py-1 rounded-full shadow-sm">
+                <%= stay.propertyType %>
+              </span>
+              <span class="bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold px-2.5 py-1 rounded-full">
+                <%= stay.genderPreference %>
+              </span>
+            </div>
+            <div class="absolute bottom-3 right-3 bg-surface/95 backdrop-blur-sm text-on-surface px-2.5 py-1 rounded-lg font-label-sm text-label-sm font-bold shadow-sm">
+              ₹<%= stay.price.toLocaleString('en-IN') %><span class="text-outline font-normal">/mo</span>
+            </div>
+          </div>
+          <div class="p-space-md flex-1 flex flex-col justify-between space-y-space-sm">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-label-sm text-label-sm text-secondary font-medium"><%= stay.locality %>, <%= stay.city %></span>
+                <div class="flex items-center gap-1 text-on-surface">
+                  <span class="material-symbols-outlined text-tertiary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                  <span class="font-label-md text-label-md font-bold"><%= stay.rating || 4.8 %></span>
+                </div>
+              </div>
+              <h3 class="font-title-md text-title-md text-on-surface font-bold line-clamp-1"><%= stay.title %></h3>
+              <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-1">
+                <span class="material-symbols-outlined text-[16px] text-primary">directions_walk</span>
+                <span><%= stay.campusDistance || 'Short walk to campus' %></span>
+              </p>
+            </div>
+            <div class="pt-space-xs border-t border-outline-variant/20 flex items-center justify-between">
+              <span class="font-label-sm text-label-sm text-outline"><%= stay.roomSharing %> Sharing</span>
+              <a href="/stays/<%= stay._id %>" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md font-bold transition-colors">
+                View Stay
+              </a>
+            </div>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </section>
+<% } %>
+
+<!-- SECTION 5: ARE YOU A HOST / OWNER? (Stitch Owner CTA Banner) -->
+<section class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin pb-space-2xl w-full">
+  <div class="rounded-3xl bg-secondary-container/60 border border-secondary/20 p-space-xl md:p-space-2xl flex flex-col md:flex-row items-center justify-between gap-space-xl">
+    <div class="space-y-space-xs max-w-xl text-center md:text-left">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Host &amp; Landlord Partner Network</span>
+      <h2 class="font-headline-md text-headline-md font-bold text-on-secondary-container">
+        Fill your student beds with zero listing fees.
+      </h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Connect directly with verified students from nearby colleges. Manage enquiries, accept token holds, and streamline occupancy from our dedicated Owner Hub.
+      </p>
+    </div>
+    <div class="flex flex-col sm:flex-row items-center gap-space-sm shrink-0">
+      <a href="/stays/new" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold transition-all shadow-md text-center">
+        List Your Property
+      </a>
+      <a href="/owner/dashboard" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-colors text-center">
+        Owner Dashboard
+      </a>
+    </div>
+  </div>
+</section>

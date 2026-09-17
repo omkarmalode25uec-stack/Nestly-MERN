@@ -1,0 +1,280 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-xl">
+  <!-- Top Breadcrumb & Controls -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+    <div class="space-y-1">
+      <nav aria-label="Breadcrumbs" class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+        <a href="/" class="hover:text-primary transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">home</span>
+          <span>Home</span>
+        </a>
+        <span class="text-outline-variant">/</span>
+        <a href="/owner/dashboard" class="hover:text-primary transition-colors">Owner Hub</a>
+        <span class="text-outline-variant">/</span>
+        <span class="text-on-surface font-semibold">Payouts &amp; Settlements</span>
+      </nav>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface font-bold tracking-tight">
+        Owner Payout &amp; Settlement Hub
+      </h1>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        Configure your receiving account and track student token hold deposits held in escrow.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-space-sm">
+      <a href="/owner/dashboard" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+        <span class="material-symbols-outlined text-[18px]">domain</span>
+        <span>Owner Dashboard</span>
+      </a>
+      <a href="/owner/verification" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+        <span class="material-symbols-outlined text-[18px]">verified_user</span>
+        <span>Verification</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Financial Summary KPI Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+    <!-- Total Collected -->
+    <div class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-semibold">Total Escrow Deposits</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-on-surface">₹<%= summary.totalCollected.toLocaleString('en-IN') %></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant"><%= summary.settlementCount %> student token bookings</p>
+    </div>
+
+    <!-- Settled & Disbursed -->
+    <div class="p-space-lg rounded-2xl bg-secondary-container/40 shadow-sm border border-secondary/20 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Disbursed Payouts</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-on-secondary-container">₹<%= summary.settledAmount.toLocaleString('en-IN') %></div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">Credited to your verified account</p>
+    </div>
+
+    <!-- Pending Escrow -->
+    <div class="p-space-lg rounded-2xl bg-amber-50 shadow-sm border border-amber-200 space-y-1">
+      <span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-800 font-bold">Pending Escrow Balance</span>
+      <div class="font-headline-lg text-headline-lg font-bold text-amber-900">₹<%= summary.pendingSettlement.toLocaleString('en-IN') %></div>
+      <p class="font-body-sm text-body-sm text-amber-800">Held until move-in terms verified</p>
+    </div>
+  </div>
+
+  <!-- Main Content: Settlement Profile Form & Settlement Ledger -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+    <!-- Left Column: Settlement Profile Settings (5 Cols) -->
+    <div class="lg:col-span-5 bg-surface-container-lowest rounded-3xl p-6 md:p-8 shadow-sm border border-outline-variant/30 space-y-space-md">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed-variant font-label-md text-label-md font-bold mb-2">
+          <span class="material-symbols-outlined text-[16px]">account_balance</span>
+          <span>Payout Receiving Account</span>
+        </div>
+        <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Settlement Destination</h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Where Nestly should disburse student token deposits collected for your properties.
+        </p>
+      </div>
+
+      <!-- Security Notice Box -->
+      <div class="p-3.5 rounded-2xl bg-surface-container-low border border-outline-variant/30 text-body-sm font-body-sm text-on-surface-variant space-y-1">
+        <div class="flex items-center gap-1.5 text-primary font-semibold">
+          <span class="material-symbols-outlined text-[18px]">security</span>
+          <span>Zero Credential Risk Guarantee</span>
+        </div>
+        <p class="text-xs leading-relaxed">
+          Nestly will <strong>NEVER</strong> ask for your UPI PIN, banking password, or SMS OTP. Only enter receiving account identifiers.
+        </p>
+      </div>
+
+      <!-- Form (POST /owner/settlement) -->
+      <form action="/owner/settlement" method="POST" class="space-y-4">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="accountHolderName">
+            Bank / UPI Account Holder Name *
+          </label>
+          <input
+            name="accountHolderName"
+            id="accountHolderName"
+            type="text"
+            required
+            value="<%= settlementProfile.accountHolderName || owner.name %>"
+            placeholder="e.g. Rameshwar Patil"
+            class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all"
+          />
+        </div>
+
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1">
+            Settlement Method *
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2 p-3 rounded-xl border border-outline-variant/40 bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+              <input type="radio" name="settlementMethod" value="upi" <%= (settlementProfile.settlementMethod !== 'bank_transfer') ? 'checked' : '' %> id="methodUpi" onchange="toggleMethodFields()"/>
+              <span class="font-label-md text-label-md font-semibold text-on-surface">UPI ID (VPA)</span>
+            </label>
+            <label class="flex items-center gap-2 p-3 rounded-xl border border-outline-variant/40 bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+              <input type="radio" name="settlementMethod" value="bank_transfer" <%= (settlementProfile.settlementMethod === 'bank_transfer') ? 'checked' : '' %> id="methodBank" onchange="toggleMethodFields()"/>
+              <span class="font-label-md text-label-md font-semibold text-on-surface">Bank Transfer</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- UPI Field -->
+        <div id="upiContainer" class="<%= (settlementProfile.settlementMethod === 'bank_transfer') ? 'hidden' : '' %>">
+          <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="upiId">
+            Receiving UPI ID / VPA *
+          </label>
+          <div class="relative flex items-center">
+            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-lg">qr_code_2</span>
+            <input
+              name="upiId"
+              id="upiId"
+              type="text"
+              value="<%= settlementProfile.upiId || '' %>"
+              placeholder="e.g. saikrupa@okhdfcbank"
+              class="w-full pl-10 pr-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all"
+            />
+          </div>
+          <span class="text-[11px] text-outline mt-1 block">Compatible with PhonePe, Google Pay, Paytm, BHIM</span>
+        </div>
+
+        <!-- Bank Fields -->
+        <div id="bankContainer" class="space-y-3 <%= (settlementProfile.settlementMethod === 'bank_transfer') ? '' : 'hidden' %>">
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="bankName">
+              Bank Name
+            </label>
+            <input
+              name="bankName"
+              id="bankName"
+              type="text"
+              value="<%= settlementProfile.bankName || '' %>"
+              placeholder="e.g. State Bank of India, Kopargaon"
+              class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all"
+            />
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="accountNumber">
+              Account Number
+            </label>
+            <input
+              name="accountNumber"
+              id="accountNumber"
+              type="text"
+              value="<%= settlementProfile.accountNumber || '' %>"
+              placeholder="e.g. 00001234567890"
+              class="w-full px-4 py-2.5 bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all"
+            />
+          </div>
+
+          <div>
+            <label class="block font-label-md text-label-md text-on-surface font-semibold mb-1" for="ifscCode">
+              IFSC Code
+            </label>
+            <input
+              name="ifscCode"
+              id="ifscCode"
+              type="text"
+              value="<%= settlementProfile.ifscCode || '' %>"
+              placeholder="e.g. SBIN0000300"
+              class="w-full px-4 py-2.5 uppercase bg-surface-container-lowest border border-outline-variant/50 text-on-surface font-body-md text-body-md rounded-xl shadow-sm outline-none focus:border-primary focus:bg-surface-container-low transition-all"
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 px-4 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold shadow-md hover:bg-on-primary-fixed-variant transition-all duration-200">
+          Save Settlement Account
+        </button>
+      </form>
+    </div>
+
+    <!-- Right Column: Escrow Settlement History Ledger (7 Cols) -->
+    <div class="lg:col-span-7 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant/30 overflow-hidden space-y-4">
+      <div class="p-6 border-b border-outline-variant/20 flex items-center justify-between">
+        <div>
+          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Escrow Settlement Ledger</h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant">Breakdown of student reservation token deposits</p>
+        </div>
+        <span class="font-label-sm text-label-sm text-secondary bg-secondary-container px-2.5 py-1 rounded-full font-bold">100% Guaranteed</span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-surface-container-low border-b border-outline-variant/20 text-on-surface-variant font-label-sm text-label-sm">
+              <th class="py-3 px-4">Booking / Resident</th>
+              <th class="py-3 px-4">Property</th>
+              <th class="py-3 px-4">Net Payout</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Reference / UTR</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-outline-variant/10 text-body-sm font-body-sm">
+            <% if (settlements && settlements.length > 0) { %>
+              <% settlements.forEach(s => { %>
+                <tr class="hover:bg-surface-container-low/40 transition-colors">
+                  <td class="py-3.5 px-4">
+                    <div class="font-semibold text-on-surface"><%= s.student ? s.student.name : 'Student Resident' %></div>
+                    <div class="text-[11px] text-outline"><%= s.booking ? s.booking.referenceCode : 'Token Hold' %></div>
+                  </td>
+                  <td class="py-3.5 px-4 text-on-surface">
+                    <%= s.property ? s.property.title : 'Accommodation' %>
+                  </td>
+                  <td class="py-3.5 px-4 font-bold text-primary whitespace-nowrap">
+                    ₹<%= (s.netAmount || s.grossAmount).toLocaleString('en-IN') %>
+                  </td>
+                  <td class="py-3.5 px-4">
+                    <% if (s.status === 'settled') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-[11px] font-bold">
+                        <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                        <span>Settled</span>
+                      </span>
+                    <% } else if (s.status === 'on_hold') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-label-sm text-[11px] font-bold">
+                        <span>On Hold</span>
+                      </span>
+                    <% } else { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-[11px] font-semibold">
+                        <span class="material-symbols-outlined text-[13px]">hourglass_empty</span>
+                        <span>Pending Escrow</span>
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="py-3.5 px-4 text-on-surface-variant text-[11px]">
+                    <% if (s.settlementReference) { %>
+                      <span class="font-mono text-primary font-semibold"><%= s.settlementReference %></span>
+                      <div class="text-[10px] text-outline"><%= s.settledAt ? new Date(s.settledAt).toLocaleDateString('en-IN') : '' %></div>
+                    <% } else { %>
+                      <span class="text-outline">Held in Vault</span>
+                    <% } %>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="py-10 text-center text-on-surface-variant">
+                  <span class="material-symbols-outlined text-[32px] text-outline mb-1">payments</span>
+                  <p class="font-body-sm text-body-sm">No token deposits or settlements recorded yet.</p>
+                </td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleMethodFields() {
+    const isBank = document.getElementById('methodBank').checked;
+    const upiContainer = document.getElementById('upiContainer');
+    const bankContainer = document.getElementById('bankContainer');
+    if (isBank) {
+      upiContainer.classList.add('hidden');
+      bankContainer.classList.remove('hidden');
+    } else {
+      upiContainer.classList.remove('hidden');
+      bankContainer.classList.add('hidden');
+    }
+  }
+</script>

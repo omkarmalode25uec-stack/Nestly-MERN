@@ -1,0 +1,28 @@
+﻿<% layout('layouts/boilerplate') %>
+
+<div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-2xl text-center space-y-space-md">
+  <div class="w-20 h-20 rounded-full bg-error-container/70 text-on-error-container flex items-center justify-center mx-auto mb-space-md shadow-sm">
+    <span class="material-symbols-outlined text-[40px]">warning</span>
+  </div>
+  
+  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold uppercase tracking-wider">
+    Status <%= typeof statusCode !== 'undefined' ? statusCode : 500 %>
+  </div>
+
+  <h1 class="font-headline-lg text-headline-lg font-bold text-on-surface">
+    <%= typeof title !== 'undefined' ? title : 'Something Went Wrong' %>
+  </h1>
+
+  <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md mx-auto leading-relaxed">
+    <%= typeof message !== 'undefined' ? message : 'An unexpected error occurred while processing your request. Please try again or return to home.' %>
+  </p>
+
+  <div class="pt-space-md flex flex-col sm:flex-row items-center justify-center gap-space-sm">
+    <a href="/" class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold transition-all shadow-md">
+      Back to Home
+    </a>
+    <a href="javascript:history.back()" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-colors">
+      Go Back
+    </a>
+  </div>
+</div>
