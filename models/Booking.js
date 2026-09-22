@@ -17,10 +17,10 @@ const bookingSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Owner reference is required']
     },
-    // Amount for token hold deposit (default ₹2,000 as per Stitch design)
+    // Amount for reservation payment (first month's rent)
     amount: {
       type: Number,
-      default: 2000,
+      required: true,
       min: 0
     },
     monthlyRent: {

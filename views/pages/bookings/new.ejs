@@ -36,7 +36,7 @@
           <%= property.roomSharing %> Room Unit Reserved under Session
         </p>
         <p class="font-body-sm text-body-sm text-on-surface-variant">
-          Rate of ₹<%= property.price.toLocaleString('en-IN') %>/mo is protected. Token deposit is ₹2,000 and 100% refundable upon cancellation within 48 hours.
+          Rate of ₹<%= property.price.toLocaleString('en-IN') %>/mo is protected. First month rent is ₹<%= property.price.toLocaleString('en-IN') %> and 100% refundable upon cancellation prior to check-in confirmation.
         </p>
       </div>
       <div class="flex items-center gap-2 bg-surface-container-lowest/90 p-2.5 rounded-xl text-secondary border border-outline-variant/20">
@@ -129,7 +129,7 @@
           <div>
             <h3 class="font-title-md text-title-md font-bold text-primary">100% Escrow Protection Protocol</h3>
             <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-              Your token deposit of ₹2,000 is safely held in escrow. It is released to the property owner ONLY after you physically inspect the unit and accept key handover.
+              Your first month rent of ₹<%= property.price.toLocaleString('en-IN') %> is safely held in escrow. It is released to the property owner ONLY after you physically inspect the unit and accept key handover.
             </p>
           </div>
         </div>
@@ -170,11 +170,11 @@
           <div class="h-px bg-surface-container-highest my-2"></div>
           <div class="flex justify-between items-center pt-0.5">
             <div>
-              <div class="font-title-md text-title-md font-bold text-on-surface">Token Hold Deposit Payable</div>
-              <div class="font-body-sm text-body-sm text-secondary">Adjusted against 1st month rent on check-in</div>
+              <div class="font-title-md text-title-md font-bold text-on-surface">First Month Rent Payable Today</div>
+              <div class="font-body-sm text-body-sm text-secondary">Secures your bed reservation under 100% Escrow Protection</div>
             </div>
             <div class="text-right">
-              <span class="font-headline-sm text-headline-sm font-bold text-primary">₹2,000</span>
+              <span class="font-headline-sm text-headline-sm font-bold text-primary">₹<%= property.price.toLocaleString('en-IN') %></span>
               <div class="font-label-sm text-label-sm text-secondary font-semibold">100% Refundable</div>
             </div>
           </div>

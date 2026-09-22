@@ -28,7 +28,7 @@
           <% } else if (booking.status === 'cancelled') { %>
             This accommodation request was cancelled.
           <% } else { %>
-            Your unit hold is active in the Nestly system. Token deposit of ₹<%= booking.amount.toLocaleString('en-IN') %> is protected under Escrow.
+            Your unit hold is active in the Nestly system. First month rent of ₹<%= booking.amount.toLocaleString('en-IN') %> is protected under Escrow.
           <% } %>
         </p>
       </div>
@@ -118,7 +118,7 @@
           <span class="font-semibold text-on-surface">₹<%= booking.securityDeposit.toLocaleString('en-IN') %></span>
         </div>
         <div class="flex justify-between text-on-surface-variant">
-          <span>Token Hold Deposit (Escrow)</span>
+          <span>First Month Rent (Escrow)</span>
           <span class="font-bold text-primary">₹<%= booking.amount.toLocaleString('en-IN') %></span>
         </div>
         <div class="flex justify-between items-center text-on-surface-variant">
@@ -127,7 +127,7 @@
             <span class="font-semibold uppercase text-xs px-2 py-0.5 rounded <%= booking.paymentStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container text-secondary' %>"><%= booking.paymentStatus %></span>
             <% if (isStudent && booking.paymentStatus !== 'completed' && booking.status !== 'cancelled' && booking.status !== 'rejected') { %>
               <a href="/checkout?bookingId=<%= booking._id %>" class="px-2.5 py-1 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition-all">
-                Pay Token
+                Pay First Month Rent
               </a>
             <% } %>
           </div>

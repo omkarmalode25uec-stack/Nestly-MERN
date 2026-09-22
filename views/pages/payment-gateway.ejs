@@ -15,9 +15,9 @@
       </div>
     </div>
     <div>
-      <h1 class="font-title-lg text-title-lg text-on-surface font-bold">Complete Your Escrow Token Deposit</h1>
+      <h1 class="font-title-lg text-title-lg text-on-surface font-bold">Complete Your First Month Rent Payment</h1>
       <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-        Scan the dynamic UPI QR code or open your preferred UPI mobile app to transfer the token deposit.
+        Scan the dynamic UPI QR code or open your preferred UPI mobile app to pay the first month's rent.
       </p>
     </div>
   </div>
@@ -91,45 +91,29 @@
     </div>
   </div>
 
-  <!-- 4. UTR / Bank Reference Verification Form -->
-  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm border border-outline-variant/30 space-y-space-sm">
-    <div class="flex items-start gap-2.5">
-      <div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">
-        ✓
+  <!-- 4. Server-Side Verification Action (No manual UTR required) -->
+  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm border border-outline-variant/30 space-y-space-sm text-center">
+    <div class="space-y-1">
+      <div class="inline-flex items-center gap-1.5 text-primary font-label-md text-label-md font-bold">
+        <span class="material-symbols-outlined text-[18px]">verified</span>
+        <span>Automatic Server Verification</span>
       </div>
-      <div>
-        <h3 class="font-title-md text-title-md font-bold text-on-surface">Step 2: Enter Bank UTR to Confirm</h3>
-        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-          After authorizing the ₹<%= payment.amount.toLocaleString('en-IN') %> payment in your UPI app, find the <strong class="text-on-surface">12-digit UTR / Bank Reference Number</strong> on your transaction receipt and paste it below:
-        </p>
-      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant max-w-md mx-auto">
+        After completing the ₹<%= payment.amount.toLocaleString('en-IN') %> payment in your UPI app, click below to verify and confirm your reservation. No manual UTR entry needed.
+      </p>
     </div>
 
-    <form action="/payments/verify-utr/<%= payment.orderId %>" method="POST" class="space-y-space-xs pt-1">
-      <div class="space-y-1">
-        <label for="utrInput" class="block font-label-sm text-label-sm text-on-surface-variant font-semibold">
-          Bank UTR / UPI Transaction Reference Number
-        </label>
-        <div class="relative">
-          <input 
-            type="text" 
-            id="utrInput" 
-            name="utr" 
-            required 
-            minlength="8" 
-            maxlength="22" 
-            placeholder="e.g. 423456789012" 
-            class="w-full h-12 bg-surface-container-lowest px-3.5 rounded-xl font-mono text-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary uppercase tracking-wider"
-            autocomplete="off"
-          />
-        </div>
-      </div>
+    <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="/payments/verify/<%= payment.orderId %>" id="checkStatusBtn" class="w-full sm:w-auto min-w-[260px] py-3.5 px-6 rounded-xl bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.99] text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md transition-all">
+        <span class="material-symbols-outlined text-[20px]">sync</span>
+        <span>I Have Paid — Check Status</span>
+      </a>
+    </div>
 
-      <button type="submit" class="w-full h-13 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.99] text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md transition-all">
-        <span class="material-symbols-outlined text-[20px]">verified</span>
-        <span>Verify & Confirm Reservation</span>
-      </button>
-    </form>
+    <div class="flex items-center justify-center gap-1.5 text-xs text-outline pt-1">
+      <span class="material-symbols-outlined text-[14px] text-primary">lock_clock</span>
+      <span>Live webhook verification active. Status automatically syncs once bank settles.</span>
+    </div>
   </div>
 
   <!-- 5. Bottom Controls: Cancel & Security Guarantee -->
@@ -141,19 +125,20 @@
 
     <div class="flex items-center gap-1.5 text-xs text-outline">
       <span class="material-symbols-outlined text-[14px] text-primary">security</span>
-      <span>Token held in escrow until check-in inspection</span>
+      <span>First month rent held in escrow until check-in inspection</span>
     </div>
   </div>
 
 </div>
 
-<!-- 6. Client-Side Countdown & Expiry Script -->
+<!-- 6. Client-Side Countdown & Auto-Polling Script -->
 <script>
   (function() {
     let timeLeft = 15 * 60; // 15 minutes in seconds
     const countdownEl = document.getElementById('countdown');
     const orderId = '<%= payment.orderId %>';
 
+    // Countdown Timer
     const timer = setInterval(function() {
       timeLeft--;
       if (timeLeft <= 0) {
@@ -168,5 +153,25 @@
         }
       }
     }, 1000);
+
+    // Background Status Polling every 4 seconds
+    const pollInterval = setInterval(function() {
+      fetch('/payments/check-status/' + orderId)
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          if (data && data.status === 'success' && data.redirectUrl) {
+            clearInterval(pollInterval);
+            clearInterval(timer);
+            window.location.href = data.redirectUrl;
+          } else if (data && (data.status === 'failed' || data.status === 'timeout') && data.redirectUrl) {
+            clearInterval(pollInterval);
+            clearInterval(timer);
+            window.location.href = data.redirectUrl;
+          }
+        })
+        .catch(function(err) {
+          // ignore network glitch in polling
+        });
+    }, 4000);
   })();
 </script>
