@@ -10,6 +10,22 @@ const {
   getActiveLocationQueryFilter
 } = require('../config/serviceArea');
 
+const { upload, deleteCloudinaryImage } = require('../config/cloudinary');
+
+/**
+ * Multer image upload middleware wrapper with user-friendly flash error handling
+ */
+function handleImageUpload(req, res, next) {
+  upload.array('images', 10)(req, res, (err) => {
+    if (err) {
+      req.flash('error', err.message || 'Image upload error. Please select valid photos (max 5MB each).');
+      const fallbackUrl = req.params && req.params.id ? `/stays/${req.params.id}/edit` : '/stays/new';
+      return res.redirect(fallbackUrl);
+    }
+    next();
+  });
+}
+
 /**
  * Helper to process amenities array from checkbox form inputs
  */
@@ -25,14 +41,18 @@ function parseAmenities(raw) {
  */
 function parseImages(raw) {
   if (!raw) return [];
-  if (Array.isArray(raw)) return raw.filter(Boolean);
+  if (Array.isArray(raw)) {
+    return raw
+      .map((img) => (typeof img === 'string' ? { url: img, filename: img } : img))
+      .filter((img) => img && img.url);
+  }
   if (typeof raw === 'string') {
     return raw
       .split(/[\n,]/)
       .map((s) => s.trim())
-      .filter((s) => s.startsWith('http'));
+      .filter((s) => s.startsWith('http'))
+      .map((url) => ({ url, filename: url }));
   }
-  return [];
 }
 
 /**
@@ -104,11 +124,22 @@ router.get('/stays', async (req, res, next) => {
 
     // 6. Occupant Suitability: Gender Preference
     if (gender) {
-      const genders = Array.isArray(gender) ? gender.filter(Boolean) : [gender].filter(Boolean);
-      if (genders.length === 1 && genders[0]) {
-        filter.genderPreference = genders[0];
-      } else if (genders.length > 1) {
-        filter.genderPreference = { $in: genders };
+      const rawList = Array.isArray(gender) ? gender.filter(Boolean) : [gender].filter(Boolean);
+      const normalizedGenders = rawList
+        .map((g) => {
+          const val = String(g).trim();
+          if (!val || /^(all|any)$/i.test(val)) return null;
+          if (/^(male|boys|boy|men)$/i.test(val)) return 'Boys';
+          if (/^(female|girls|girl|women)$/i.test(val)) return 'Girls';
+          if (/^(unisex|co-ed|coliving|co-living|mixed)$/i.test(val)) return 'Unisex';
+          return val;
+        })
+        .filter(Boolean);
+
+      if (normalizedGenders.length === 1) {
+        filter.genderPreference = normalizedGenders[0];
+      } else if (normalizedGenders.length > 1) {
+        filter.genderPreference = { $in: normalizedGenders };
       }
     }
 
@@ -268,7 +299,7 @@ router.get('/stays/new', isLoggedIn, isVerifiedOwner, (req, res) => {
  * POST /stays
  * Handle new property listing creation (Verified Owners & Admins only)
  */
-router.post('/stays', isLoggedIn, isVerifiedOwner, async (req, res, next) => {
+router.post('/stays', isLoggedIn, isVerifiedOwner, handleImageUpload, async (req, res, next) => {
   try {
     const {
       title,
@@ -285,12 +316,32 @@ router.post('/stays', isLoggedIn, isVerifiedOwner, async (req, res, next) => {
       images,
       amenities,
       availableBeds,
-      contactPhone
+      contactPhone,
+      latitude,
+      longitude,
+      googleMapsUrl
     } = req.body;
 
     if (!title || !description || !city || !locality || !address || price === undefined || price === null || price === '') {
       req.flash('error', 'Please fill in all required property details.');
       return res.redirect('/stays/new');
+    }
+
+    // Location Coordinates validation
+    let parsedLat = latitude !== undefined && latitude !== '' ? Number(latitude) : undefined;
+    let parsedLng = longitude !== undefined && longitude !== '' ? Number(longitude) : undefined;
+    if (parsedLat !== undefined && (isNaN(parsedLat) || parsedLat < -90 || parsedLat > 90)) {
+      req.flash('error', 'Please provide a valid latitude between -90 and 90.');
+      return res.redirect('/stays/new');
+    }
+    if (parsedLng !== undefined && (isNaN(parsedLng) || parsedLng < -180 || parsedLng > 180)) {
+      req.flash('error', 'Please provide a valid longitude between -180 and 180.');
+      return res.redirect('/stays/new');
+    }
+    // Default to Kopargaon reference coordinates if not provided
+    if (parsedLat === undefined || parsedLng === undefined) {
+      parsedLat = 19.8913;
+      parsedLng = 74.4784;
     }
 
     // Geographic boundary restriction: Validate city against active service areas (Kopargaon)
@@ -338,7 +389,17 @@ router.post('/stays', isLoggedIn, isVerifiedOwner, async (req, res, next) => {
     const chosenGender = validGenders.includes(genderPreference) ? genderPreference : 'Unisex';
     const chosenSharing = validSharings.includes(roomSharing) ? roomSharing : 'Double';
 
-    const imageArray = parseImages(images);
+    // Map uploaded files from Multer / Cloudinary
+    let imageArray = [];
+    if (req.files && req.files.length) {
+      imageArray = req.files.map((file) => ({
+        url: file.path || file.secure_url || file.url,
+        filename: file.filename || file.public_id || file.originalname
+      }));
+    } else if (images) {
+      imageArray = parseImages(images);
+    }
+
     const amenityArray = parseAmenities(amenities);
     const normalizedCity = normalizeToActiveCity(city);
 
@@ -352,7 +413,10 @@ router.post('/stays', isLoggedIn, isVerifiedOwner, async (req, res, next) => {
       location: {
         city: normalizedCity,
         locality: locality.trim(),
-        address: address.trim()
+        address: address.trim(),
+        latitude: parsedLat,
+        longitude: parsedLng,
+        googleMapsUrl: googleMapsUrl ? googleMapsUrl.trim() : ''
       },
       campusDistance: campusDistance ? campusDistance.trim() : 'Short walk to Sanjivani campus',
       price: numPrice,
@@ -434,9 +498,9 @@ router.get('/stays/:id/edit', isLoggedIn, isPropertyOwner, async (req, res, next
 
 /**
  * POST /stays/:id
- * Handle property update
+ * Handle property update (supports uploading additional photos and deleting specific photos)
  */
-router.post('/stays/:id', isLoggedIn, isPropertyOwner, async (req, res, next) => {
+router.post('/stays/:id', isLoggedIn, isPropertyOwner, handleImageUpload, async (req, res, next) => {
   try {
     const { id } = req.params;
     const {
@@ -452,14 +516,30 @@ router.post('/stays/:id', isLoggedIn, isPropertyOwner, async (req, res, next) =>
       roomSharing,
       genderPreference,
       images,
+      deleteImages,
       amenities,
       availableBeds,
       contactPhone,
-      isAvailable
+      isAvailable,
+      latitude,
+      longitude,
+      googleMapsUrl
     } = req.body;
 
     if (!title || !description || !city || !locality || !address || price === undefined || price === null || price === '') {
       req.flash('error', 'Please fill in all required property details.');
+      return res.redirect(`/stays/${id}/edit`);
+    }
+
+    // Location Coordinates validation
+    let parsedLat = latitude !== undefined && latitude !== '' ? Number(latitude) : undefined;
+    let parsedLng = longitude !== undefined && longitude !== '' ? Number(longitude) : undefined;
+    if (parsedLat !== undefined && (isNaN(parsedLat) || parsedLat < -90 || parsedLat > 90)) {
+      req.flash('error', 'Please provide a valid latitude between -90 and 90.');
+      return res.redirect(`/stays/${id}/edit`);
+    }
+    if (parsedLng !== undefined && (isNaN(parsedLng) || parsedLng < -180 || parsedLng > 180)) {
+      req.flash('error', 'Please provide a valid longitude between -180 and 180.');
       return res.redirect(`/stays/${id}/edit`);
     }
 
@@ -508,7 +588,39 @@ router.post('/stays/:id', isLoggedIn, isPropertyOwner, async (req, res, next) =>
     const chosenGender = validGenders.includes(genderPreference) ? genderPreference : 'Unisex';
     const chosenSharing = validSharings.includes(roomSharing) ? roomSharing : 'Double';
 
-    const imageArray = parseImages(images);
+    const existingProperty = await Property.findById(id);
+    if (!existingProperty) {
+      req.flash('error', 'Property not found.');
+      return res.redirect('/stays');
+    }
+
+    let currentImages = existingProperty.images ? [...existingProperty.images] : [];
+
+    // Delete selected images from Cloudinary and property
+    if (deleteImages) {
+      const toDelete = Array.isArray(deleteImages) ? deleteImages : [deleteImages];
+      for (const filename of toDelete) {
+        await deleteCloudinaryImage(filename);
+      }
+      currentImages = currentImages.filter((img) => {
+        const fn = img.filename || '';
+        const u = img.url || (typeof img.toString === 'function' ? img.toString() : '');
+        return !toDelete.includes(fn) && !toDelete.includes(u);
+      });
+    }
+
+    // Append newly uploaded photos
+    if (req.files && req.files.length) {
+      const newImages = req.files.map((file) => ({
+        url: file.path || file.secure_url || file.url,
+        filename: file.filename || file.public_id || file.originalname
+      }));
+      currentImages = currentImages.concat(newImages);
+    } else if (images) {
+      const parsed = parseImages(images);
+      if (parsed.length) currentImages = currentImages.concat(parsed);
+    }
+
     const amenityArray = parseAmenities(amenities);
     const normalizedCity = normalizeToActiveCity(city);
 
@@ -528,16 +640,23 @@ router.post('/stays/:id', isLoggedIn, isPropertyOwner, async (req, res, next) =>
       roomSharing: chosenSharing,
       genderPreference: chosenGender,
       availableBeds: numBeds,
+      images: currentImages,
       isAvailable: isAvailable === 'true' || isAvailable === true || isAvailable === 'on',
       contactPhone: contactPhone ? contactPhone.trim() : ''
     };
 
-    if (imageArray.length) {
-      updateData.images = imageArray;
-    }
-
     if (amenityArray.length) {
       updateData.amenities = amenityArray;
+    }
+
+    if (parsedLat !== undefined) {
+      updateData['location.latitude'] = parsedLat;
+    }
+    if (parsedLng !== undefined) {
+      updateData['location.longitude'] = parsedLng;
+    }
+    if (googleMapsUrl !== undefined) {
+      updateData['location.googleMapsUrl'] = googleMapsUrl.trim();
     }
 
     const updated = await Property.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
@@ -552,13 +671,21 @@ router.post('/stays/:id', isLoggedIn, isPropertyOwner, async (req, res, next) =>
 
 /**
  * POST /stays/:id/delete
- * Delete a property
+ * Delete a property and purge its Cloudinary photos
  */
 router.post('/stays/:id/delete', isLoggedIn, isPropertyOwner, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const property = await Property.findByIdAndDelete(id);
+    const property = await Property.findById(id);
     if (property) {
+      if (property.images && property.images.length) {
+        for (const img of property.images) {
+          if (img.filename && !img.filename.startsWith('http') && img.filename !== 'default_property') {
+            await deleteCloudinaryImage(img.filename);
+          }
+        }
+      }
+      await Property.findByIdAndDelete(id);
       const User = require('../models/User');
       await Review.deleteMany({ property: id });
       await User.updateMany({ savedProperties: id }, { $pull: { savedProperties: id } });

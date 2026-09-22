@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
 
 <!-- Subtle Ambient Glow Background Element -->
-<div class="relative w-full max-w-[1280px] mx-auto px-margin py-space-xl">
+<div class="relative w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin py-space-xl">
   <div class="absolute top-0 right-1/4 w-96 h-96 bg-primary-fixed/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
   <div class="absolute top-48 left-10 w-72 h-72 bg-secondary-container/25 rounded-full blur-3xl pointer-events-none -z-10"></div>
 
@@ -22,15 +22,15 @@
 
     <!-- Action Buttons -->
     <div class="flex flex-wrap items-center gap-space-sm">
-      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer" id="share-link-btn" type="button">
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer border border-surface-container" id="share-link-btn" type="button">
         <span class="material-symbols-outlined text-[18px] text-secondary">share</span>
         <span>Share Link</span>
       </button>
-      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer" onclick="window.print()" type="button">
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-on-surface font-label-lg text-label-lg shadow-sm hover:bg-surface-container-low transition-colors focus:outline-none cursor-pointer border border-surface-container" onclick="window.print()" type="button">
         <span class="material-symbols-outlined text-[18px] text-secondary">picture_as_pdf</span>
         <span>Export PDF</span>
       </button>
-      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-error font-label-lg text-label-lg shadow-sm hover:bg-error-container hover:text-on-error-container transition-colors focus:outline-none cursor-pointer" id="clear-all-btn" type="button">
+      <button class="inline-flex items-center gap-space-xs px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-error font-label-lg text-label-lg shadow-sm hover:bg-error-container hover:text-on-error-container transition-colors focus:outline-none cursor-pointer border border-surface-container" id="clear-all-btn" type="button">
         <span class="material-symbols-outlined text-[18px]">delete_sweep</span>
         <span>Clear All</span>
       </button>
@@ -42,345 +42,522 @@
   </div>
 
   <% 
-    const p1 = properties && properties[0] ? properties[0] : null;
-    const p2 = properties && properties[1] ? properties[1] : null;
-    const p3 = properties && properties[2] ? properties[2] : null;
-    const props = [p1, p2, p3].filter(Boolean);
+    const props = (properties || []).filter(Boolean);
   %>
 
-  <!-- Quick Highlights Bento Row -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mb-space-xl">
-    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
-      <div class="flex items-center gap-space-sm">
-        <div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
-          <span class="material-symbols-outlined text-[22px]">savings</span>
+  <% if (props.length === 0) { %>
+    <!-- Empty State -->
+    <div class="bg-surface-container-lowest rounded-2xl p-space-2xl text-center shadow-sm max-w-lg mx-auto border border-surface-container my-12">
+      <div class="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-4xl">balance</span>
+      </div>
+      <h2 class="font-headline-sm text-headline-sm font-bold text-on-surface">No Stays Shortlisted</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-2 mb-6">
+        You haven't selected any accommodations to compare yet. Browse verified student stays to compare them side-by-side.
+      </p>
+      <a href="/stays" class="inline-flex items-center gap-2 px-space-lg py-3 rounded-lg bg-primary text-on-primary font-label-lg shadow-sm hover:bg-primary-container transition-all">
+        <span class="material-symbols-outlined text-[20px]">explore</span>
+        Explore Verified Stays
+      </a>
+    </div>
+  <% } else { %>
+
+    <!-- Quick Highlights Bento Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md mb-space-xl">
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container flex items-center justify-between">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-lg bg-secondary-container text-on-secondary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">savings</span>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Lowest Monthly Rent</p>
+            <p class="font-title-md text-title-md text-on-surface font-bold">
+              ₹<%= Math.min(...props.map(p => p.price || 0)).toLocaleString('en-IN') %> 
+              <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span>
+            </p>
+          </div>
         </div>
+        <span class="material-symbols-outlined text-primary text-[24px]">trending_down</span>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container flex items-center justify-between">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">directions_walk</span>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nearest to Campus</p>
+            <p class="font-title-md text-title-md text-on-surface font-bold">
+              <%= props[0] && props[0].campusDistance ? props[0].campusDistance : 'Short Walk' %>
+            </p>
+          </div>
+        </div>
+        <span class="inline-block px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold truncate max-w-[120px]">
+          <%= props[0] ? props[0].locality : 'Campus Area' %>
+        </span>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm border border-surface-container flex items-center justify-between">
+        <div class="flex items-center gap-space-sm">
+          <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">verified_user</span>
+          </div>
+          <div>
+            <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Highest Overall Score</p>
+            <p class="font-title-md text-title-md text-tertiary font-bold">
+              <%= (Math.max(...props.map(p => (p.rating || 4.5) * 2))).toFixed(1) %> / 10 
+              <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">Value Metric</span>
+            </p>
+          </div>
+        </div>
+        <span class="inline-block px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+          Top Rated
+        </span>
+      </div>
+    </div>
+
+    <!-- SECTION: Clean Vertical Structure Comparison Cards -->
+    <div class="mb-space-xl">
+      <div class="flex items-center justify-between mb-space-md">
         <div>
-          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Lowest Monthly Rent</p>
-          <p class="font-title-md text-title-md text-on-surface font-bold">
-            ₹<%= p1 ? Math.min(...props.map(p => p.price)).toLocaleString('en-IN') : '7,800' %> 
-            <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">/mo</span>
+          <h2 class="font-headline-sm text-headline-sm text-on-surface font-bold">
+            Side-by-Side Accommodation Overview
+          </h2>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Compare essential specifications, pricing, amenities, and availability.
           </p>
         </div>
+        <span class="inline-flex items-center gap-1 text-secondary font-label-sm font-semibold bg-secondary-container px-3 py-1 rounded-full">
+          <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+          <%= props.length %> <%= props.length === 1 ? 'Stay' : 'Stays' %> Compared
+        </span>
       </div>
-      <span class="material-symbols-outlined text-primary text-[24px]">trending_down</span>
-    </div>
 
-    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
-      <div class="flex items-center gap-space-sm">
-        <div class="w-10 h-10 rounded-lg bg-primary-fixed text-on-primary-fixed flex items-center justify-center">
-          <span class="material-symbols-outlined text-[22px]">directions_walk</span>
-        </div>
-        <div>
-          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Nearest to Campus</p>
-          <p class="font-title-md text-title-md text-on-surface font-bold">400m <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">(Symbiosis)</span></p>
-        </div>
-      </div>
-      <span class="inline-block px-2 py-0.5 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">Scholar Haven</span>
-    </div>
-
-    <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex items-center justify-between">
-      <div class="flex items-center gap-space-sm">
-        <div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center">
-          <span class="material-symbols-outlined text-[22px]">verified_user</span>
-        </div>
-        <div>
-          <p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Highest Overall Score</p>
-          <p class="font-title-md text-title-md text-tertiary font-bold">9.4 / 10 <span class="font-body-sm text-body-sm text-on-surface-variant font-normal">Value Metric</span></p>
-        </div>
-      </div>
-      <span class="inline-block px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">Green Valley</span>
-    </div>
-  </div>
-
-  <!-- Comparison Table Wrapper (Responsive Scroll for Mobile) -->
-  <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-x-auto">
-    <div class="min-w-[768px]">
-      <!-- Sticky Property Profile Header Row -->
-      <div class="sticky top-20 z-20 bg-surface-container-lowest shadow-sm">
-        <div class="grid grid-cols-12 gap-0 border-b border-surface-container">
-          <!-- Column 1: Feature Title Blank / Switcher -->
-          <div class="col-span-3 p-space-lg flex flex-col justify-between bg-surface-container-low/50">
+      <!-- Dynamic responsive grid for 1, 2, or 3 properties -->
+      <div class="grid grid-cols-1 <%= props.length === 1 ? 'max-w-md mx-auto' : props.length === 2 ? 'md:grid-cols-2 max-w-4xl mx-auto' : 'md:grid-cols-2 lg:grid-cols-3' %> gap-space-lg">
+        <% props.forEach((p, idx) => { %>
+          <% 
+            const imgSrc = (p.images && p.images[0] && p.images[0].url) 
+              || (typeof p.images[0] === 'string' ? p.images[0] : null) 
+              || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80';
+          %>
+          <div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm border border-surface-container flex flex-col justify-between hover:shadow-md transition-shadow">
             <div>
-              <span class="font-label-sm text-label-sm uppercase tracking-wider text-outline">Comparison Metric</span>
-              <h2 class="font-title-lg text-title-lg text-on-surface font-bold mt-1"><%= props.length %> Accommodations</h2>
-              <p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Verified for safety, mess food, and hygiene standards.</p>
-            </div>
-            <div class="flex items-center gap-space-xs pt-space-md">
-              <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-              <span class="font-label-sm text-label-sm text-secondary font-semibold">Live Availability Synchronized</span>
-            </div>
-          </div>
-
-          <!-- Columns 2, 3, 4: Properties -->
-          <% [p1, p2, p3].forEach((p, idx) => { %>
-            <div class="col-span-3 p-space-md bg-surface-container-lowest hover:bg-surface-bright transition-colors relative flex flex-col border-l border-surface-container">
-              <% if (p) { %>
-                <div class="relative rounded-lg overflow-hidden aspect-[16/10] mb-space-sm bg-surface-container">
-                  <img class="w-full h-full object-cover" alt="<%= p.title %>" src="<%= (p.images && p.images[0]) || 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
-                  <div class="absolute top-2 left-2 inline-flex items-center gap-1 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-primary font-label-sm text-label-sm font-semibold shadow-sm">
+              <!-- 1. Property Image (in its own bounded container) -->
+              <div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-surface-container shrink-0">
+                <img 
+                  class="w-full h-full object-cover block" 
+                  src="<%= imgSrc %>" 
+                  alt="<%= p.title %>"
+                  loading="lazy"
+                />
+                
+                <!-- Bounded Badges Inside Image Container Only -->
+                <% if (p.isVerified !== false) { %>
+                  <div class="absolute top-2.5 left-2.5 inline-flex items-center gap-1 bg-surface-container-lowest/95 backdrop-blur-sm px-2.5 py-1 rounded-full text-primary font-label-sm font-semibold shadow-sm">
                     <span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
                     <span>Verified</span>
                   </div>
-                  <% if (idx === 0) { %>
-                    <div class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-primary text-on-primary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold">
-                      Best Value
-                    </div>
-                  <% } else if (idx === 1) { %>
-                    <div class="absolute bottom-2 left-2 inline-flex items-center gap-1 bg-secondary text-on-secondary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold">
-                      Closest to Campus
-                    </div>
+                <% } %>
+
+                <!-- Remove button -->
+                <button 
+                  type="button" 
+                  class="remove-compare-btn absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-surface-container-lowest/90 backdrop-blur-sm text-on-surface-variant hover:text-error hover:bg-error-container/90 flex items-center justify-center transition-colors shadow-sm cursor-pointer"
+                  data-property-id="<%= p._id %>"
+                  title="Remove <%= p.title %> from comparison"
+                >
+                  <span class="material-symbols-outlined text-[16px]">close</span>
+                </button>
+
+                <% if (idx === 0) { %>
+                  <div class="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 bg-primary text-on-primary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold shadow-sm">
+                    <span class="material-symbols-outlined text-[14px]">thumb_up</span>
+                    Best Value
+                  </div>
+                <% } else if (idx === 1 && props.length > 1) { %>
+                  <div class="absolute bottom-2.5 left-2.5 inline-flex items-center gap-1 bg-secondary text-on-secondary px-2 py-0.5 rounded font-label-sm text-label-sm font-semibold shadow-sm">
+                    <span class="material-symbols-outlined text-[14px]">near_me</span>
+                    Close to Campus
+                  </div>
+                <% } %>
+              </div>
+
+              <!-- Information section begins cleanly AFTER the image container in natural flow -->
+              <div class="pt-space-md">
+                <!-- 2. Property Name -->
+                <h3 class="font-title-lg text-title-lg text-on-surface font-bold leading-snug break-words line-clamp-2 min-h-[3rem]">
+                  <a href="/stays/<%= p._id %>" class="hover:text-primary transition-colors">
+                    <%= p.title %>
+                  </a>
+                </h3>
+
+                <!-- 3. Type -->
+                <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-semibold bg-surface-container text-secondary">
+                    <span class="material-symbols-outlined text-[13px]">apartment</span>
+                    <%= p.propertyType || 'PG' %>
+                  </span>
+                  <% if (p.roomSharing) { %>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-medium bg-surface-container text-on-surface-variant">
+                      <span class="material-symbols-outlined text-[13px]">group</span>
+                      <%= p.roomSharing %> Sharing
+                    </span>
                   <% } %>
                 </div>
-                <div>
-                  <h3 class="font-title-md text-title-md text-on-surface font-bold leading-tight line-clamp-1"><%= p.title %></h3>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
-                    <span class="material-symbols-outlined text-[14px] text-secondary">location_on</span>
-                    <%= p.locality %>, <%= p.city || 'Pune' %>
-                  </p>
-                </div>
-                <div class="flex items-center gap-space-sm mt-space-xs pt-space-xs">
-                  <div class="flex items-center gap-1 bg-secondary-container px-2 py-0.5 rounded text-on-secondary-container font-label-md text-label-md font-bold">
-                    <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <%= p.rating || '4.8' %>
+
+                <!-- 4. Location -->
+                <div class="flex items-start gap-1.5 mt-3 text-body-sm text-on-surface-variant">
+                  <span class="material-symbols-outlined text-[18px] text-secondary shrink-0 mt-0.5">location_on</span>
+                  <div class="flex flex-col">
+                    <span class="font-semibold text-on-surface"><%= p.locality %>, <%= p.city || 'Kopargaon' %></span>
+                    <span class="text-secondary text-label-sm font-medium"><%= p.campusDistance || 'Short walk to campus' %></span>
                   </div>
-                  <span class="font-body-sm text-body-sm text-outline">(<%= p.reviewCount || 24 %> reviews)</span>
-                  <span class="font-label-sm text-label-sm bg-surface-container text-secondary px-1.5 py-0.5 rounded"><%= p.propertyType %></span>
                 </div>
-              <% } else { %>
-                <div class="flex flex-col items-center justify-center h-full py-12 text-center text-outline">
-                  <span class="material-symbols-outlined text-4xl mb-2">add_home</span>
-                  <p class="font-label-md">Empty Slot</p>
-                  <a href="/stays" class="mt-2 text-primary font-label-sm hover:underline">Select Stay</a>
+
+                <!-- 5. Price -->
+                <div class="mt-4 p-space-sm rounded-xl bg-surface-container-low border border-surface-container flex items-baseline justify-between">
+                  <div>
+                    <span class="font-label-sm text-outline uppercase tracking-wider block">Monthly Rent</span>
+                    <div class="flex items-baseline gap-1">
+                      <span class="font-headline-sm text-headline-sm font-bold text-primary">₹<%= p.price.toLocaleString('en-IN') %></span>
+                      <span class="text-body-sm text-on-surface-variant">/mo</span>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <span class="font-label-sm text-outline uppercase tracking-wider block">Deposit</span>
+                    <span class="font-label-lg font-semibold text-on-surface">₹<%= (p.securityDeposit || p.price).toLocaleString('en-IN') %></span>
+                  </div>
                 </div>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-      </div>
 
-      <!-- SECTION 1: PRICING & DEPOSITS -->
-      <div class="w-full">
-        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
-          <div class="flex items-center gap-space-sm">
-            <span class="material-symbols-outlined text-[20px] text-primary">payments</span>
-            <h3 class="font-title-md text-title-md text-on-surface font-bold">1. Pricing &amp; Deposits</h3>
-          </div>
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Standard Sharing Basis</span>
-        </div>
-
-        <!-- Monthly Rent -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Monthly Rent</span>
-            <span class="font-body-sm text-body-sm text-outline">Per student inclusive</span>
-          </div>
-          <% [p1, p2, p3].forEach((p, idx) => { %>
-            <div class="col-span-3 p-space-md flex items-center justify-between border-l border-surface-container <%= idx === 0 ? 'bg-primary-fixed/10' : '' %>">
-              <% if (p) { %>
-                <div>
-                  <span class="font-headline-sm text-headline-sm <%= idx === 0 ? 'text-primary font-bold' : 'text-on-surface font-bold' %>">₹<%= p.price.toLocaleString('en-IN') %></span>
-                  <span class="font-body-sm text-body-sm text-on-surface-variant">/month</span>
+                <!-- 6. Gender Preference -->
+                <div class="mt-4 py-2.5 border-t border-b border-surface-container flex items-center justify-between">
+                  <span class="font-label-md text-on-surface-variant flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-secondary">wc</span>
+                    Gender Preference
+                  </span>
+                  <div>
+                    <% if (p.genderPreference === 'Boys') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 font-label-sm font-semibold border border-blue-200">
+                        <span class="material-symbols-outlined text-[14px]">male</span> Boys Only
+                      </span>
+                    <% } else if (p.genderPreference === 'Girls') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-pink-50 text-pink-700 font-label-sm font-semibold border border-pink-200">
+                        <span class="material-symbols-outlined text-[14px]">female</span> Girls Only
+                      </span>
+                    <% } else { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-label-sm font-semibold border border-emerald-200">
+                        <span class="material-symbols-outlined text-[14px]">group</span> Unisex / Co-ed
+                      </span>
+                    <% } %>
+                  </div>
                 </div>
-                <% if (idx === 0) { %>
-                  <span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded font-semibold">Optimal</span>
-                <% } %>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
 
-        <!-- Security Deposit -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-bright hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Security Deposit</span>
-            <span class="font-body-sm text-body-sm text-outline">100% refundable at move-out</span>
-          </div>
-          <% [p1, p2, p3].forEach((p, idx) => { %>
-            <div class="col-span-3 p-space-md flex items-center border-l border-surface-container">
-              <% if (p) { %>
-                <div>
-                  <p class="font-title-md text-title-md text-on-surface font-semibold">1 Month (₹<%= (p.securityDeposit || p.price).toLocaleString('en-IN') %>)</p>
-                  <p class="font-body-sm text-body-sm text-secondary">Zero deductions on timely notice</p>
+                <!-- 7. Amenities -->
+                <div class="py-2.5 border-b border-surface-container">
+                  <span class="font-label-sm text-outline uppercase tracking-wider block mb-2 font-semibold">Included Amenities</span>
+                  <div class="flex flex-wrap gap-1.5">
+                    <% if (p.amenities && p.amenities.length > 0) { %>
+                      <% p.amenities.slice(0, 5).forEach(amenity => { %>
+                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-surface-container text-on-surface-variant font-label-sm">
+                          <span class="material-symbols-outlined text-[13px] text-primary">check_circle</span>
+                          <%= amenity %>
+                        </span>
+                      <% }) %>
+                      <% if (p.amenities.length > 5) { %>
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-container-high text-on-surface-variant font-label-sm">
+                          +<%= p.amenities.length - 5 %> more
+                        </span>
+                      <% } %>
+                    <% } else { %>
+                      <span class="text-body-sm text-outline italic">Basic student amenities</span>
+                    <% } %>
+                  </div>
                 </div>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
 
-        <!-- Maintenance Charges -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Maintenance Charges</span>
-            <span class="font-body-sm text-body-sm text-outline">Lift, cleaning &amp; common repair</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex items-center gap-space-xs text-primary font-semibold border-l border-surface-container">
-              <% if (p) { %>
-                <span class="material-symbols-outlined text-[18px]">check_circle</span>
-                <span>Included in Rent</span>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-      </div>
-
-      <!-- SECTION 2: SPECIFICATIONS & AMENITIES -->
-      <div class="w-full">
-        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
-          <div class="flex items-center gap-space-sm">
-            <span class="material-symbols-outlined text-[20px] text-primary">hotel</span>
-            <h3 class="font-title-md text-title-md text-on-surface font-bold">2. Room Specs &amp; Amenities</h3>
-          </div>
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Daily Student Essentials</span>
-        </div>
-
-        <!-- Meal Plan -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Mess / Meal Plan</span>
-            <span class="font-body-sm text-body-sm text-outline">Breakfast, Lunch, Dinner</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex items-center gap-1 text-secondary font-semibold border-l border-surface-container">
-              <% if (p) { %>
-                <span class="material-symbols-outlined text-[18px]">restaurant</span>
-                <span><%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('meal') || a.toLowerCase().includes('food')) ? '3x Meals Included' : 'Self Cooking / Optional' %></span>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-
-        <!-- Wi-Fi & Power Backup -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-bright hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Wi-Fi &amp; Power Backup</span>
-            <span class="font-body-sm text-body-sm text-outline">For late study sessions</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex items-center gap-1 text-primary font-semibold border-l border-surface-container">
-              <% if (p) { %>
-                <span class="material-symbols-outlined text-[18px]">wifi</span>
-                <span>High-Speed + 24/7 Backup</span>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-
-        <!-- Washroom Type -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Washroom Type</span>
-            <span class="font-body-sm text-body-sm text-outline">Private vs Shared</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex items-center gap-1 text-on-surface font-semibold border-l border-surface-container">
-              <% if (p) { %>
-                <span class="material-symbols-outlined text-[18px] text-secondary">bathtub</span>
-                <span><%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('attached')) ? 'Attached En-suite' : 'Shared Clean Washroom' %></span>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-      </div>
-
-      <!-- SECTION 3: PROXIMITY & COMMUTE -->
-      <div class="w-full">
-        <div class="bg-surface-container-low px-space-lg py-space-sm flex items-center justify-between">
-          <div class="flex items-center gap-space-sm">
-            <span class="material-symbols-outlined text-[20px] text-primary">distance</span>
-            <h3 class="font-title-md text-title-md text-on-surface font-bold">3. Proximity &amp; Commute</h3>
-          </div>
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold">Verified Field Audits</span>
-        </div>
-
-        <!-- Campus Distance -->
-        <div class="grid grid-cols-12 gap-0 bg-surface-container-lowest hover:bg-surface-container-low/30 transition-colors border-b border-surface-container">
-          <div class="col-span-3 p-space-md flex flex-col justify-center">
-            <span class="font-title-md text-title-md text-on-surface font-semibold">Campus Distance</span>
-            <span class="font-body-sm text-body-sm text-outline">Walking vs Transit</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex flex-col justify-center border-l border-surface-container">
-              <% if (p) { %>
-                <span class="font-title-md text-title-md text-on-surface font-bold"><%= p.campusDistance || 'Short walk to transit' %></span>
-                <span class="font-body-sm text-body-sm text-secondary"><%= p.locality %> hub</span>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
-      </div>
-
-      <!-- SECTION 4: VALUE SCORE & ACTIONS -->
-      <div class="w-full bg-surface-container-low/70">
-        <div class="grid grid-cols-12 gap-0 border-b border-surface-container">
-          <div class="col-span-3 p-space-lg flex flex-col justify-center">
-            <span class="font-title-lg text-title-lg text-on-surface font-bold">Nestly Value Score</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant">Weighted algorithm considering price, safety, amenities &amp; student ratings.</span>
-          </div>
-          <% [p1, p2, p3].forEach((p, idx) => { %>
-            <div class="col-span-3 p-space-lg flex flex-col justify-center bg-surface-container-lowest shadow-sm border-l border-surface-container">
-              <% if (p) { %>
-                <div class="flex items-baseline gap-1">
-                  <span class="font-display text-display <%= idx === 0 ? 'text-primary font-bold' : 'text-on-surface font-bold' %>"><%= (p.rating * 2).toFixed(1) %></span>
-                  <span class="font-title-md text-title-md text-outline">/ 10</span>
+                <!-- 8. Availability -->
+                <div class="py-2.5 border-b border-surface-container flex items-center justify-between">
+                  <span class="font-label-md text-on-surface-variant flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-primary">event_available</span>
+                    Availability
+                  </span>
+                  <div>
+                    <% if (typeof p.availableBeds === 'number' && p.availableBeds > 0) { %>
+                      <span class="inline-flex items-center gap-1 text-primary font-label-md font-semibold bg-primary-fixed/30 px-2.5 py-0.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                        <%= p.availableBeds %> Bed<%= p.availableBeds > 1 ? 's' : '' %> Available
+                      </span>
+                    <% } else if (p.isAvailable !== false) { %>
+                      <span class="inline-flex items-center gap-1 text-secondary font-label-md font-semibold bg-secondary-container px-2.5 py-0.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                        Ready to Move
+                      </span>
+                    <% } else { %>
+                      <span class="inline-flex items-center gap-1 text-error font-label-md font-semibold bg-error-container px-2.5 py-0.5 rounded-full">
+                        <span class="w-2 h-2 rounded-full bg-error"></span>
+                        Fully Booked
+                      </span>
+                    <% } %>
+                  </div>
                 </div>
-                <div class="w-full bg-surface-container rounded-full h-2 mt-2 overflow-hidden">
-                  <div class="bg-primary h-full rounded-full" style="width: <%= Math.min(100, Math.round(p.rating * 20)) %>%;"></div>
-                </div>
-                <p class="font-label-sm text-label-sm text-secondary font-semibold mt-2">
-                  <%= idx === 0 ? 'Highest Value for Money' : idx === 1 ? 'Top Safety & Campus Proximity' : 'Ideal for Independent Living' %>
-                </p>
-              <% } else { %>
-                <span class="text-outline">-</span>
-              <% } %>
-            </div>
-          <% }) %>
-        </div>
 
-        <!-- Action Buttons Row -->
-        <div class="grid grid-cols-12 gap-0 p-space-md bg-surface-container-high/30">
-          <div class="col-span-3 p-space-md flex items-center">
-            <span class="font-body-md text-body-md text-on-surface-variant font-medium">Ready to take the next step? Reserve a free 24-hr room hold.</span>
-          </div>
-          <% [p1, p2, p3].forEach((p) => { %>
-            <div class="col-span-3 p-space-md flex flex-col gap-space-xs border-l border-surface-container">
-              <% if (p) { %>
-                <a class="w-full text-center py-space-sm px-space-md rounded-lg bg-primary text-on-primary font-label-lg text-label-lg shadow-sm hover:bg-primary-container transition-all active:scale-[0.98]" href="/stays/<%= p._id %>">
-                  View <%= p.title.split(' ')[0] %>
-                </a>
-                <a href="/bookings/new?propertyId=<%= p._id %>" class="w-full text-center py-space-xs px-space-sm rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-secondary/90 transition-colors flex items-center justify-center gap-1">
-                  <span class="material-symbols-outlined text-[16px]">bookmark_add</span>
-                  Reserve Bed Hold
-                </a>
-              <% } else { %>
-                <a href="/stays" class="w-full text-center py-space-sm px-space-md rounded-lg bg-surface-container text-on-surface font-label-md">
-                  Explore Stays
-                </a>
-              <% } %>
+                <!-- 9. Rating -->
+                <div class="py-2.5 flex items-center justify-between">
+                  <span class="font-label-md text-on-surface-variant flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-[18px] text-tertiary">star</span>
+                    Resident Rating
+                  </span>
+                  <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-1 bg-secondary-container px-2 py-0.5 rounded text-on-secondary-container font-label-md font-bold">
+                      <span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">star</span>
+                      <%= p.rating ? Number(p.rating).toFixed(1) : '4.8' %>
+                    </div>
+                    <span class="font-body-sm text-outline">(<%= p.reviewCount || 24 %> reviews)</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          <% }) %>
-        </div>
+
+            <!-- Action Buttons -->
+            <div class="mt-6 pt-4 border-t border-surface-container flex flex-col gap-2">
+              <a href="/stays/<%= p._id %>" class="w-full text-center py-2.5 px-space-md rounded-lg bg-primary text-on-primary font-label-lg shadow-sm hover:bg-primary-container transition-all active:scale-[0.98]">
+                View Full Details
+              </a>
+              <a href="/bookings/new?propertyId=<%= p._id %>" class="w-full text-center py-2 px-space-sm rounded-lg bg-secondary text-on-secondary font-label-md hover:bg-secondary/90 transition-colors flex items-center justify-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">bookmark_add</span>
+                Reserve Bed Hold
+              </a>
+            </div>
+          </div>
+        <% }) %>
+
+        <!-- Empty Slot Placeholder if fewer than 3 properties -->
+        <% if (props.length < 3) { %>
+          <div class="bg-surface-container-low/40 rounded-2xl p-space-lg border-2 border-dashed border-outline-variant flex flex-col items-center justify-center text-center min-h-[420px] hover:border-primary transition-colors">
+            <div class="w-14 h-14 rounded-full bg-surface-container text-secondary flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-[32px]">add_home</span>
+            </div>
+            <h3 class="font-title-lg text-title-lg text-on-surface font-bold">Add Another Stay</h3>
+            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-xs mt-1 mb-6">
+              Select another property to compare pricing, distance to campus, and amenities side-by-side.
+            </p>
+            <a href="/stays" class="inline-flex items-center gap-2 px-space-md py-2.5 rounded-lg bg-primary text-on-primary font-label-lg shadow-sm hover:bg-primary-container transition-all">
+              <span class="material-symbols-outlined text-[18px]">search</span>
+              Browse Stays
+            </a>
+          </div>
+        <% } %>
       </div>
     </div>
-  </div>
 
-  <!-- Assurance Banner Under Table -->
-  <div class="mt-space-xl p-space-lg rounded-xl bg-surface-container flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-sm">
+    <!-- SECTION: Detailed Side-by-Side Comparison Matrix Table -->
+    <div class="mt-space-2xl bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-container overflow-hidden">
+      <div class="bg-surface-container-low px-space-lg py-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 border-b border-surface-container">
+        <div>
+          <h3 class="font-title-lg text-title-lg text-on-surface font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">table_chart</span>
+            Detailed Specifications Comparison Table
+          </h3>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+            Compare line items, deposits, included meals, and campus proximity.
+          </p>
+        </div>
+        <span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-semibold">
+          Side-by-side Matrix
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[640px]">
+          <!-- Header row without sticky collision -->
+          <thead>
+            <tr class="border-b border-surface-container bg-surface-bright">
+              <th class="p-space-md font-label-md text-label-md uppercase tracking-wider text-outline w-1/4">
+                Comparison Metric
+              </th>
+              <% props.forEach((p, idx) => { %>
+                <th class="p-space-md border-l border-surface-container w-1/4">
+                  <div class="font-title-md text-title-md text-on-surface font-bold truncate max-w-[200px]">
+                    <%= p.title %>
+                  </div>
+                  <div class="font-body-sm text-body-sm text-secondary">
+                    <%= p.propertyType %> &bull; ₹<%= p.price.toLocaleString('en-IN') %>/mo
+                  </div>
+                </th>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <th class="p-space-md border-l border-surface-container text-outline font-label-md italic w-1/4">
+                  Empty Slot
+                </th>
+              <% } %>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container text-body-md">
+            <!-- Category: Pricing -->
+            <tr class="bg-surface-container-low/60">
+              <td colspan="<%= 1 + Math.max(props.length, 3) %>" class="px-space-md py-2 font-label-md text-label-md font-bold text-primary uppercase tracking-wider">
+                1. Pricing &amp; Deposits
+              </td>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Monthly Rent</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <span class="font-title-md font-bold text-primary">₹<%= p.price.toLocaleString('en-IN') %></span>
+                  <span class="text-body-sm text-outline">/mo</span>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Security Deposit</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <span class="font-semibold text-on-surface">₹<%= (p.securityDeposit || p.price).toLocaleString('en-IN') %></span>
+                  <span class="block text-label-sm text-secondary">100% Refundable</span>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Maintenance Charges</td>
+              <% props.forEach(() => { %>
+                <td class="p-space-md border-l border-surface-container text-primary font-semibold flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                  Included in Rent
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+
+            <!-- Category: Living Specifications -->
+            <tr class="bg-surface-container-low/60">
+              <td colspan="<%= 1 + Math.max(props.length, 3) %>" class="px-space-md py-2 font-label-md text-label-md font-bold text-primary uppercase tracking-wider">
+                2. Living Specs &amp; Amenities
+              </td>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Gender Suitability</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container font-semibold">
+                  <%= p.genderPreference === 'Boys' ? 'Boys Only' : p.genderPreference === 'Girls' ? 'Girls Only' : 'Unisex / Co-ed' %>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Mess / Meal Plan</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container text-secondary font-medium">
+                  <%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('meal') || a.toLowerCase().includes('food')) ? '3x Meals Included' : 'Self Cooking / Optional' %>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Wi-Fi &amp; Backup</td>
+              <% props.forEach(() => { %>
+                <td class="p-space-md border-l border-surface-container text-primary font-medium flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[18px]">wifi</span>
+                  High-Speed + 24/7 Power
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Washroom Type</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container font-medium text-on-surface">
+                  <%= p.amenities && p.amenities.some(a => a.toLowerCase().includes('attached')) ? 'Attached En-suite' : 'Shared Clean Washroom' %>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+
+            <!-- Category: Campus Distance -->
+            <tr class="bg-surface-container-low/60">
+              <td colspan="<%= 1 + Math.max(props.length, 3) %>" class="px-space-md py-2 font-label-md text-label-md font-bold text-primary uppercase tracking-wider">
+                3. Proximity &amp; Commute
+              </td>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Distance to College</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <span class="font-semibold text-on-surface block"><%= p.campusDistance || 'Short walk' %></span>
+                  <span class="text-body-sm text-secondary"><%= p.locality %></span>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+
+            <!-- Category: Rating & Value Score -->
+            <tr class="bg-surface-container-low/60">
+              <td colspan="<%= 1 + Math.max(props.length, 3) %>" class="px-space-md py-2 font-label-md text-label-md font-bold text-primary uppercase tracking-wider">
+                4. Value Score &amp; Actions
+              </td>
+            </tr>
+            <tr class="hover:bg-surface-bright transition-colors">
+              <td class="p-space-md font-semibold text-on-surface">Nestly Value Score</td>
+              <% props.forEach((p, idx) => { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-headline-sm font-bold <%= idx === 0 ? 'text-primary' : 'text-on-surface' %>">
+                      <%= ((p.rating || 4.5) * 2).toFixed(1) %>
+                    </span>
+                    <span class="text-body-sm text-outline">/ 10</span>
+                  </div>
+                  <div class="w-full bg-surface-container rounded-full h-1.5 mt-1.5 overflow-hidden">
+                    <div class="bg-primary h-full rounded-full" style="width: <%= Math.min(100, Math.round((p.rating || 4.5) * 20)) %>%;"></div>
+                  </div>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container text-outline">-</td>
+              <% } %>
+            </tr>
+            <tr class="bg-surface-container-lowest">
+              <td class="p-space-md font-semibold text-on-surface">Bookings</td>
+              <% props.forEach(p => { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <a href="/stays/<%= p._id %>" class="inline-block w-full text-center py-2 px-space-sm rounded-lg bg-primary text-on-primary font-label-md shadow-sm hover:bg-primary-container transition-all">
+                    View Stay
+                  </a>
+                </td>
+              <% }) %>
+              <% for (let i = props.length; i < 3; i++) { %>
+                <td class="p-space-md border-l border-surface-container">
+                  <a href="/stays" class="inline-block w-full text-center py-2 px-space-sm rounded-lg bg-surface-container text-on-surface font-label-md hover:bg-surface-container-high transition-colors">
+                    Find Stays
+                  </a>
+                </td>
+              <% } %>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  <% } %>
+
+  <!-- Assurance Banner Under Comparison -->
+  <div class="mt-space-xl p-space-lg rounded-2xl bg-surface-container flex flex-col md:flex-row items-center justify-between gap-space-lg shadow-sm border border-surface-container-high">
     <div class="flex items-center gap-space-md">
       <div class="w-12 h-12 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0">
         <span class="material-symbols-outlined text-[28px]">verified</span>
@@ -393,7 +570,7 @@
       </div>
     </div>
     <div class="flex items-center gap-space-sm shrink-0">
-      <a class="px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-lg text-label-lg hover:bg-surface-container-low transition-colors shadow-sm" href="/stays">
+      <a class="px-space-md py-space-sm rounded-lg bg-surface-container-lowest text-primary font-label-lg text-label-lg hover:bg-surface-container-low transition-colors shadow-sm border border-surface-container" href="/stays">
         Explore All Hostels
       </a>
     </div>
@@ -423,4 +600,36 @@
       }
     });
   }
+
+  // Remove individual property from comparison
+  document.querySelectorAll('.remove-compare-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const removeId = btn.dataset.propertyId;
+      const currentUrl = new URL(window.location.href);
+      const idsParam = currentUrl.searchParams.get('ids');
+      
+      if (idsParam) {
+        const idList = idsParam.split(',').map(s => s.trim()).filter(id => id && id !== removeId);
+        if (idList.length > 0) {
+          currentUrl.searchParams.set('ids', idList.join(','));
+        } else {
+          currentUrl.searchParams.delete('ids');
+        }
+        window.location.href = currentUrl.toString();
+      } else {
+        <% if (typeof props !== 'undefined' && props && props.length) { %>
+          const allIds = <%- JSON.stringify(props.map(p => p._id.toString())) %>;
+          const remainingIds = allIds.filter(id => id !== removeId);
+          if (remainingIds.length > 0) {
+            window.location.href = '/compare?ids=' + remainingIds.join(',');
+          } else {
+            window.location.href = '/stays';
+          }
+        <% } else { %>
+          window.location.href = '/stays';
+        <% } %>
+      }
+    });
+  });
 </script>

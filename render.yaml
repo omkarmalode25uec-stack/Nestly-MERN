@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: nestly
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ATLASDB_URL
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: MAPBOX_ACCESS_TOKEN
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_KEY
+        sync: false
+      - key: CLOUDINARY_SECRET
+        sync: false
+      - key: ZAP_UPI_API_KEY
+        sync: false
+      - key: ZAP_UPI_BASE_URL
+        value: https://pay.zapupi.com
+      - key: ZAP_UPI_SERVER_GATEWAY_IP
+        value: 72.61.225.127
+      - key: ZAP_UPI_SIMULATION
+        value: "true"

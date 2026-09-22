@@ -1,5 +1,25 @@
 const mongoose = require('mongoose');
 
+const imageSchema = new mongoose.Schema(
+  {
+    url: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    filename: {
+      type: String,
+      trim: true,
+      default: ''
+    }
+  },
+  { _id: false }
+);
+
+imageSchema.methods.toString = function () {
+  return this.url;
+};
+
 const propertySchema = new mongoose.Schema(
   {
     title: {
@@ -59,6 +79,11 @@ const propertySchema = new mongoose.Schema(
         min: -180,
         max: 180
       },
+      googleMapsUrl: {
+        type: String,
+        trim: true,
+        default: ''
+      },
       nearbyInstitutions: [
         {
           name: { type: String, trim: true },
@@ -93,9 +118,12 @@ const propertySchema = new mongoose.Schema(
       default: 'Unisex'
     },
     images: {
-      type: [String],
+      type: [imageSchema],
       default: [
-        'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul'
+        {
+          url: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=1200&q=80',
+          filename: 'default_property'
+        }
       ]
     },
     amenities: {
@@ -139,6 +167,18 @@ const propertySchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
+// Pre-validate hook: normalize images to { url, filename } objects
+propertySchema.pre('validate', function () {
+  if (this.images && Array.isArray(this.images)) {
+    this.images = this.images.map((img) => {
+      if (typeof img === 'string') {
+        return { url: img, filename: img };
+      }
+      return img;
+    });
+  }
+});
 
 // Pre-save hook: ensure location subdocument remains in sync with root fields
 propertySchema.pre('save', function () {

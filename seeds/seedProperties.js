@@ -1,4 +1,4 @@
-﻿const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const User = require('../models/User');
@@ -98,7 +98,8 @@ const sampleProperties = [
 ];
 
 async function seedDatabase() {
-  await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/nestly');
+  const dbUrl = process.env.ATLASDB_URL || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/nestly';
+  await mongoose.connect(dbUrl);
   console.log('MongoDB connected for seeding.');
 
   // Find or create a default host/owner user

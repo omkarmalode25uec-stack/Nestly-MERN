@@ -1,23 +1,37 @@
 const express = require('express');
 const path = require('path');
+const dns = require('dns');
 const ejsMate = require('ejs-mate');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const { MongoStore } = require('connect-mongo');
 const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/User');
 require('dotenv').config();
 
+// Defensive DNS fallback for Windows local environments where c-ares may default to 127.0.0.1
+if (process.platform === 'win32') {
+  const currentServers = dns.getServers();
+  if (currentServers.length === 1 && currentServers[0] === '127.0.0.1') {
+    try {
+      dns.setServers(['8.8.8.8', '1.1.1.1']);
+    } catch (e) {}
+  }
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/nestly';
 
-// 1. Database Connection
+// 1. Primary Database Connection: MongoDB Atlas (process.env.ATLASDB_URL)
+const DB_URL = process.env.ATLASDB_URL || process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/nestly';
+
 mongoose
-  .connect(MONGODB_URI)
+  .connect(DB_URL)
   .then(async () => {
-    console.log('MongoDB connected successfully');
+    const isAtlas = DB_URL.includes('mongodb.net');
+    console.log(`[Database] Connected successfully to ${isAtlas ? 'MongoDB Atlas (Production)' : 'MongoDB (Local)'}`);
     try {
       let admin = await User.findOne({ email: 'admin@nestly.com' });
       if (!admin) {
@@ -56,9 +70,25 @@ if (isProduction) {
   }
 }
 
-// 4. Session Configuration
+// 4. Session Configuration (Persistent sessions stored in MongoDB Atlas via connect-mongo)
+const sessionSecret = process.env.SESSION_SECRET || 'nestly-learning-secret-session-key';
+
+const store = MongoStore.create({
+  mongoUrl: DB_URL,
+  crypto: {
+    secret: sessionSecret
+  },
+  touchAfter: 24 * 3600 // Lazy session update: update only once every 24 hours if unchanged
+});
+
+store.on('error', (err) => {
+  console.log('[Session Store Notice]', err.message);
+});
+
 const sessionConfig = {
-  secret: process.env.SESSION_SECRET || 'nestly-learning-secret-session-key',
+  store,
+  name: 'nestly.sid',
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -91,6 +121,7 @@ app.use((req, res, next) => {
   res.locals.info = req.flash('info');
   res.locals.currentUser = req.user || null;
   res.locals.primaryServiceArea = getPrimaryServiceArea();
+  res.locals.mapboxToken = process.env.MAPBOX_ACCESS_TOKEN || process.env.MAP_TOKEN || '';
   next();
 });
 

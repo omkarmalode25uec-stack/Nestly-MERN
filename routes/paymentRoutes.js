@@ -18,20 +18,27 @@ const isValidOrderId = (orderId) => typeof orderId === 'string' && /^[A-Za-z0-9_
 /**
  * Synchronize booking status and Escrow Settlement Ledger with payment outcome
  */
-async function syncBookingPayment(payment, isSuccess) {
+async function syncBookingPayment(payment, outcome) {
   if (!payment || !payment.booking) return;
   try {
     const booking = await Booking.findById(payment.booking).populate('property');
     if (!booking) return;
 
+    const isSuccess = outcome === 'success' || outcome === true;
+    const isTimeout = outcome === 'timeout';
+
     if (isSuccess) {
+      const alreadyCompleted = booking.paymentStatus === 'completed';
       booking.paymentStatus = 'completed';
       booking.payment = payment._id;
       booking.status = 'confirmed';
       await booking.save();
 
-      if (booking.property) {
-        await Property.findByIdAndUpdate(booking.property._id || booking.property, { $inc: { availableBeds: -1 } });
+      // Only decrement bed inventory if not already completed!
+      if (!alreadyCompleted && booking.property && booking.property.availableBeds > 0) {
+        await Property.findByIdAndUpdate(booking.property._id || booking.property, {
+          $inc: { availableBeds: -1 }
+        });
       }
 
       // Escrow Settlement Architecture:
@@ -62,6 +69,11 @@ async function syncBookingPayment(payment, isSuccess) {
           await settlement.save();
         }
       }
+    } else if (isTimeout) {
+      if (booking.paymentStatus !== 'completed') {
+        booking.paymentStatus = 'timeout';
+        await booking.save();
+      }
     } else {
       if (booking.paymentStatus !== 'completed') {
         booking.paymentStatus = 'failed';
@@ -83,11 +95,11 @@ router.get('/checkout', isLoggedIn, async (req, res) => {
     let bookingDetails = {
       propertyTitle: 'CozyNest Student Co-Living',
       roomNumber: 'Studio Suite • Room #304-B',
-      location: 'Baner Rd, near Symbiosis & MIT-WPU Transit hub, Pune',
+      location: 'Kopargaon, Maharashtra',
       residentName: req.user.name || 'Student Resident',
       residentPhone: req.user.phone || '+91 98765 43210',
-      monthlyRent: 11500,
-      securityDeposit: 11500,
+      monthlyRent: 8500,
+      securityDeposit: 8500,
       tokenDeposit: TOKEN_DEPOSIT_AMOUNT,
       bookingId: null
     };
@@ -98,7 +110,7 @@ router.get('/checkout', isLoggedIn, async (req, res) => {
         bookingDetails = {
           propertyTitle: booking.property ? booking.property.title : 'Nestly Accommodations',
           roomNumber: `${booking.roomType} Room • Allocated`,
-          location: booking.property ? `${booking.property.locality}, ${booking.property.city}` : 'Pune',
+          location: booking.property ? `${booking.property.locality}, ${booking.property.city}` : 'Kopargaon',
           residentName: req.user.name,
           residentPhone: req.user.phone || '+91 98765 43210',
           monthlyRent: booking.monthlyRent,
@@ -125,32 +137,76 @@ router.get('/checkout', isLoggedIn, async (req, res) => {
 router.post('/payments/create-order', isLoggedIn, async (req, res) => {
   try {
     const {
-      propertyTitle = 'CozyNest Student Co-Living',
-      roomNumber = 'Studio Suite • Room #304-B',
       customerName,
       customerMobile,
       vpa = '',
       bookingId
     } = req.body;
 
-    // Generate unique order reference ID complying with ZapUPI ORD[timestamp][random3] format
-    const orderId = 'ORD' + Math.floor(Date.now() / 1000) + Math.floor(100 + Math.random() * 900);
-    const amount = TOKEN_DEPOSIT_AMOUNT; // Enforce server-side amount
-
-    // Determine webhook callback URL
-    const protocol = req.protocol;
-    const host = req.get('host');
-    const webhookUrl = `${protocol}://${host}/payments/webhook`;
-
     let bookingOwner = null;
     let bookingProperty = null;
+    let amount = TOKEN_DEPOSIT_AMOUNT;
+    let propertyTitle = req.body.propertyTitle || 'Nestly Student Stay';
+    let roomNumber = req.body.roomNumber || 'Allocated Bed Space';
+
+    // Verify & authorize booking if bookingId is provided
     if (bookingId && mongoose.Types.ObjectId.isValid(bookingId)) {
-      const b = await Booking.findById(bookingId);
-      if (b) {
-        bookingOwner = b.owner;
-        bookingProperty = b.property;
+      const booking = await Booking.findById(bookingId).populate('property');
+      if (!booking) {
+        return res.status(404).render('pages/payment-failed', {
+          title: 'Booking Not Found',
+          orderId: 'N/A',
+          errorMessage: 'The reservation specified does not exist.'
+        });
+      }
+
+      // Security Authorization: Only the student who created the booking (or admin) can pay
+      if (!booking.user.equals(req.user._id) && req.user.role !== 'admin') {
+        return res.status(403).render('pages/payment-failed', {
+          title: 'Access Denied',
+          orderId: 'N/A',
+          errorMessage: 'You are not authorized to make a payment for this reservation.'
+        });
+      }
+
+      // Guard against double payment on already completed bookings
+      if (booking.paymentStatus === 'completed') {
+        req.flash('info', 'This reservation is already paid and confirmed.');
+        return res.redirect(`/bookings/${booking._id}`);
+      }
+
+      // Check if an existing successful payment already exists for this booking
+      const existingSuccess = await Payment.findOne({ booking: booking._id, status: 'success' });
+      if (existingSuccess) {
+        req.flash('info', 'A successful payment for this reservation has already been recorded.');
+        return res.redirect(`/payments/success/${existingSuccess.orderId}`);
+      }
+
+      // Strictly enforce payable amount calculated on the server
+      amount = booking.amount || TOKEN_DEPOSIT_AMOUNT;
+      bookingOwner = booking.owner;
+      bookingProperty = booking.property ? booking.property._id : null;
+      if (booking.property) {
+        propertyTitle = booking.property.title || propertyTitle;
+        roomNumber = `${booking.roomType || 'Standard'} Room • Allocated`;
       }
     }
+
+    // Generate unique order reference ID complying with ZapUPI ORD[timestamp][random3] format
+    const orderId = 'ORD' + Math.floor(Date.now() / 1000) + Math.floor(100 + Math.random() * 900);
+
+    // Determine gateway callback and redirect URLs
+    const protocol = req.protocol;
+    const host = req.get('host');
+    const baseUrl = `${protocol}://${host}`;
+    const webhookUrl = `${baseUrl}/payments/webhook`;
+    const redirectUrl = `${baseUrl}/payments/verify/${orderId}`;
+    const successUrl = `${baseUrl}/payments/success/${orderId}`;
+    const failedUrl = `${baseUrl}/payments/failed/${orderId}`;
+    const timeoutUrl = `${baseUrl}/payments/timeout/${orderId}`;
+
+    const resolvedMobile = (req.user && req.user.phone) || customerMobile || '9876543210';
+    const resolvedName = (req.user && req.user.name) || customerName || 'Student';
 
     // Save pending payment record in database with authenticated user association
     const payment = new Payment({
@@ -162,8 +218,8 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
       referenceId: orderId,
       propertyTitle: String(propertyTitle).substring(0, 100),
       roomNumber: String(roomNumber).substring(0, 50),
-      customerName: customerName ? String(customerName).substring(0, 100) : req.user.name,
-      customerMobile: customerMobile ? String(customerMobile).substring(0, 15) : (req.user.phone || '9876543210'),
+      customerName: String(resolvedName).substring(0, 100),
+      customerMobile: String(resolvedMobile).substring(0, 15),
       amount,
       status: 'pending'
     });
@@ -173,15 +229,19 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
     const gatewayResult = await ZapUpiService.createOrder({
       orderId,
       amount,
-      customerMobile,
+      customerMobile: resolvedMobile,
       remark: `Nestly Token Deposit | ${roomNumber}`,
-      webhookUrl
+      webhookUrl,
+      redirectUrl,
+      successUrl,
+      failedUrl,
+      timeoutUrl
     });
 
     if (!gatewayResult.success) {
       payment.status = 'failed';
       await payment.save();
-      await syncBookingPayment(payment, false);
+      await syncBookingPayment(payment, 'failed');
       return res.status(400).render('pages/payment-failed', {
         title: 'Payment Initiation Failed',
         orderId,
@@ -193,7 +253,7 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
     payment.paymentUrl = gatewayResult.paymentUrl;
     await payment.save();
 
-    // Redirect user to payment URL (either live gateway or local simulation)
+    // Redirect user to payment URL (live gateway or local simulation sandbox)
     return res.redirect(gatewayResult.paymentUrl);
   } catch (err) {
     console.error('[Payment] Create order error:', err.message);
@@ -207,11 +267,14 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
 
 /**
  * ZapUPI Gateway Webhook Callback
- * Receives payment status updates and verifies server-side before updating database
+ * Receives payment status notifications, verifies server-side, and updates database idempotently
  */
 router.post('/payments/webhook', async (req, res) => {
   try {
-    const { order_id, status } = req.body;
+    const rawOrderId = req.body.order_id || req.body.orderId;
+    const rawStatus = req.body.status || req.body.order_status;
+    const txnId = req.body.txn_id || req.body.txnId || req.body.transaction_id;
+    const utr = req.body.utr || req.body.bank_utr;
 
     // Security: Check sender IP against configured ZapUPI gateway server IP
     const callerIp = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
@@ -219,31 +282,54 @@ router.post('/payments/webhook', async (req, res) => {
       console.warn(`[ZapUPI Webhook Notice] Request from IP ${callerIp}. Verified in simulation/test mode.`);
     }
 
-    if (!order_id) {
+    if (!rawOrderId) {
       return res.status(400).json({ status: 'error', message: 'Missing order_id' });
     }
 
-    const payment = await Payment.findOne({ orderId: order_id });
+    const payment = await Payment.findOne({ orderId: rawOrderId });
     if (!payment) {
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
-    // Security Rule: Double-confirm with the gateway verification endpoint
-    const verification = await ZapUpiService.verifyOrderStatus(order_id);
+    // Save gateway response payload for audit/reconciliation
+    payment.gatewayResponse = req.body;
 
-    if (verification.success) {
-      payment.status = 'success';
-      payment.transactionId = verification.txnId || req.body.txn_id || ('TXN_' + Date.now());
-      payment.utr = verification.utr || req.body.utr || ('UTR_' + Date.now());
+    // Idempotency: If payment is already marked success, do NOT duplicate booking confirm or settlements
+    if (payment.status === 'success') {
+      if (txnId && !payment.transactionId) payment.transactionId = txnId;
+      if (utr && !payment.utr) payment.utr = utr;
       await payment.save();
-      await syncBookingPayment(payment, true);
+      return res.status(200).json({ status: 'ok', message: 'Already processed as success' });
+    }
+
+    // Determine normalized status
+    let normalizedStatus = ZapUpiService.normalizeStatus(rawStatus);
+
+    // If configured with live gateway, double-confirm status
+    if (ZapUpiService.isConfigured()) {
+      const verification = await ZapUpiService.verifyOrderStatus(rawOrderId);
+      if (verification && verification.normalizedStatus) {
+        normalizedStatus = verification.normalizedStatus;
+      }
+    }
+
+    if (normalizedStatus === 'success') {
+      payment.status = 'success';
+      payment.transactionId = txnId || payment.transactionId || ('TXN_' + Date.now());
+      payment.utr = utr || payment.utr || ('UTR_' + Date.now());
+      await payment.save();
+      await syncBookingPayment(payment, 'success');
+    } else if (normalizedStatus === 'timeout') {
+      payment.status = 'timeout';
+      await payment.save();
+      await syncBookingPayment(payment, 'timeout');
     } else {
       payment.status = 'failed';
       await payment.save();
-      await syncBookingPayment(payment, false);
+      await syncBookingPayment(payment, 'failed');
     }
 
-    // Respond with standard HTTP 200 JSON required by ZapUPI
+    // Always respond with standard HTTP 200 JSON required by ZapUPI
     return res.status(200).json({ status: 'ok' });
   } catch (err) {
     console.error('[Payment Webhook] Error:', err.message);
@@ -273,23 +359,43 @@ router.get('/payments/verify/:orderId', async (req, res) => {
       });
     }
 
+    // If already finalized in database, redirect to corresponding view immediately
+    if (payment.status === 'success') {
+      return res.redirect(`/payments/success/${orderId}`);
+    }
+    if (payment.status === 'timeout') {
+      return res.redirect(`/payments/timeout/${orderId}`);
+    }
+    if (payment.status === 'failed') {
+      return res.redirect(`/payments/failed/${orderId}`);
+    }
+
     // Verify order status directly with gateway
     const verification = await ZapUpiService.verifyOrderStatus(orderId);
+    payment.gatewayResponse = verification.raw || null;
 
-    if (verification.success) {
+    if (verification.normalizedStatus === 'success' || verification.success) {
       payment.status = 'success';
       payment.transactionId = verification.txnId || ('TXN_' + Date.now());
       payment.utr = verification.utr || ('UTR_' + Date.now());
       await payment.save();
-      await syncBookingPayment(payment, true);
+      await syncBookingPayment(payment, 'success');
       req.flash('success', 'Escrow token deposit received! Your accommodation reservation is confirmed.');
       return res.redirect(`/payments/success/${orderId}`);
-    } else {
+    } else if (verification.normalizedStatus === 'timeout') {
+      payment.status = 'timeout';
+      await payment.save();
+      await syncBookingPayment(payment, 'timeout');
+      return res.redirect(`/payments/timeout/${orderId}`);
+    } else if (verification.normalizedStatus === 'failed') {
       payment.status = 'failed';
       await payment.save();
-      await syncBookingPayment(payment, false);
+      await syncBookingPayment(payment, 'failed');
       req.flash('error', 'Payment verification was unsuccessful or cancelled.');
       return res.redirect(`/payments/failed/${orderId}`);
+    } else {
+      // Still pending
+      return res.redirect(`/payments/timeout/${orderId}`);
     }
   } catch (err) {
     console.error('[Payment Verification] Error:', err.message);
@@ -305,12 +411,27 @@ router.get('/payments/simulate-fail/:orderId', async (req, res) => {
   const { orderId } = req.params;
   if (!isValidOrderId(orderId)) return res.redirect('/');
   const payment = await Payment.findOne({ orderId });
-  if (payment) {
+  if (payment && payment.status !== 'success') {
     payment.status = 'failed';
     await payment.save();
-    await syncBookingPayment(payment, false);
+    await syncBookingPayment(payment, 'failed');
   }
   return res.redirect(`/payments/failed/${orderId}`);
+});
+
+/**
+ * Local Simulation: Timeout Order
+ */
+router.get('/payments/simulate-timeout/:orderId', async (req, res) => {
+  const { orderId } = req.params;
+  if (!isValidOrderId(orderId)) return res.redirect('/');
+  const payment = await Payment.findOne({ orderId });
+  if (payment && payment.status !== 'success') {
+    payment.status = 'timeout';
+    await payment.save();
+    await syncBookingPayment(payment, 'timeout');
+  }
+  return res.redirect(`/payments/timeout/${orderId}`);
 });
 
 /**
@@ -320,10 +441,10 @@ router.get('/payments/cancel/:orderId', async (req, res) => {
   const { orderId } = req.params;
   if (!isValidOrderId(orderId)) return res.redirect('/');
   const payment = await Payment.findOne({ orderId });
-  if (payment) {
+  if (payment && payment.status !== 'success') {
     payment.status = 'cancelled';
     await payment.save();
-    await syncBookingPayment(payment, false);
+    await syncBookingPayment(payment, 'failed');
   }
   req.flash('info', 'Your payment transaction was cancelled.');
   return res.redirect(`/payments/failed/${orderId}`);
@@ -355,6 +476,31 @@ router.get('/payments/success/:orderId', async (req, res) => {
     });
   } catch (err) {
     console.error('[Payment Success] Error:', err.message);
+    res.redirect('/');
+  }
+});
+
+/**
+ * Payment Timeout Page
+ */
+router.get('/payments/timeout/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    if (!isValidOrderId(orderId)) {
+      return res.redirect('/');
+    }
+
+    const payment = await Payment.findOne({ orderId });
+
+    res.render('pages/payment-timeout', {
+      title: 'Payment Window Expired | Nestly',
+      activePage: 'payment-timeout',
+      orderId,
+      payment
+    });
+  } catch (err) {
+    console.error('[Payment Timeout] Error:', err.message);
     res.redirect('/');
   }
 });

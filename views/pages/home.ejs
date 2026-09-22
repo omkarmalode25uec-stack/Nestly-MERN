@@ -59,76 +59,120 @@
 
   <!-- Stitch Landing Search Card -->
   <div class="bg-surface-container-lowest rounded-2xl shadow-xl p-space-md sm:p-space-lg border border-outline-variant/30 mb-space-xl">
-    <form action="/stays" method="GET">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-md items-end">
-        <!-- Location / City / College Column -->
-        <div class="lg:col-span-4 space-y-1.5">
-          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span> Locality or College in Kopargaon
-          </label>
-          <div class="relative">
-            <input name="q" class="w-full h-12 pl-4 pr-10 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm" placeholder="e.g. Sanjivani, Sahajanandnagar, Sai City..." type="text" value=""/>
-            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px]">near_me</span>
+    <form action="/stays" method="GET" class="space-y-space-md">
+      <!-- Top Row: Location Search Bar & Integrated Search Button -->
+      <div class="flex flex-col sm:flex-row gap-space-sm items-stretch">
+        <div class="flex-1 relative">
+          <label class="sr-only" for="homeLocationInput">Locality or College in Kopargaon</label>
+          <span class="material-symbols-outlined absolute left-4 top-3 text-primary text-[22px]">pin_drop</span>
+          <input id="homeLocationInput" name="q" class="w-full h-12 pl-12 pr-10 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm" placeholder="Search by locality or college (e.g. Sanjivani, Sahajanandnagar, Sai City...)" type="text" value=""/>
+          <span class="material-symbols-outlined absolute right-4 top-3 text-outline text-[20px] pointer-events-none">near_me</span>
+        </div>
+        <button type="submit" class="h-12 px-space-lg rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all active:scale-[0.98] shrink-0 cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">search</span>
+          <span>Search Stays</span>
+        </button>
+      </div>
+
+      <!-- Segmented Interactive Controls: Room Sharing, Stay Type & Max Budget -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-md pt-space-xs border-t border-surface-container">
+        <!-- 1. Room Sharing Option -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px] text-primary">bed</span>
+              Room Sharing
+            </span>
+            <span class="font-label-sm text-outline text-[11px] uppercase tracking-wider">Occupancy</span>
+          </div>
+          <div class="filter-pill-group flex flex-wrap gap-1 p-1 bg-surface-container-low rounded-xl" id="homeRoomSharingGroup">
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent bg-surface-container-lowest text-primary font-bold shadow-sm ring-1 ring-primary/20">
+              <input type="radio" name="sharing" value="" class="sr-only" checked>
+              <span>Any</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="sharing" value="Single" class="sr-only">
+              <span>Single</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="sharing" value="Double" class="sr-only">
+              <span>2 Sharing</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="sharing" value="Triple" class="sr-only">
+              <span>3 Sharing</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="sharing" value="Four+" class="sr-only">
+              <span>4+ Sharing</span>
+            </label>
           </div>
         </div>
 
-        <!-- Room Sharing Column -->
-        <div class="lg:col-span-3 space-y-1.5">
-          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px] text-primary">bed</span> Room Sharing
-          </label>
-          <div class="relative">
-            <select name="sharing" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
-              <option value="">Any Sharing Type</option>
-              <option value="Single">Single Private Occupancy</option>
-              <option value="Double" selected>Double Sharing Room</option>
-              <option value="Triple">Triple Sharing (Budget)</option>
-              <option value="Four+">Four+ Sharing</option>
-            </select>
-            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+        <!-- 2. Stay Type Option -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px] text-primary">apartment</span>
+              Stay Type
+            </span>
+            <span class="font-label-sm text-outline text-[11px] uppercase tracking-wider">Category</span>
+          </div>
+          <div class="filter-pill-group flex flex-wrap gap-1 p-1 bg-surface-container-low rounded-xl" id="homeStayTypeGroup">
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent bg-surface-container-lowest text-primary font-bold shadow-sm ring-1 ring-primary/20">
+              <input type="radio" name="type" value="" class="sr-only" checked>
+              <span>All Types</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="type" value="PG" class="sr-only">
+              <span>PG</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="type" value="Hostel" class="sr-only">
+              <span>Hostel</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="type" value="Co-Living" class="sr-only">
+              <span>Co-Living</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="type" value="Shared Flat" class="sr-only">
+              <span>Flat</span>
+            </label>
           </div>
         </div>
 
-        <!-- Property Type Column -->
-        <div class="lg:col-span-2 space-y-1.5">
-          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px] text-primary">apartment</span> Stay Type
-          </label>
-          <div class="relative">
-            <select name="type" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
-              <option value="">All Types</option>
-              <option value="PG" selected>Paying Guest (PG)</option>
-              <option value="Hostel">Student Hostel</option>
-              <option value="Co-Living">Co-Living</option>
-              <option value="Shared Flat">Shared Flat</option>
-            </select>
-            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+        <!-- 3. Max Budget Option -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px] text-primary">payments</span>
+              Max Budget
+            </span>
+            <span class="font-label-sm text-outline text-[11px] uppercase tracking-wider">Monthly</span>
           </div>
-        </div>
-
-        <!-- Budget Range Column -->
-        <div class="lg:col-span-2 space-y-1.5">
-          <label class="font-label-md text-label-md text-on-surface-variant font-semibold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px] text-primary">payments</span> Max Budget
-          </label>
-          <div class="relative">
-            <select name="maxPrice" class="w-full h-12 px-4 rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md appearance-none focus:bg-surface-container-lowest focus:outline-none focus:ring-2 focus:ring-primary transition-all text-sm cursor-pointer">
-              <option value="">Any Budget</option>
-              <option value="8000">Under ₹8,000 / mo</option>
-              <option value="10000" selected>Under ₹10,000 / mo</option>
-              <option value="15000">Under ₹15,000 / mo</option>
-              <option value="25000">₹25,000+ (Luxury)</option>
-            </select>
-            <span class="material-symbols-outlined absolute right-3 top-3 text-outline text-[20px] pointer-events-none">expand_more</span>
+          <div class="filter-pill-group flex flex-wrap gap-1 p-1 bg-surface-container-low rounded-xl" id="homeBudgetGroup">
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent bg-surface-container-lowest text-primary font-bold shadow-sm ring-1 ring-primary/20">
+              <input type="radio" name="maxPrice" value="" class="sr-only" checked>
+              <span>Any</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="maxPrice" value="8000" class="sr-only">
+              <span>₹8,000</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="maxPrice" value="10000" class="sr-only">
+              <span>₹10,000</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="maxPrice" value="15000" class="sr-only">
+              <span>₹15,000</span>
+            </label>
+            <label class="filter-pill cursor-pointer px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none border border-transparent text-on-surface-variant hover:text-on-surface hover:bg-surface-container">
+              <input type="radio" name="maxPrice" value="25000" class="sr-only">
+              <span>₹25k+</span>
+            </label>
           </div>
-        </div>
-
-        <!-- CTA Trigger Column -->
-        <div class="lg:col-span-1">
-          <button type="submit" class="w-full h-12 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.98]" title="Search verified student properties">
-            <span class="material-symbols-outlined text-[22px]">search</span>
-            <span class="lg:hidden">Search</span>
-          </button>
         </div>
       </div>
     </form>
@@ -423,3 +467,31 @@
     </div>
   </div>
 </section>
+
+<script>
+  // Interactive pill selection in Home search card
+  document.querySelectorAll('.filter-pill-group').forEach(group => {
+    const labels = group.querySelectorAll('.filter-pill');
+    labels.forEach(lbl => {
+      const radio = lbl.querySelector('input[type="radio"]');
+      if (!radio) return;
+
+      const updateState = () => {
+        labels.forEach(l => {
+          l.classList.remove('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-sm', 'ring-1', 'ring-primary/20');
+          l.classList.add('text-on-surface-variant', 'border-transparent');
+        });
+        if (radio.checked) {
+          lbl.classList.remove('text-on-surface-variant', 'border-transparent');
+          lbl.classList.add('bg-surface-container-lowest', 'text-primary', 'font-bold', 'shadow-sm', 'ring-1', 'ring-primary/20');
+        }
+      };
+
+      radio.addEventListener('change', updateState);
+      lbl.addEventListener('click', () => {
+        radio.checked = true;
+        updateState();
+      });
+    });
+  });
+</script>

@@ -71,12 +71,16 @@ const paymentSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'success', 'failed', 'cancelled'],
+      enum: ['pending', 'success', 'failed', 'timeout', 'cancelled'],
       default: 'pending'
     },
     paymentUrl: {
       type: String,
       trim: true
+    },
+    gatewayResponse: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null
     }
   },
   {

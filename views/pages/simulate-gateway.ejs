@@ -46,6 +46,11 @@
         <span>Simulate Payment Failure (Declined)</span>
       </a>
 
+      <a href="/payments/simulate-timeout/<%= payment.orderId %>" class="w-full py-3 px-4 rounded-xl bg-surface-container hover:bg-amber-100 text-amber-800 font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 transition-all">
+        <span class="material-symbols-outlined text-[20px]">timer_off</span>
+        <span>Simulate Session Timeout (Expired)</span>
+      </a>
+
       <a href="/payments/cancel/<%= payment.orderId %>" class="w-full py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-lg text-label-lg font-semibold flex items-center justify-center gap-2 transition-all">
         <span class="material-symbols-outlined text-[20px]">cancel</span>
         <span>Simulate User Cancellation</span>

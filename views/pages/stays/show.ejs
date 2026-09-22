@@ -88,35 +88,192 @@
     </div>
   </header>
 
-  <!-- Photo Gallery Bento Grid -->
-  <section class="relative mb-space-2xl">
-    <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-3 h-[360px] sm:h-[440px] md:h-[480px] rounded-2xl overflow-hidden bg-surface-container-high">
-      <!-- Main Large Photo -->
-      <div class="md:col-span-2 md:row-span-2 relative overflow-hidden group">
-        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="<%= property.title %> main" src="<%= property.images && property.images[0] ? property.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>"/>
-        <span class="absolute bottom-3 left-3 px-3 py-1 bg-surface/90 backdrop-blur-md rounded-lg font-label-sm text-label-sm text-primary font-semibold">
+  <!-- Flipkart / Amazon Style Interactive Photo Gallery -->
+  <%
+    const defaultPlaceholder = 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul';
+    const rawImages = (property.images && Array.isArray(property.images)) ? property.images : [];
+    const galleryImages = rawImages.length > 0 
+      ? rawImages.map(img => (img && img.url) ? img.url : (img ? img.toString() : defaultPlaceholder)).filter(Boolean)
+      : [defaultPlaceholder];
+    const hasMultipleImages = galleryImages.length > 1;
+  %>
+  <section class="relative mb-space-2xl rounded-2xl overflow-hidden border border-outline-variant/30 bg-surface-container-low shadow-sm select-none" id="propertyGalleryContainer">
+    <!-- Main Viewport -->
+    <div class="relative w-full h-[360px] sm:h-[460px] md:h-[520px] bg-neutral-900 flex items-center justify-center overflow-hidden group">
+      <!-- Active Image -->
+      <img 
+        id="galleryMainImg" 
+        src="<%= galleryImages[0] %>" 
+        alt="<%= property.title %> photo" 
+        class="w-full h-full object-cover transition-opacity duration-300 ease-in-out select-none"
+      />
+
+      <!-- Room Sharing Badge -->
+      <div class="absolute top-4 left-4 z-10 flex items-center gap-2 pointer-events-none">
+        <span class="px-3 py-1 bg-surface/90 backdrop-blur-md rounded-xl font-label-sm text-label-sm text-primary font-bold shadow-sm flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px] text-primary">apartment</span>
           <%= property.roomSharing %> Room Suite
         </span>
       </div>
-      <!-- Secondary Photos -->
-      <div class="hidden md:block relative overflow-hidden group">
-        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Room bath" src="<%= property.images && property.images[1] ? property.images[1] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg7qGDgoE-L4O5XEb65do0kjcLNoTvCJ_3x-8bSrA78i4Zaj57Nd_PfrLzvK9k8XI9oXYd1YBUbac4mlThC38kGiSZRRcnb_ijOPfYiMAp_QF8-3h03j5kagGZqwcIrQoicOOjG_s1AWVwgEHhvEwV2ao7af3mYfcQiNnLmLbnnb71RXuBRxEbAFkMkwqAHn2YAJwFAF23OuqnbxIprPjdCgSn6zNE4wJGiEJ3lD6XFI2WDwA_OVIE' %>"/>
-        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Ensuite Washroom</span>
-      </div>
-      <div class="hidden md:block relative overflow-hidden group">
-        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Dining mess" src="<%= property.images && property.images[2] ? property.images[2] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuCwDASJnBO1Sa-xAVAqF_Dq7JnYOsdbZQD6iVjgQ8sN7KgyRnmLPZr6ea7tfEgC_r_z_D2dnWsHv6dC23GiN8q5sTZK4LQRI7rLhiuHBHqZryRytUWm0IGX9a3-c28gsd1wCMDjDc_VZ4lO-0IpjMZnjwZln0MD6ikO0ti1NL73huChu-JpuALOGb1M2dZrVOpFV80KV1z8nA-iwm0TQvwp_TqL-VhMVRaRrWz0tP74VRX2nx0V0LHi' %>"/>
-        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Mess & Dining</span>
-      </div>
-      <div class="hidden md:block relative overflow-hidden group">
-        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Study lounge" src="<%= property.images && property.images[3] ? property.images[3] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuB2hKNomyCs5fjlQhiTjlB_hXehvJEPXcnmcPeLlQqMe-rRR_g2Wbf2ZtG2A-MMtFxUVPzO4Z7wBeIzvxWQ7mnR1D01L2N9c6Z9aUF8d3WA_Ch2pDume7sXQ4RlSbRNhL0xl9qPKzDdXvspYliTj9Ou4shZ5TcCsFq8cKbh5-gGVSxRhCykUTjEd4lqCJOuxOkiNqzr3KQYzYWLtdvaMwBI2sxpIgRBlcgwgXWS9MnUmzr4UDIYKUIB' %>"/>
-        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Study Lounge</span>
-      </div>
-      <div class="hidden md:block relative overflow-hidden group">
-        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Building grounds" src="<%= property.images && property.images[4] ? property.images[4] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAa1q3GQSPa4SIFj03WUkL4mDjKuQUA452NLCmCwUMKInHPlMqO_7nBoSez87T9HRPEQZmqTYWiuqTCkvOsdiMd3dV4ylaJBcX1orP-xGO2wbG5KgGQluot5RTZM9LeK7TNt3fTcJGQ5HQOmtTS1RQ5J5rskPkCacQ1a_moFnViZ5gZdRemW8ODgYEQbzF6SQYKZUJSddbV8KDJcH4XvTorBevNSUXDbvB9P--VyI0X4YWwgmRHbW5F' %>"/>
-        <span class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface/85 backdrop-blur-sm rounded font-label-sm text-label-sm text-on-surface">Biometric Gate</span>
-      </div>
+
+      <% if (hasMultipleImages) { %>
+        <!-- Floating Left Arrow -->
+        <button 
+          type="button" 
+          id="galleryPrevBtn" 
+          onclick="prevGalleryImage(event)" 
+          aria-label="Previous photo"
+          class="absolute left-3 md:left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface/90 hover:bg-surface text-on-surface shadow-lg backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-[28px]">keyboard_arrow_left</span>
+        </button>
+
+        <!-- Floating Right Arrow -->
+        <button 
+          type="button" 
+          id="galleryNextBtn" 
+          onclick="nextGalleryImage(event)" 
+          aria-label="Next photo"
+          class="absolute right-3 md:right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-surface/90 hover:bg-surface text-on-surface shadow-lg backdrop-blur-md flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer"
+        >
+          <span class="material-symbols-outlined text-[28px]">keyboard_arrow_right</span>
+        </button>
+      <% } %>
     </div>
+
+    <% if (hasMultipleImages) { %>
+      <!-- Shopping-App Style Centered Counter Bar (2 / 6) -->
+      <div class="bg-surface-container-low py-2 px-4 flex items-center justify-between border-t border-outline-variant/20">
+        <span class="text-xs text-on-surface-variant font-medium hidden sm:inline">Use arrows or thumbnails to explore</span>
+        <div id="galleryCounter" class="mx-auto sm:mx-0 px-3.5 py-1 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md font-bold shadow-sm flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px] text-primary">photo_library</span>
+          <span><span id="galleryCurrentIndex">1</span> / <span><%= galleryImages.length %></span></span>
+        </div>
+        <span class="text-xs text-on-surface-variant font-medium hidden sm:inline">Tap photo or thumbnails</span>
+      </div>
+
+      <!-- Thumbnail Strip (Flipkart / Amazon Style) -->
+      <div class="bg-surface-container-lowest border-t border-outline-variant/20 p-2 sm:p-3">
+        <div 
+          id="galleryThumbnailStrip" 
+          class="flex items-center gap-2 sm:gap-3 overflow-x-auto scrollbar-thin py-1 px-1 scroll-smooth"
+        >
+          <% galleryImages.forEach((imgUrl, idx) => { %>
+            <button 
+              type="button"
+              onclick="setGalleryImage(<%= idx %>)"
+              class="gallery-thumbnail relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer focus:outline-none <%= idx === 0 ? 'border-primary ring-2 ring-primary/40 opacity-100 scale-[1.02]' : 'border-outline-variant/40 opacity-60 hover:opacity-100 hover:border-primary/50' %>"
+              data-index="<%= idx %>"
+              aria-label="View photo <%= idx + 1 %>"
+            >
+              <img 
+                src="<%= imgUrl %>" 
+                alt="<%= property.title %> thumbnail <%= idx + 1 %>" 
+                class="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </button>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
   </section>
+
+  <% if (hasMultipleImages) { %>
+    <script>
+      (function() {
+        const images = <%- JSON.stringify(galleryImages) %>;
+        if (!images || images.length <= 1) return;
+
+        let currentIndex = 0;
+        const mainImg = document.getElementById('galleryMainImg');
+        const counterEl = document.getElementById('galleryCurrentIndex');
+        const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+
+        function updateGallery(idx) {
+          if (idx < 0) {
+            currentIndex = images.length - 1; // Looping to last image
+          } else if (idx >= images.length) {
+            currentIndex = 0; // Looping to first image
+          } else {
+            currentIndex = idx;
+          }
+
+          // Smooth fade transition
+          if (mainImg) {
+            mainImg.style.opacity = '0.4';
+            mainImg.src = images[currentIndex];
+            mainImg.onload = function() {
+              mainImg.style.opacity = '1';
+            };
+          }
+
+          // Update counter badge
+          if (counterEl) {
+            counterEl.textContent = currentIndex + 1;
+          }
+
+          // Update thumbnails highlight & scroll into view
+          thumbnails.forEach((thumb, i) => {
+            if (i === currentIndex) {
+              thumb.classList.add('border-primary', 'ring-2', 'ring-primary/40', 'opacity-100', 'scale-[1.02]');
+              thumb.classList.remove('border-outline-variant/40', 'opacity-60');
+              thumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            } else {
+              thumb.classList.remove('border-primary', 'ring-2', 'ring-primary/40', 'opacity-100', 'scale-[1.02]');
+              thumb.classList.add('border-outline-variant/40', 'opacity-60');
+            }
+          });
+        }
+
+        window.nextGalleryImage = function(e) {
+          if (e) e.stopPropagation();
+          updateGallery(currentIndex + 1);
+        };
+
+        window.prevGalleryImage = function(e) {
+          if (e) e.stopPropagation();
+          updateGallery(currentIndex - 1);
+        };
+
+        window.setGalleryImage = function(idx) {
+          updateGallery(idx);
+        };
+
+        // Keyboard Left/Right Navigation
+        document.addEventListener('keydown', function(e) {
+          if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName)) return;
+          if (e.key === 'ArrowLeft') {
+            updateGallery(currentIndex - 1);
+          } else if (e.key === 'ArrowRight') {
+            updateGallery(currentIndex + 1);
+          }
+        });
+
+        // Touch Swipe Navigation for Mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const container = document.getElementById('propertyGalleryContainer');
+        if (container) {
+          container.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+          }, { passive: true });
+
+          container.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            const swipeDist = touchEndX - touchStartX;
+            if (Math.abs(swipeDist) > 40) {
+              if (swipeDist < 0) {
+                updateGallery(currentIndex + 1); // Swipe left -> next
+              } else {
+                updateGallery(currentIndex - 1); // Swipe right -> prev
+              }
+            }
+          }, { passive: true });
+        }
+      })();
+    </script>
+  <% } %>
 
   <!-- Two-Column Main Content -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
@@ -177,6 +334,87 @@
           <% }) %>
         </div>
       </section>
+
+      <!-- Location & Neighborhood Mapbox Section -->
+      <%
+        const propLat = (property.location && property.location.latitude) ? property.location.latitude : 19.8913;
+        const propLng = (property.location && property.location.longitude) ? property.location.longitude : 74.4784;
+        const googleMapsDirectUrl = (property.location && property.location.googleMapsUrl) 
+          ? property.location.googleMapsUrl 
+          : `https://www.google.com/maps/search/?api=1&query=${propLat},${propLng}`;
+      %>
+      <section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-md" id="locationSection">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-space-xs border-b border-surface-container-low">
+          <div>
+            <h2 class="font-title-lg text-title-lg text-on-surface font-bold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-primary text-[22px]">location_on</span>
+              Location &amp; Neighborhood
+            </h2>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">
+              <%= property.address %>, <%= property.locality %>, <%= property.city %>
+            </p>
+          </div>
+          <a href="<%= googleMapsDirectUrl %>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-sm text-label-sm font-bold border border-outline-variant/30 transition-colors self-start sm:self-auto shrink-0 shadow-xs">
+            <span class="material-symbols-outlined text-[16px]">directions</span>
+            <span>Get Directions</span>
+          </a>
+        </div>
+
+        <% if (property.campusDistance) { %>
+          <div class="flex items-center gap-2 p-3 rounded-xl bg-secondary-container/40 text-on-surface text-sm">
+            <span class="material-symbols-outlined text-secondary text-[20px] shrink-0">near_me</span>
+            <span><strong>Campus Proximity:</strong> <%= property.campusDistance %></span>
+          </div>
+        <% } %>
+
+        <!-- Mapbox Interactive Map -->
+        <div class="relative w-full h-64 sm:h-72 rounded-xl overflow-hidden border border-outline-variant/40 shadow-xs">
+          <div id="propertyShowMap" class="w-full h-full" data-lat="<%= propLat %>" data-lng="<%= propLng %>" data-title="<%= property.title %>" data-token="<%= typeof mapboxToken !== 'undefined' ? mapboxToken : '' %>"></div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-on-surface-variant pt-0.5">
+          <span class="flex items-center gap-1">
+            <span class="material-symbols-outlined text-emerald-600 text-[16px]">verified</span>
+            <span>Verified stay within Nestly Kopargaon Service Scope</span>
+          </span>
+          <span class="font-mono text-[11px] text-outline"><%= Number(propLat).toFixed(4) %>, <%= Number(propLng).toFixed(4) %></span>
+        </div>
+      </section>
+
+      <script>
+        (function() {
+          const mapEl = document.getElementById('propertyShowMap');
+          if (!mapEl) return;
+          const token = mapEl.dataset.token;
+          if (!token || token === 'undefined' || typeof mapboxgl === 'undefined') return;
+
+          const lat = parseFloat(mapEl.dataset.lat) || 19.8913;
+          const lng = parseFloat(mapEl.dataset.lng) || 74.4784;
+          const title = mapEl.dataset.title || 'Student Stay';
+
+          mapboxgl.accessToken = token;
+          const showMap = new mapboxgl.Map({
+            container: mapEl,
+            style: 'mapbox://styles/mapbox/streets-v12',
+            center: [lng, lat],
+            zoom: 15
+          });
+
+          showMap.addControl(new mapboxgl.NavigationControl({ showCompass: true }), 'top-right');
+
+          const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
+            <div class="p-1 font-sans">
+              <div class="font-bold text-xs text-gray-900">${title}</div>
+              <div class="text-[11px] text-gray-600">Nestly Verified Stay</div>
+            </div>
+          `);
+
+          new mapboxgl.Marker({ color: '#006a4e' })
+            .setLngLat([lng, lat])
+            .setPopup(popup)
+            .addTo(showMap);
+        })();
+      </script>
 
       <!-- Stitch Reviews & Ratings Section -->
       <section class="bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm border border-outline-variant/30 space-y-space-lg" id="reviews">

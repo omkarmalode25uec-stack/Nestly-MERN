@@ -16,7 +16,7 @@
     </div>
 
     <!-- Edit Form (POST /stays/:id) -->
-    <form action="/stays/<%= property._id %>" method="POST" class="space-y-space-md">
+    <form action="/stays/<%= property._id %>" method="POST" enctype="multipart/form-data" class="space-y-space-md">
       <!-- Section 1: Basic Information -->
       <div class="space-y-3">
         <h3 class="font-title-md text-title-md font-bold text-on-surface">1. Basic Property Details</h3>
@@ -64,10 +64,96 @@
       </div>
 
       <!-- Section 2: Location Details -->
-      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+      <div class="space-y-4 pt-2 border-t border-outline-variant/30">
         <div class="flex items-center justify-between">
           <h3 class="font-title-md text-title-md font-bold text-on-surface">2. Location & Campus Proximity</h3>
           <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container">Service Area: Kopargaon</span>
+        </div>
+
+        <!-- Mapbox Interactive Location Picker Container -->
+        <% 
+          const savedLat = (property.location && property.location.latitude) ? property.location.latitude : '';
+          const savedLng = (property.location && property.location.longitude) ? property.location.longitude : '';
+          const savedGoogleMapsUrl = (property.location && property.location.googleMapsUrl) ? property.location.googleMapsUrl : '';
+        %>
+        <div id="mapboxLocationPicker" data-token="<%= typeof mapboxToken !== 'undefined' ? mapboxToken : '' %>" class="space-y-3 p-3 sm:p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <label class="block font-label-md text-label-md text-on-surface font-bold">
+              Property Location
+            </label>
+            <div class="flex items-center gap-2">
+              <button type="button" id="useCurrentLocationBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-primary font-label-sm text-label-sm font-bold border border-outline-variant/30 transition-all shadow-xs cursor-pointer">
+                <span>📍</span>
+                <span>Use my current location</span>
+              </button>
+              <button type="button" id="chooseOnMapBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-lowest hover:bg-surface-container text-on-surface font-label-sm text-label-sm font-bold border border-outline-variant/30 transition-all shadow-xs cursor-pointer">
+                <span>🗺️</span>
+                <span>Choose on map</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Search Property Location Bar -->
+          <div class="relative">
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined text-[18px] text-outline absolute left-3 pointer-events-none">search</span>
+              <input type="text" id="mapboxSearchInput" value="<%= property.address || '' %>" placeholder="Search property location (e.g. Sai City, Sanjivani College, Sahajanandnagar...)" autocomplete="off" class="w-full pl-9 pr-8 py-2.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-body-md text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm shadow-xs"/>
+              <button type="button" id="mapboxSearchClearBtn" class="<%= property.address ? '' : 'hidden' %> absolute right-2.5 text-on-surface-variant hover:text-on-surface text-base font-bold leading-none p-1 cursor-pointer" title="Clear search">&times;</button>
+            </div>
+            <!-- Autocomplete Suggestions List -->
+            <ul id="mapboxSuggestionsList" class="hidden absolute top-full left-0 right-0 mt-1 bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-lg z-50 max-h-56 overflow-y-auto no-scrollbar"></ul>
+          </div>
+
+          <!-- Location Alert / Status Box -->
+          <div id="locationAlertContainer" class="hidden"></div>
+
+          <!-- Mapbox Interactive Map Container -->
+          <div class="relative rounded-xl overflow-hidden border border-outline-variant/40 bg-surface-container-lowest shadow-xs">
+            <div id="mapboxMapContainer" class="w-full h-64 sm:h-72"></div>
+            <div class="absolute bottom-2 left-2 pointer-events-none bg-surface-container-lowest/90 backdrop-blur-xs px-2 py-1 rounded-md text-[10px] text-on-surface font-medium shadow-xs">
+              Drag green pin or click on map to reposition stay
+            </div>
+          </div>
+
+          <!-- Location Selected Confirmation Card -->
+          <div id="locationConfirmationCard" class="<%= (savedLat && savedLng) ? '' : 'hidden' %> p-3 rounded-xl bg-surface-container-lowest border border-primary/20 shadow-xs">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-start gap-2.5">
+                <span class="material-symbols-outlined text-primary text-[22px] mt-0.5" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                <div>
+                  <h4 class="font-label-md text-label-md font-bold text-on-surface flex items-center gap-1.5">
+                    <span>Property Location</span>
+                    <span class="text-emerald-700 bg-emerald-100 font-bold px-1.5 py-0.5 rounded-md text-[10px] leading-none">✓ Selected</span>
+                  </h4>
+                  <p id="confirmedAddressText" class="font-body-sm text-body-sm text-on-surface-variant font-medium mt-0.5 leading-snug"><%= property.address || property.locality || 'Kopargaon' %></p>
+                  <div class="flex items-center gap-3 mt-1 text-[11px] text-outline font-mono">
+                    <span>Lat: <strong id="confirmedLatText" class="text-on-surface font-semibold"><%= savedLat || '-' %></strong></span>
+                    <span>Lng: <strong id="confirmedLngText" class="text-on-surface font-semibold"><%= savedLng || '-' %></strong></span>
+                  </div>
+                </div>
+              </div>
+              <button type="button" id="changeLocationBtn" class="text-xs font-semibold text-primary hover:underline shrink-0 cursor-pointer pt-0.5">
+                Change Location
+              </button>
+            </div>
+          </div>
+
+          <!-- Hidden Form Fields for Coordinates -->
+          <input type="hidden" name="latitude" id="latitudeInput" value="<%= savedLat %>" />
+          <input type="hidden" name="longitude" id="longitudeInput" value="<%= savedLng %>" />
+
+          <!-- Optional Google Maps URL Fallback -->
+          <div class="pt-1">
+            <button type="button" id="toggleGoogleMapsUrlBtn" class="text-xs text-on-surface-variant hover:text-primary font-medium inline-flex items-center gap-1 transition-colors cursor-pointer">
+              <span>Have a Google Maps link?</span>
+              <span class="text-primary underline">Paste it here (Optional)</span>
+            </button>
+            <div id="googleMapsUrlContainer" class="<%= savedGoogleMapsUrl ? '' : 'hidden' %> mt-1.5">
+              <input type="url" name="googleMapsUrl" id="googleMapsUrlInput" value="<%= savedGoogleMapsUrl %>" placeholder="https://maps.app.goo.gl/... or https://google.com/maps?q=..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl text-body-sm text-on-surface outline-none focus:border-primary text-xs" />
+              <p class="text-[11px] text-outline mt-0.5">Optional reference link. The map coordinates above remain the primary location.</p>
+            </div>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -118,10 +204,64 @@
         </div>
       </div>
 
-      <!-- Section 4: Image URLs -->
-      <div class="space-y-2 pt-2 border-t border-outline-variant/30">
-        <h3 class="font-title-md text-title-md font-bold text-on-surface">4. Photos (Image URLs)</h3>
-        <textarea name="images" rows="3" class="w-full px-4 py-2.5 bg-surface-container-low border border-outline-variant/50 rounded-xl text-body-md text-on-surface outline-none focus:bg-surface-container-lowest focus:border-primary font-mono text-xs"><%= (property.images || []).join('\n') %></textarea>
+      <!-- Section 4: Property Photos Management (Multer + Cloudinary) -->
+      <div class="space-y-3 pt-2 border-t border-outline-variant/30">
+        <div class="flex items-center justify-between">
+          <h3 class="font-title-md text-title-md font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-[20px]">photo_library</span>
+            <span>4. Manage Property Photos</span>
+          </h3>
+          <span class="font-label-sm text-label-sm text-outline">Stored on Cloudinary</span>
+        </div>
+
+        <!-- Current Photos Gallery with Delete Toggles -->
+        <% if (property.images && property.images.length) { %>
+          <div>
+            <label class="block font-label-sm text-label-sm font-semibold text-on-surface mb-2">
+              Existing Photos (Check to Remove):
+            </label>
+            <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3">
+              <% property.images.forEach((img, idx) => { %>
+                <% const imgUrl = (img && img.url) ? img.url : img; %>
+                <% const imgFilename = (img && img.filename) ? img.filename : img; %>
+                <div class="relative aspect-[4/3] rounded-xl overflow-hidden bg-surface-container border border-outline-variant/30 group">
+                  <img src="<%= imgUrl %>" alt="Photo <%= idx + 1 %>" class="w-full h-full object-cover"/>
+                  <label class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-white p-2">
+                    <input type="checkbox" name="deleteImages" value="<%= imgFilename %>" class="w-4 h-4 accent-error mb-1"/>
+                    <span class="text-[11px] font-bold bg-error/90 px-2 py-0.5 rounded">Remove</span>
+                  </label>
+                </div>
+              <% }) %>
+            </div>
+            <p class="text-[11px] text-outline mt-1.5">Hover and check "Remove" on any photo you want to delete from Cloudinary upon saving.</p>
+          </div>
+        <% } %>
+
+        <!-- Add New Photos -->
+        <div>
+          <label class="block font-label-sm text-label-sm font-semibold text-on-surface mb-1">
+            Upload Additional Photos:
+          </label>
+          <div class="relative border-2 border-dashed border-outline-variant/60 hover:border-primary rounded-2xl p-5 text-center bg-surface-container-low transition-colors cursor-pointer group" onclick="document.getElementById('editImagesInput').click()">
+            <input type="file" id="editImagesInput" name="images" multiple accept="image/jpeg,image/png,image/webp,image/jpg" class="hidden" onchange="previewEditImages(event)"/>
+            <div class="flex flex-col items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-primary text-[24px]">add_a_photo</span>
+              <p class="font-label-md text-label-md font-semibold text-on-surface">Click to add more photos</p>
+              <p class="font-body-sm text-body-sm text-outline text-xs">JPG, PNG, WEBP (Max 5MB each)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Preview Grid for newly selected photos -->
+        <div id="editPreviewContainer" class="hidden space-y-2 pt-1">
+          <div class="flex items-center justify-between text-label-sm font-semibold text-on-surface">
+            <span id="editPreviewCountText">New Photos to Upload:</span>
+            <button type="button" onclick="clearEditImages()" class="text-error hover:underline text-xs flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">close</span> Clear Selection
+            </button>
+          </div>
+          <div id="editPreviewGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-2.5"></div>
+        </div>
       </div>
 
       <!-- Submit Buttons -->
@@ -136,3 +276,44 @@
     </form>
   </div>
 </div>
+
+<script>
+  function previewEditImages(event) {
+    const input = event.target;
+    const container = document.getElementById('editPreviewContainer');
+    const grid = document.getElementById('editPreviewGrid');
+    const countText = document.getElementById('editPreviewCountText');
+
+    if (!input.files || input.files.length === 0) {
+      container.classList.add('hidden');
+      grid.innerHTML = '';
+      return;
+    }
+
+    grid.innerHTML = '';
+    countText.textContent = `${input.files.length} New Photo${input.files.length > 1 ? 's' : ''} Ready:`;
+    container.classList.remove('hidden');
+
+    Array.from(input.files).forEach((file, index) => {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const div = document.createElement('div');
+        div.className = 'relative aspect-[4/3] rounded-xl overflow-hidden bg-surface-container border border-outline-variant/40 shadow-sm';
+        div.innerHTML = `
+          <img src="${e.target.result}" alt="New Photo ${index + 1}" class="w-full h-full object-cover"/>
+          <span class="absolute bottom-1 left-1 px-1.5 py-0.5 bg-primary text-white rounded text-[10px] font-mono font-medium">+New</span>
+        `;
+        grid.appendChild(div);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function clearEditImages() {
+    const input = document.getElementById('editImagesInput');
+    input.value = '';
+    document.getElementById('editPreviewContainer').classList.add('hidden');
+    document.getElementById('editPreviewGrid').innerHTML = '';
+  }
+</script>
+<script src="/js/locationPicker.js"></script>

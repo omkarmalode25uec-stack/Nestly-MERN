@@ -126,7 +126,7 @@
     <input type="hidden" name="propertyTitle" value="<%= bookingDetails.propertyTitle %>"/>
     <input type="hidden" name="roomNumber" value="<%= bookingDetails.roomNumber %>"/>
     <input type="hidden" name="customerName" value="<%= bookingDetails.residentName %>"/>
-    <input type="hidden" name="customerMobile" value="9876543210"/>
+    <input type="hidden" name="customerMobile" value="<%= bookingDetails.residentPhone || '9876543210' %>"/>
     <% if (bookingDetails.bookingId) { %>
       <input type="hidden" name="bookingId" value="<%= bookingDetails.bookingId %>"/>
     <% } %>

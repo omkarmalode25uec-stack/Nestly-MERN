@@ -219,6 +219,10 @@
                   <span class="px-2 py-0.5 rounded-full text-xs font-bold uppercase <%= booking.status === 'confirmed' ? 'bg-emerald-100 text-emerald-800' : (booking.status === 'rejected' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800') %>">
                     <%= booking.status %>
                   </span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-bold uppercase flex items-center gap-0.5 <%= booking.paymentStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' : (booking.paymentStatus === 'failed' ? 'bg-red-100 text-red-800' : 'bg-surface-container text-secondary') %>">
+                    <span class="material-symbols-outlined text-[13px]"><%= booking.paymentStatus === 'completed' ? 'verified' : 'account_balance_wallet' %></span>
+                    <span><%= booking.paymentStatus === 'completed' ? 'Token Paid (₹' + (booking.amount || 2000).toLocaleString('en-IN') + ')' : (booking.paymentStatus === 'failed' ? 'Payment Failed' : 'Payment Pending') %></span>
+                  </span>
                   <span class="text-xs font-mono text-outline"><%= booking.referenceCode %></span>
                 </div>
                 <p class="font-body-sm text-body-sm text-on-surface-variant">

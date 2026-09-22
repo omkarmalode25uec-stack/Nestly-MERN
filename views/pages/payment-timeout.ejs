@@ -1,0 +1,40 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-md text-center">
+  <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto mb-space-md">
+    <span class="material-symbols-outlined text-[36px]">timer_off</span>
+  </div>
+
+  <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-bold uppercase tracking-wide">
+    <span class="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+    Session Timed Out
+  </div>
+
+  <h2 class="font-headline-lg text-headline-lg font-bold text-on-surface">Payment Window Expired</h2>
+  <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+    Your UPI payment session for this accommodation token hold timed out before completion. Your bank account was not charged.
+  </p>
+
+  <div class="bg-surface-container-low p-space-md rounded-2xl max-w-sm mx-auto text-left space-y-2 border border-outline-variant/30">
+    <div>
+      <p class="font-label-sm text-label-sm text-outline uppercase font-semibold">Order Reference</p>
+      <p class="font-title-md text-title-md font-mono text-on-surface font-bold"><%= orderId %></p>
+    </div>
+    <% if (typeof payment !== 'undefined' && payment && payment.propertyTitle) { %>
+      <div class="pt-1 border-t border-outline-variant/20">
+        <p class="font-label-sm text-label-sm text-outline uppercase font-semibold">Accommodation</p>
+        <p class="font-body-sm text-body-sm text-on-surface font-medium truncate"><%= payment.propertyTitle %></p>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="pt-space-md flex flex-col sm:flex-row items-center justify-center gap-space-sm">
+    <% const retryBookingId = (typeof payment !== 'undefined' && payment && payment.booking) ? payment.booking : ''; %>
+    <a href="<%= retryBookingId ? '/checkout?bookingId=' + retryBookingId : '/checkout' %>" class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold shadow-md transition-all">
+      Retry Payment
+    </a>
+    <a href="/bookings" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-all">
+      View My Bookings
+    </a>
+  </div>
+</div>
