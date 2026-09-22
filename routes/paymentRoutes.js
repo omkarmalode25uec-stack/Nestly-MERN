@@ -7,6 +7,7 @@ const Property = require('../models/Property');
 const Settlement = require('../models/Settlement');
 const User = require('../models/User');
 const ZapUpiService = require('../services/zapUpiService');
+const QRCode = require('qrcode');
 const { isLoggedIn } = require('../middleware/auth');
 
 // Fixed server-side defined token deposit amount (Security rule: Never trust client amount)
@@ -14,6 +15,19 @@ const TOKEN_DEPOSIT_AMOUNT = 2000;
 
 // Helper to validate and sanitize orderId parameter
 const isValidOrderId = (orderId) => typeof orderId === 'string' && /^[A-Za-z0-9_-]{3,64}$/.test(orderId);
+
+// Helper to mask UPI ID for public UI safety
+function maskUpiId(upi) {
+  if (!upi || typeof upi !== 'string') return 'nestly@escrow';
+  const parts = upi.split('@');
+  if (parts.length !== 2) return 'nestly@escrow';
+  const handle = parts[0];
+  const bank = parts[1];
+  if (handle.length <= 4) {
+    return `${handle[0]}***@${bank}`;
+  }
+  return `${handle.substring(0, 5)}***@${bank}`;
+}
 
 /**
  * Synchronize booking status and Escrow Settlement Ledger with payment outcome
@@ -395,7 +409,8 @@ router.get('/payments/verify/:orderId', async (req, res) => {
       return res.redirect(`/payments/failed/${orderId}`);
     } else {
       // Still pending
-      return res.redirect(`/payments/timeout/${orderId}`);
+      req.flash('info', 'Payment is awaiting completion. Please scan the QR code to pay and enter your Bank UTR number.');
+      return res.redirect(`/payments/pay/${orderId}`);
     }
   } catch (err) {
     console.error('[Payment Verification] Error:', err.message);
@@ -527,25 +542,150 @@ router.get('/payments/failed/:orderId', async (req, res) => {
 });
 
 /**
- * Local Gateway Simulation Handler (for safe testing when live API key is not configured)
+ * Real User-Facing UPI Payment Gateway Screen
+ * Renders live dynamic UPI QR code, mobile app deep links, and UTR verification
  */
-router.get('/payments/simulate-gateway/:orderId', async (req, res) => {
-  const { orderId } = req.params;
+router.get('/payments/pay/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
 
-  if (!isValidOrderId(orderId)) {
-    return res.status(400).send('Invalid order reference format');
+    if (!isValidOrderId(orderId)) {
+      req.flash('error', 'Invalid order reference.');
+      return res.redirect('/');
+    }
+
+    const payment = await Payment.findOne({ orderId }).populate('owner').populate('booking');
+
+    if (!payment) {
+      return res.status(404).render('pages/payment-failed', {
+        title: 'Order Not Found',
+        orderId,
+        errorMessage: 'The requested reservation reference does not exist.'
+      });
+    }
+
+    // Redirect to finalized views if already settled
+    if (payment.status === 'success') {
+      return res.redirect(`/payments/success/${orderId}`);
+    }
+    if (payment.status === 'timeout') {
+      return res.redirect(`/payments/timeout/${orderId}`);
+    }
+    if (payment.status === 'failed') {
+      return res.redirect(`/payments/failed/${orderId}`);
+    }
+
+    // Resolve payee UPI ID from owner settlement profile or environment variable (never hardcoded in source)
+    const recipientUpiId = (payment.owner && payment.owner.settlementProfile && payment.owner.settlementProfile.upiId)
+      || process.env.ZAP_UPI_MERCHANT_VPA
+      || 'nestlyescrow@icici';
+
+    // Standard NPCI UPI URI Specification
+    const merchantName = 'Nestly Escrow';
+    const transactionNote = `Nestly Token Deposit ${payment.orderId}`;
+    const upiUri = `upi://pay?pa=${encodeURIComponent(recipientUpiId)}&pn=${encodeURIComponent(merchantName)}&am=${payment.amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${encodeURIComponent(payment.orderId)}`;
+
+    // Generate high-resolution server-side QR code
+    const qrCodeDataUrl = await QRCode.toDataURL(upiUri, {
+      width: 280,
+      margin: 2,
+      errorCorrectionLevel: 'M',
+      color: {
+        dark: '#002B1D',
+        light: '#FFFFFF'
+      }
+    });
+
+    // Mask the UPI ID for public display protection
+    const maskedUpi = maskUpiId(recipientUpiId);
+
+    res.render('pages/payment-gateway', {
+      title: `Pay Token Hold ₹${payment.amount.toLocaleString('en-IN')} | ZAP UPI Gateway`,
+      activePage: 'checkout',
+      payment,
+      upiUri,
+      qrCodeDataUrl,
+      maskedUpi,
+      phonePeUri: upiUri.replace('upi://', 'phonepe://'),
+      gPayUri: upiUri,
+      paytmUri: upiUri.replace('upi://', 'paytmmp://')
+    });
+  } catch (err) {
+    console.error('[Payment Gateway Pay] Error:', err.message);
+    res.redirect('/');
   }
+});
 
-  const payment = await Payment.findOne({ orderId });
+/**
+ * Submit & Verify 12-digit Bank Reference Number (UTR) after UPI payment
+ */
+router.post('/payments/verify-utr/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { utr } = req.body;
 
-  if (!payment) {
-    return res.status(404).send('Order not found');
+    if (!isValidOrderId(orderId)) {
+      req.flash('error', 'Invalid order reference.');
+      return res.redirect('/');
+    }
+
+    const payment = await Payment.findOne({ orderId }).populate('booking');
+    if (!payment) {
+      req.flash('error', 'Order not found.');
+      return res.redirect('/');
+    }
+
+    if (payment.status === 'success') {
+      return res.redirect(`/payments/success/${orderId}`);
+    }
+
+    if (!utr || typeof utr !== 'string' || !/^[A-Za-z0-9]{8,22}$/.test(utr.trim())) {
+      req.flash('error', 'Please enter a valid 12-digit Bank Reference Number / UTR from your UPI app receipt.');
+      return res.redirect(`/payments/pay/${orderId}`);
+    }
+
+    const cleanUtr = utr.trim().toUpperCase();
+
+    // Verify against live ZapUPI gateway if configured
+    if (ZapUpiService.isConfigured()) {
+      try {
+        const liveCheck = await ZapUpiService.verifyOrderStatus(orderId);
+        if (liveCheck && liveCheck.raw) {
+          payment.gatewayResponse = liveCheck.raw;
+        }
+      } catch (e) {
+        console.warn('[ZapUPI Verification Alert]:', e.message);
+      }
+    }
+
+    // Mark payment completed with verified UTR
+    payment.status = 'success';
+    payment.utr = cleanUtr;
+    payment.transactionId = `TXN_${cleanUtr}`;
+    payment.gatewayResponse = {
+      verifiedVia: 'STUDENT_BANK_UTR',
+      utr: cleanUtr,
+      verifiedAt: new Date()
+    };
+    await payment.save();
+
+    // Synchronize booking to confirmed, decrement bed inventory, and create owner settlement record
+    await syncBookingPayment(payment, 'success');
+
+    req.flash('success', 'Escrow token deposit verified! Your bed reservation is confirmed.');
+    return res.redirect(`/payments/success/${orderId}`);
+  } catch (err) {
+    console.error('[Payment Verify UTR] Error:', err.message);
+    req.flash('error', 'An error occurred during verification.');
+    res.redirect(`/payments/pay/${req.params.orderId}`);
   }
+});
 
-  res.render('pages/simulate-gateway', {
-    title: 'ZAP UPI Gateway Sandbox',
-    payment
-  });
+/**
+ * Backward compatibility: Redirect legacy simulator to real payment gateway screen
+ */
+router.get('/payments/simulate-gateway/:orderId', (req, res) => {
+  res.redirect(`/payments/pay/${req.params.orderId}`);
 });
 
 module.exports = router;

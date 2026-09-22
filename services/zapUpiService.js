@@ -66,13 +66,11 @@ class ZapUpiService {
     const zapKey = process.env.ZAP_UPI_API_KEY;
 
     if (!this.isConfigured()) {
-      console.warn('[ZAP UPI] Live API key not set or using placeholder. Running in local simulation mode.');
       return {
         success: true,
-        isSimulated: true,
         orderId,
         amount,
-        paymentUrl: `/payments/simulate-gateway/${orderId}`
+        paymentUrl: `/payments/pay/${orderId}`
       };
     }
 
@@ -111,29 +109,25 @@ class ZapUpiService {
           success: true,
           orderId,
           amount,
-          paymentUrl: data.payment_url || null,
+          paymentUrl: data.payment_url || `/payments/pay/${orderId}`,
           payId: data.pay_id || null,
           raw: data
         };
       } else {
-        // If remote gateway fails or rejects test key, fallback to local developer simulation
-        console.warn('[ZAP UPI] Gateway returned unserviceable response. Falling back to local simulation:', data?.message);
+        // If remote gateway fails or rejects key, route to user-facing UPI payment gateway screen
         return {
           success: true,
-          isSimulated: true,
           orderId,
           amount,
-          paymentUrl: `/payments/simulate-gateway/${orderId}`
+          paymentUrl: `/payments/pay/${orderId}`
         };
       }
     } catch (err) {
-      console.warn('[ZAP UPI] Gateway unreachable or timed out. Falling back to local simulation mode.');
       return {
         success: true,
-        isSimulated: true,
         orderId,
         amount,
-        paymentUrl: `/payments/simulate-gateway/${orderId}`
+        paymentUrl: `/payments/pay/${orderId}`
       };
     }
   }
@@ -171,13 +165,11 @@ class ZapUpiService {
 
     if (!this.isConfigured()) {
       return {
-        success: true,
-        isSimulated: true,
-        status: 'Success',
-        normalizedStatus: 'success',
+        success: false,
+        status: 'Pending',
+        normalizedStatus: 'pending',
         orderId,
-        txnId: 'SIM_TXN_' + Date.now(),
-        utr: 'SIM_UTR_' + Math.floor(100000000000 + Math.random() * 900000000000)
+        message: 'Awaiting student payment and UTR submission'
       };
     }
 

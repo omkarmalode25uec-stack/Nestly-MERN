@@ -1,0 +1,172 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-md space-y-space-md">
+
+  <!-- 1. Gateway Header & Security Header -->
+  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm space-y-space-xs border border-outline-variant/30">
+    <div class="flex items-center justify-between gap-space-xs">
+      <div class="inline-flex items-center gap-1.5 bg-secondary-container text-on-secondary-container px-2.5 py-1 rounded-full font-label-sm text-label-sm font-semibold tracking-wide">
+        <span class="material-symbols-outlined text-[15px] animate-pulse text-primary">lock</span>
+        <span>ZAP UPI SECURE ESCROW GATEWAY</span>
+      </div>
+      <div class="flex items-center gap-1 text-tertiary-container font-label-md text-label-md bg-tertiary-fixed/60 px-2.5 py-0.5 rounded-full" id="timerBadge">
+        <span class="material-symbols-outlined text-[14px]">timer</span>
+        <span class="font-bold tracking-tight" id="countdown">14:59</span>
+      </div>
+    </div>
+    <div>
+      <h1 class="font-title-lg text-title-lg text-on-surface font-bold">Complete Your Escrow Token Deposit</h1>
+      <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+        Scan the dynamic UPI QR code or open your preferred UPI mobile app to transfer the token deposit.
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Order Summary Card -->
+  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm space-y-space-sm border border-outline-variant/30">
+    <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-highest">
+      <div>
+        <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Accommodation</span>
+        <h2 class="font-title-md text-title-md font-bold text-on-surface truncate"><%= payment.propertyTitle || 'Nestly Student Stay' %></h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant"><%= payment.roomNumber || 'Allocated Bed Space' %></p>
+      </div>
+      <div class="text-right">
+        <span class="font-label-sm text-label-sm text-secondary font-semibold uppercase block">Payable Amount</span>
+        <span class="font-headline-sm text-headline-sm font-bold text-primary">₹<%= payment.amount.toLocaleString('en-IN') %></span>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 text-body-sm pt-1">
+      <div>
+        <span class="text-on-surface-variant font-label-sm text-label-sm block">Order Reference ID</span>
+        <span class="font-mono font-bold text-on-surface text-xs"><%= payment.orderId %></span>
+      </div>
+      <div>
+        <span class="text-on-surface-variant font-label-sm text-label-sm block">Escrow Beneficiary VPA</span>
+        <span class="font-mono font-medium text-secondary text-xs"><%= maskedUpi %></span>
+      </div>
+      <div>
+        <span class="text-on-surface-variant font-label-sm text-label-sm block">Resident</span>
+        <span class="font-medium text-on-surface text-xs"><%= payment.customerName %></span>
+      </div>
+      <div>
+        <span class="text-on-surface-variant font-label-sm text-label-sm block">Protection Protocol</span>
+        <span class="font-semibold text-primary text-xs">100% RBI Escrow Vault</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Dynamic UPI QR Code Box -->
+  <div class="bg-surface-container-lowest rounded-2xl p-space-md md:p-space-lg shadow-sm border border-outline-variant/30 text-center space-y-space-md">
+    <div class="space-y-1">
+      <div class="inline-flex items-center gap-1 text-primary font-label-md text-label-md font-bold">
+        <span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+        <span>Scan QR with Any UPI App</span>
+      </div>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Open Google Pay, PhonePe, Paytm, BHIM, or Cred and scan below:
+      </p>
+    </div>
+
+    <!-- QR Code Presentation -->
+    <div class="inline-block p-3.5 bg-white rounded-2xl shadow-md border-2 border-primary/20 transition-transform hover:scale-[1.01]">
+      <img src="<%= qrCodeDataUrl %>" alt="Scan to Pay via UPI" class="w-60 h-60 md:w-64 md:h-64 object-contain mx-auto rounded-lg" id="upiQrCode"/>
+    </div>
+
+    <!-- Supported UPI Apps Badges -->
+    <div class="flex items-center justify-center gap-3 text-xs text-on-surface-variant font-medium pt-1">
+      <span class="px-2.5 py-1 bg-surface-container rounded-lg">PhonePe</span>
+      <span class="px-2.5 py-1 bg-surface-container rounded-lg">Google Pay</span>
+      <span class="px-2.5 py-1 bg-surface-container rounded-lg">Paytm</span>
+      <span class="px-2.5 py-1 bg-surface-container rounded-lg">BHIM UPI</span>
+    </div>
+
+    <!-- Mobile Deep Link (Tap to Pay on Mobile Devices) -->
+    <div class="pt-2">
+      <a href="<%= upiUri %>" class="w-full py-3.5 px-4 rounded-xl bg-secondary-container hover:bg-secondary-fixed text-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 transition-all shadow-sm">
+        <span class="material-symbols-outlined text-[20px]">open_in_new</span>
+        <span>Tap to Pay with Mobile UPI App</span>
+      </a>
+      <p class="text-xs text-outline mt-1.5">Opens your installed UPI application directly on mobile phones</p>
+    </div>
+  </div>
+
+  <!-- 4. UTR / Bank Reference Verification Form -->
+  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm border border-outline-variant/30 space-y-space-sm">
+    <div class="flex items-start gap-2.5">
+      <div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center shrink-0 font-bold text-xs">
+        ✓
+      </div>
+      <div>
+        <h3 class="font-title-md text-title-md font-bold text-on-surface">Step 2: Enter Bank UTR to Confirm</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          After authorizing the ₹<%= payment.amount.toLocaleString('en-IN') %> payment in your UPI app, find the <strong class="text-on-surface">12-digit UTR / Bank Reference Number</strong> on your transaction receipt and paste it below:
+        </p>
+      </div>
+    </div>
+
+    <form action="/payments/verify-utr/<%= payment.orderId %>" method="POST" class="space-y-space-xs pt-1">
+      <div class="space-y-1">
+        <label for="utrInput" class="block font-label-sm text-label-sm text-on-surface-variant font-semibold">
+          Bank UTR / UPI Transaction Reference Number
+        </label>
+        <div class="relative">
+          <input 
+            type="text" 
+            id="utrInput" 
+            name="utr" 
+            required 
+            minlength="8" 
+            maxlength="22" 
+            placeholder="e.g. 423456789012" 
+            class="w-full h-12 bg-surface-container-lowest px-3.5 rounded-xl font-mono text-body-md text-on-surface border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary uppercase tracking-wider"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <button type="submit" class="w-full h-13 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.99] text-on-primary font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-md transition-all">
+        <span class="material-symbols-outlined text-[20px]">verified</span>
+        <span>Verify & Confirm Reservation</span>
+      </button>
+    </form>
+  </div>
+
+  <!-- 5. Bottom Controls: Cancel & Security Guarantee -->
+  <div class="flex flex-col sm:flex-row items-center justify-between gap-space-xs pt-space-xs text-center sm:text-left">
+    <a href="/payments/cancel/<%= payment.orderId %>" class="text-body-sm text-on-surface-variant hover:text-error transition-colors flex items-center gap-1 font-medium" onclick="return confirm('Are you sure you want to cancel this payment session?');">
+      <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+      <span>Cancel Payment & Return</span>
+    </a>
+
+    <div class="flex items-center gap-1.5 text-xs text-outline">
+      <span class="material-symbols-outlined text-[14px] text-primary">security</span>
+      <span>Token held in escrow until check-in inspection</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- 6. Client-Side Countdown & Expiry Script -->
+<script>
+  (function() {
+    let timeLeft = 15 * 60; // 15 minutes in seconds
+    const countdownEl = document.getElementById('countdown');
+    const orderId = '<%= payment.orderId %>';
+
+    const timer = setInterval(function() {
+      timeLeft--;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        if (countdownEl) countdownEl.innerText = '00:00';
+        window.location.href = '/payments/timeout/' + orderId;
+      } else {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        if (countdownEl) {
+          countdownEl.innerText = (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        }
+      }
+    }, 1000);
+  })();
+</script>
