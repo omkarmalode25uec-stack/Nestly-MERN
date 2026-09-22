@@ -214,7 +214,7 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
     const orderId = 'ORD' + Math.floor(Date.now() / 1000) + Math.floor(100 + Math.random() * 900);
 
     // Determine gateway callback and redirect URLs
-    const protocol = req.protocol;
+    const protocol = req.headers['x-forwarded-proto'] || (process.env.NODE_ENV === 'production' ? 'https' : req.protocol);
     const host = req.get('host');
     const baseUrl = `${protocol}://${host}`;
     const webhookUrl = `${baseUrl}/payments/webhook`;
@@ -289,28 +289,38 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
  */
 router.post('/payments/webhook', async (req, res) => {
   try {
-    const rawOrderId = req.body.order_id || req.body.orderId;
-    const rawStatus = req.body.status || req.body.order_status;
-    const txnId = req.body.txn_id || req.body.txnId || req.body.transaction_id;
-    const utr = req.body.utr || req.body.bank_utr;
+    const payload = req.body || {};
+    const inner = (payload && typeof payload.data === 'object' && payload.data !== null) ? payload.data : payload;
+
+    const rawOrderId = inner.order_id || inner.orderId || payload.order_id || payload.orderId || req.query?.order_id || req.query?.orderId;
+    const rawStatus = inner.order_status || inner.status || inner.txn_status || inner.payment_status || payload.status || payload.order_status || req.query?.status;
+    const txnId = inner.txn_id || inner.txnId || inner.transaction_id || payload.txn_id || payload.txnId || payload.transaction_id || req.query?.txn_id;
+    const utr = inner.utr || inner.bank_utr || inner.bank_rrn || payload.utr || payload.bank_utr || req.query?.utr;
 
     // Security: Check sender IP against configured ZapUPI gateway server IP
-    const callerIp = req.headers['x-forwarded-for'] || req.ip || req.socket.remoteAddress;
+    const callerIp = req.headers['x-forwarded-for'] || req.ip || req.socket?.remoteAddress;
     if (!ZapUpiService.isValidGatewayIp(callerIp)) {
-      console.warn(`[ZapUPI Webhook Notice] Request from IP ${callerIp}. Verified in simulation/test mode.`);
+      console.warn(`[ZapUPI Webhook Notice] Request from IP ${callerIp}.`);
     }
 
     if (!rawOrderId) {
       return res.status(400).json({ status: 'error', message: 'Missing order_id' });
     }
 
-    const payment = await Payment.findOne({ orderId: rawOrderId });
+    const trimmedOrderId = String(rawOrderId).trim();
+    const payment = await Payment.findOne({
+      $or: [
+        { orderId: trimmedOrderId },
+        { referenceId: trimmedOrderId }
+      ]
+    });
+
     if (!payment) {
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
     // Save gateway response payload for audit/reconciliation
-    payment.gatewayResponse = req.body;
+    payment.gatewayResponse = payload;
 
     // Idempotency: If payment is already marked success, do NOT duplicate booking confirm or settlements
     if (payment.status === 'success') {
@@ -320,18 +330,36 @@ router.post('/payments/webhook', async (req, res) => {
       return res.status(200).json({ status: 'ok', message: 'Already processed as success' });
     }
 
-    // Determine normalized status
+    // Determine normalized status from incoming webhook notification
     let normalizedStatus = ZapUpiService.normalizeStatus(rawStatus);
 
-    // If configured with live gateway, double-confirm status
-    if (ZapUpiService.isConfigured()) {
-      const verification = await ZapUpiService.verifyOrderStatus(rawOrderId);
-      if (verification && verification.normalizedStatus) {
-        normalizedStatus = verification.normalizedStatus;
+    // If webhook alone did not provide definitive success, and gateway is configured, check with status API
+    if (normalizedStatus !== 'success' && ZapUpiService.isConfigured()) {
+      try {
+        const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
+        if (verification && verification.normalizedStatus === 'success') {
+          normalizedStatus = 'success';
+          if (!txnId && verification.txnId) payment.transactionId = verification.txnId;
+          if (!utr && verification.utr) payment.utr = verification.utr;
+        } else if (verification && (verification.normalizedStatus === 'failed' || verification.normalizedStatus === 'timeout')) {
+          normalizedStatus = verification.normalizedStatus;
+        }
+      } catch (err) {
+        // Retain webhook-provided status
       }
     }
 
     if (normalizedStatus === 'success') {
+      // Validate expected amount against gateway payload if reported
+      const reportedAmount = parseFloat(inner.amount || inner.pay_amount || payload.amount || payload.pay_amount);
+      if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+        console.warn(`[Webhook Amount Mismatch] Order ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
+        payment.status = 'failed';
+        await payment.save();
+        await syncBookingPayment(payment, 'failed');
+        return res.status(200).json({ status: 'error', message: 'Amount mismatch' });
+      }
+
       payment.status = 'success';
       payment.transactionId = txnId || payment.transactionId || ('TXN_' + Date.now());
       payment.utr = utr || payment.utr || ('UTR_' + Date.now());
@@ -341,10 +369,13 @@ router.post('/payments/webhook', async (req, res) => {
       payment.status = 'timeout';
       await payment.save();
       await syncBookingPayment(payment, 'timeout');
-    } else {
+    } else if (normalizedStatus === 'failed') {
       payment.status = 'failed';
       await payment.save();
       await syncBookingPayment(payment, 'failed');
+    } else {
+      // Still pending: preserve pending status so subsequent checks or webhooks can settle
+      await payment.save();
     }
 
     // Always respond with standard HTTP 200 JSON required by ZapUPI
@@ -356,7 +387,7 @@ router.post('/payments/webhook', async (req, res) => {
 });
 
 /**
- * Server-Side Verification Endpoint (e.g. When returning from gateway redirect)
+ * Server-Side Verification Endpoint (e.g. When returning from gateway redirect or clicking Check Status)
  */
 router.get('/payments/verify/:orderId', async (req, res) => {
   try {
@@ -367,7 +398,13 @@ router.get('/payments/verify/:orderId', async (req, res) => {
       return res.redirect('/');
     }
 
-    const payment = await Payment.findOne({ orderId });
+    const trimmedOrderId = String(orderId).trim();
+    const payment = await Payment.findOne({
+      $or: [
+        { orderId: trimmedOrderId },
+        { referenceId: trimmedOrderId }
+      ]
+    });
 
     if (!payment) {
       return res.status(404).render('pages/payment-failed', {
@@ -379,42 +416,55 @@ router.get('/payments/verify/:orderId', async (req, res) => {
 
     // If already finalized in database, redirect to corresponding view immediately
     if (payment.status === 'success') {
-      return res.redirect(`/payments/success/${orderId}`);
+      return res.redirect(`/payments/success/${payment.orderId}`);
     }
     if (payment.status === 'timeout') {
-      return res.redirect(`/payments/timeout/${orderId}`);
+      return res.redirect(`/payments/timeout/${payment.orderId}`);
     }
     if (payment.status === 'failed') {
-      return res.redirect(`/payments/failed/${orderId}`);
+      return res.redirect(`/payments/failed/${payment.orderId}`);
     }
 
     // Verify order status directly with gateway
-    const verification = await ZapUpiService.verifyOrderStatus(orderId);
-    payment.gatewayResponse = verification.raw || null;
+    const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
+    if (verification.raw) {
+      payment.gatewayResponse = verification.raw;
+    }
 
     if (verification.normalizedStatus === 'success' || verification.success) {
+      // Validate expected amount against gateway response if reported
+      const reportedAmount = parseFloat(verification.amount);
+      if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+        console.warn(`[Payment Verification] Amount mismatch for ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
+        payment.status = 'failed';
+        await payment.save();
+        await syncBookingPayment(payment, 'failed');
+        req.flash('error', 'Payment verification failed: Amount does not match listing rent.');
+        return res.redirect(`/payments/failed/${payment.orderId}`);
+      }
+
       payment.status = 'success';
-      payment.transactionId = verification.txnId || ('TXN_' + Date.now());
-      payment.utr = verification.utr || ('UTR_' + Date.now());
+      payment.transactionId = verification.txnId || payment.transactionId || ('TXN_' + Date.now());
+      payment.utr = verification.utr || payment.utr || ('UTR_' + Date.now());
       await payment.save();
       await syncBookingPayment(payment, 'success');
       req.flash('success', 'First month rent payment verified! Your accommodation reservation is confirmed.');
-      return res.redirect(`/payments/success/${orderId}`);
+      return res.redirect(`/payments/success/${payment.orderId}`);
     } else if (verification.normalizedStatus === 'timeout') {
       payment.status = 'timeout';
       await payment.save();
       await syncBookingPayment(payment, 'timeout');
-      return res.redirect(`/payments/timeout/${orderId}`);
+      return res.redirect(`/payments/timeout/${payment.orderId}`);
     } else if (verification.normalizedStatus === 'failed') {
       payment.status = 'failed';
       await payment.save();
       await syncBookingPayment(payment, 'failed');
       req.flash('error', 'Payment verification was unsuccessful or cancelled.');
-      return res.redirect(`/payments/failed/${orderId}`);
+      return res.redirect(`/payments/failed/${payment.orderId}`);
     } else {
       // Still pending
       req.flash('info', 'Payment is awaiting completion. Please complete the UPI transaction in your payment app and check status again.');
-      return res.redirect(`/payments/pay/${orderId}`);
+      return res.redirect(`/payments/pay/${payment.orderId}`);
     }
   } catch (err) {
     console.error('[Payment Verification] Error:', err.message);
@@ -579,13 +629,11 @@ router.get('/payments/pay/:orderId', async (req, res) => {
       return res.redirect(`/payments/failed/${orderId}`);
     }
 
-    // Resolve payee UPI ID from owner settlement profile or environment variable (never hardcoded in source)
-    const recipientUpiId = (payment.owner && payment.owner.settlementProfile && payment.owner.settlementProfile.upiId)
-      || process.env.ZAP_UPI_MERCHANT_VPA
-      || 'nestlyescrow@icici';
+    // Student payment destination must strictly be the Nestly Escrow Merchant Gateway, NEVER the owner's personal UPI ID
+    const recipientUpiId = process.env.ZAP_UPI_MERCHANT_VPA || 'nestlyescrow@icici';
 
     // Standard NPCI UPI URI Specification
-    const merchantName = 'Nestly Escrow';
+    const merchantName = 'Nestly Escrow Gateway';
     const transactionNote = `Nestly Rent ${payment.orderId}`;
     const upiUri = `upi://pay?pa=${encodeURIComponent(recipientUpiId)}&pn=${encodeURIComponent(merchantName)}&am=${payment.amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${encodeURIComponent(payment.orderId)}`;
 
@@ -630,42 +678,59 @@ router.get('/payments/check-status/:orderId', async (req, res) => {
       return res.status(400).json({ status: 'invalid' });
     }
 
-    const payment = await Payment.findOne({ orderId });
+    const trimmedOrderId = String(orderId).trim();
+    const payment = await Payment.findOne({
+      $or: [
+        { orderId: trimmedOrderId },
+        { referenceId: trimmedOrderId }
+      ]
+    });
     if (!payment) {
       return res.status(404).json({ status: 'not_found' });
     }
 
     if (payment.status === 'success') {
-      return res.json({ status: 'success', redirectUrl: `/payments/success/${orderId}` });
+      return res.json({ status: 'success', redirectUrl: `/payments/success/${payment.orderId}` });
     }
     if (payment.status === 'failed') {
-      return res.json({ status: 'failed', redirectUrl: `/payments/failed/${orderId}` });
+      return res.json({ status: 'failed', redirectUrl: `/payments/failed/${payment.orderId}` });
     }
     if (payment.status === 'timeout') {
-      return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${orderId}` });
+      return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${payment.orderId}` });
     }
 
     // Check with live gateway if configured
     if (ZapUpiService.isConfigured()) {
       try {
-        const verification = await ZapUpiService.verifyOrderStatus(orderId);
+        const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
+        if (verification.raw) {
+          payment.gatewayResponse = verification.raw;
+        }
         if (verification.normalizedStatus === 'success' || verification.success) {
+          const reportedAmount = parseFloat(verification.amount);
+          if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+            payment.status = 'failed';
+            await payment.save();
+            await syncBookingPayment(payment, 'failed');
+            return res.json({ status: 'failed', redirectUrl: `/payments/failed/${payment.orderId}` });
+          }
+
           payment.status = 'success';
-          payment.transactionId = verification.txnId || ('TXN_' + Date.now());
-          payment.utr = verification.utr || ('UTR_' + Date.now());
+          payment.transactionId = verification.txnId || payment.transactionId || ('TXN_' + Date.now());
+          payment.utr = verification.utr || payment.utr || ('UTR_' + Date.now());
           await payment.save();
           await syncBookingPayment(payment, 'success');
-          return res.json({ status: 'success', redirectUrl: `/payments/success/${orderId}` });
+          return res.json({ status: 'success', redirectUrl: `/payments/success/${payment.orderId}` });
         } else if (verification.normalizedStatus === 'failed') {
           payment.status = 'failed';
           await payment.save();
           await syncBookingPayment(payment, 'failed');
-          return res.json({ status: 'failed', redirectUrl: `/payments/failed/${orderId}` });
+          return res.json({ status: 'failed', redirectUrl: `/payments/failed/${payment.orderId}` });
         } else if (verification.normalizedStatus === 'timeout') {
           payment.status = 'timeout';
           await payment.save();
           await syncBookingPayment(payment, 'timeout');
-          return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${orderId}` });
+          return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${payment.orderId}` });
         }
       } catch (err) {
         // Fall back to current pending status

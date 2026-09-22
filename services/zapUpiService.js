@@ -17,12 +17,27 @@ class ZapUpiService {
    * Check whether a real ZAP UPI API key is configured.
    */
   static isConfigured() {
-    if (process.env.ZAP_UPI_SIMULATION === 'true' || process.env.NODE_ENV === 'test') {
+    const key = process.env.ZAP_UPI_API_KEY;
+    if (!key) return false;
+    const trimmed = String(key).trim();
+    const isPlaceholder = !trimmed ||
+      trimmed === 'YOUR_ZAP_UPI_API_KEY' ||
+      trimmed === 'YOUR_NEW_ZAP_API_KEY' ||
+      trimmed.startsWith('YOUR_');
+    if (isPlaceholder) return false;
+
+    // Unit test bypass
+    if (process.env.NODE_ENV === 'test' && !process.env.ZAP_UPI_TEST_REAL) {
       return false;
     }
-    const key = process.env.ZAP_UPI_API_KEY;
-    const isPlaceholder = !key || key === 'YOUR_ZAP_UPI_API_KEY' || key === 'YOUR_NEW_ZAP_API_KEY';
-    return Boolean(!isPlaceholder && key.trim().length > 0);
+
+    // In production, valid keys are always active.
+    // In non-production, allow explicit simulation flag to route locally.
+    if (process.env.NODE_ENV !== 'production' && process.env.ZAP_UPI_SIMULATION === 'true') {
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -44,7 +59,7 @@ class ZapUpiService {
    * @param {string} params.orderId - Unique order reference ID
    * @param {number|string} params.amount - Payable amount in INR
    * @param {string} params.customerMobile - Student phone number
-   * @param {string} params.remark - Transaction notes (e.g. Nestly Token Hold)
+   * @param {string} params.remark - Transaction notes (e.g. Nestly First Month Rent)
    * @param {string} params.webhookUrl - Callback URL for payment updates
    * @param {string} params.redirectUrl - Return redirect URL
    * @param {string} params.successUrl - Redirect URL on success
@@ -65,6 +80,7 @@ class ZapUpiService {
   }) {
     const zapKey = process.env.ZAP_UPI_API_KEY;
 
+    // Simulation/sandbox mode when API key is not configured
     if (!this.isConfigured()) {
       return {
         success: true,
@@ -75,7 +91,7 @@ class ZapUpiService {
     }
 
     // Sanitize remark (ZapUPI rejects pipes, hashes, and special characters)
-    const cleanRemark = String(remark || 'NestlyTokenDeposit').replace(/[^a-zA-Z0-9 ]/g, '').trim().substring(0, 50) || 'NestlyTokenDeposit';
+    const cleanRemark = String(remark || 'NestlyFirstMonthRent').replace(/[^a-zA-Z0-9 ]/g, '').trim().substring(0, 50) || 'NestlyFirstMonthRent';
 
     const payload = {
       zap_key: zapKey,
@@ -99,35 +115,56 @@ class ZapUpiService {
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(3000)
+        signal: AbortSignal.timeout(10000)
       });
 
       const data = await response.json();
+      const resData = (data && typeof data.data === 'object' && data.data !== null) ? data.data : (data?.order || data || {});
+      const status = String(data?.status || resData?.status || '').toLowerCase();
+      const paymentUrl = resData?.payment_url || data?.payment_url || resData?.paymentUrl || data?.paymentUrl || resData?.checkout_url || data?.checkout_url;
+      const payId = resData?.pay_id || data?.pay_id;
 
-      if (data && (data.status === 'success' || data.payment_url || data.pay_id)) {
+      // When ZapUPI successfully returns a live payment checkout URL
+      if (paymentUrl && (paymentUrl.startsWith('http://') || paymentUrl.startsWith('https://'))) {
         return {
           success: true,
           orderId,
           amount,
-          paymentUrl: data.payment_url || `/payments/pay/${orderId}`,
-          payId: data.pay_id || null,
+          paymentUrl,
+          payId: payId || null,
           raw: data
         };
-      } else {
-        // If remote gateway fails or rejects key, route to user-facing UPI payment gateway screen
+      }
+
+      // If gateway returns status success/true with a relative URL or identifier
+      if ((status === 'success' || status === 'true' || status === '1') && paymentUrl) {
         return {
           success: true,
           orderId,
           amount,
-          paymentUrl: `/payments/pay/${orderId}`
+          paymentUrl,
+          payId: payId || null,
+          raw: data
         };
       }
-    } catch (err) {
+
+      // If gateway rejected the order creation or returned an error
+      const errorMsg = data?.message || data?.msg || resData?.message || 'ZapUPI gateway could not generate checkout URL';
+      console.error('[ZapUPI createOrder] Gateway rejected order creation:', errorMsg, data);
       return {
-        success: true,
+        success: false,
         orderId,
         amount,
-        paymentUrl: `/payments/pay/${orderId}`
+        error: errorMsg,
+        raw: data
+      };
+    } catch (err) {
+      console.error('[ZapUPI createOrder] Network/fetch error:', err.message);
+      return {
+        success: false,
+        orderId,
+        amount,
+        error: `ZapUPI gateway unreachable: ${err.message}`
       };
     }
   }
@@ -137,18 +174,47 @@ class ZapUpiService {
    * 'success' | 'failed' | 'timeout' | 'pending'
    */
   static normalizeStatus(rawStatus) {
+    if (rawStatus === true || rawStatus === 1) return 'success';
+    if (rawStatus === false || rawStatus === 0) return 'failed';
     if (!rawStatus) return 'pending';
     const s = String(rawStatus).toLowerCase().trim();
-    if (s === 'success' || s === 'completed' || s === 'captured' || s === 'paid') {
+    if (
+      s === 'success' ||
+      s === 'completed' ||
+      s === 'captured' ||
+      s === 'paid' ||
+      s === 'successful' ||
+      s === 'txn_success' ||
+      s === 'order_success' ||
+      s === 'ok' ||
+      s === 'true' ||
+      s === '1'
+    ) {
       return 'success';
     }
-    if (s === 'timeout' || s === 'expired' || s === 'time_out') {
+    if (s === 'timeout' || s === 'expired' || s === 'time_out' || s === 'timed_out') {
       return 'timeout';
     }
-    if (s === 'failed' || s === 'failure' || s === 'rejected' || s === 'cancelled' || s === 'declined') {
+    if (
+      s === 'failed' ||
+      s === 'failure' ||
+      s === 'rejected' ||
+      s === 'cancelled' ||
+      s === 'canceled' ||
+      s === 'declined' ||
+      s === 'txn_failure' ||
+      s === 'false' ||
+      s === '0'
+    ) {
       return 'failed';
     }
-    if (s === 'pending' || s === 'initiated' || s === 'processing') {
+    if (
+      s === 'pending' ||
+      s === 'initiated' ||
+      s === 'processing' ||
+      s === 'awaiting' ||
+      s === 'submitted'
+    ) {
       return 'pending';
     }
     return s;
@@ -169,7 +235,7 @@ class ZapUpiService {
         status: 'Pending',
         normalizedStatus: 'pending',
         orderId,
-        message: 'Awaiting student payment and UTR submission'
+        message: 'Payment gateway awaiting transaction settlement'
       };
     }
 
@@ -186,26 +252,54 @@ class ZapUpiService {
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(3000)
+        signal: AbortSignal.timeout(10000)
       });
 
       const data = await response.json();
+      const inner = (data && typeof data.data === 'object' && data.data !== null) ? data.data : (data?.order || data || {});
 
-      const rawStatus = data?.status || data?.order_status || '';
-      const normalizedStatus = this.normalizeStatus(rawStatus);
+      // Candidates in priority order
+      const candidateStatuses = [
+        inner.order_status,
+        inner.status,
+        inner.txn_status,
+        inner.payment_status,
+        data?.order_status,
+        data?.status,
+        data?.txn_status
+      ];
+
+      let rawStatus = '';
+      let normalizedStatus = 'pending';
+
+      for (const candidate of candidateStatuses) {
+        if (candidate !== undefined && candidate !== null && candidate !== '') {
+          const norm = this.normalizeStatus(candidate);
+          if (norm === 'success' || norm === 'failed' || norm === 'timeout') {
+            rawStatus = candidate;
+            normalizedStatus = norm;
+            break;
+          }
+          if (!rawStatus) rawStatus = candidate;
+        }
+      }
+
       const isSuccess = normalizedStatus === 'success';
+      const amount = inner.amount || inner.pay_amount || data?.amount || data?.pay_amount || null;
+      const txnId = inner.txn_id || inner.txnId || inner.transaction_id || data?.txn_id || data?.txnId || null;
+      const utr = inner.utr || inner.bank_utr || inner.bank_rrn || data?.utr || data?.bank_utr || null;
 
       return {
         success: isSuccess,
-        status: rawStatus,
+        status: rawStatus || normalizedStatus,
         normalizedStatus,
-        amount: data?.amount || data?.pay_amount || null,
-        txnId: data?.txn_id || null,
-        utr: data?.utr || null,
+        amount,
+        txnId,
+        utr,
         raw: data
       };
     } catch (err) {
-      console.warn('[ZAP UPI] Verification gateway unreachable or timed out.');
+      console.warn('[ZAP UPI] Verification gateway query issue:', err.message);
       return {
         success: false,
         status: 'Unreachable',

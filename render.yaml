@@ -27,4 +27,5 @@ services:
       - key: ZAP_UPI_SERVER_GATEWAY_IP
         value: 72.61.225.127
       - key: ZAP_UPI_SIMULATION
-        value: "true"
+        value: "false"
+
