@@ -7,24 +7,10 @@ const Property = require('../models/Property');
 const Settlement = require('../models/Settlement');
 const User = require('../models/User');
 const ZapUpiService = require('../services/zapUpiService');
-const QRCode = require('qrcode');
 const { isLoggedIn } = require('../middleware/auth');
 
 // Helper to validate and sanitize orderId parameter
 const isValidOrderId = (orderId) => typeof orderId === 'string' && /^[A-Za-z0-9_-]{3,64}$/.test(orderId);
-
-// Helper to mask UPI ID for public UI safety
-function maskUpiId(upi) {
-  if (!upi || typeof upi !== 'string') return 'nestly@escrow';
-  const parts = upi.split('@');
-  if (parts.length !== 2) return 'nestly@escrow';
-  const handle = parts[0];
-  const bank = parts[1];
-  if (handle.length <= 4) {
-    return `${handle[0]}***@${bank}`;
-  }
-  return `${handle.substring(0, 5)}***@${bank}`;
-}
 
 /**
  * Synchronize booking status and Escrow Settlement Ledger with payment outcome
@@ -596,8 +582,8 @@ router.get('/payments/failed/:orderId', async (req, res) => {
 });
 
 /**
- * Real User-Facing UPI Payment Gateway Screen
- * Renders live dynamic UPI QR code, mobile app deep links, and UTR verification
+ * Hosted Payment Gateway Redirection Endpoint
+ * Strictly redirects to the ZapUPI-hosted checkout URL. Never generates a local UPI QR.
  */
 router.get('/payments/pay/:orderId', async (req, res) => {
   try {
@@ -608,7 +594,13 @@ router.get('/payments/pay/:orderId', async (req, res) => {
       return res.redirect('/');
     }
 
-    const payment = await Payment.findOne({ orderId }).populate('owner').populate('booking');
+    const trimmedOrderId = String(orderId).trim();
+    const payment = await Payment.findOne({
+      $or: [
+        { orderId: trimmedOrderId },
+        { referenceId: trimmedOrderId }
+      ]
+    });
 
     if (!payment) {
       return res.status(404).render('pages/payment-failed', {
@@ -620,47 +612,25 @@ router.get('/payments/pay/:orderId', async (req, res) => {
 
     // Redirect to finalized views if already settled
     if (payment.status === 'success') {
-      return res.redirect(`/payments/success/${orderId}`);
+      return res.redirect(`/payments/success/${payment.orderId}`);
     }
     if (payment.status === 'timeout') {
-      return res.redirect(`/payments/timeout/${orderId}`);
+      return res.redirect(`/payments/timeout/${payment.orderId}`);
     }
     if (payment.status === 'failed') {
-      return res.redirect(`/payments/failed/${orderId}`);
+      return res.redirect(`/payments/failed/${payment.orderId}`);
     }
 
-    // Student payment destination must strictly be the Nestly Escrow Merchant Gateway, NEVER the owner's personal UPI ID
-    const recipientUpiId = process.env.ZAP_UPI_MERCHANT_VPA || 'nestlyescrow@icici';
+    // Redirect directly to ZapUPI's hosted gateway checkout page if present
+    if (payment.paymentUrl && (payment.paymentUrl.startsWith('http://') || payment.paymentUrl.startsWith('https://'))) {
+      return res.redirect(payment.paymentUrl);
+    }
 
-    // Standard NPCI UPI URI Specification
-    const merchantName = 'Nestly Escrow Gateway';
-    const transactionNote = `Nestly Rent ${payment.orderId}`;
-    const upiUri = `upi://pay?pa=${encodeURIComponent(recipientUpiId)}&pn=${encodeURIComponent(merchantName)}&am=${payment.amount}&cu=INR&tn=${encodeURIComponent(transactionNote)}&tr=${encodeURIComponent(payment.orderId)}`;
-
-    // Generate high-resolution server-side QR code
-    const qrCodeDataUrl = await QRCode.toDataURL(upiUri, {
-      width: 280,
-      margin: 2,
-      errorCorrectionLevel: 'M',
-      color: {
-        dark: '#002B1D',
-        light: '#FFFFFF'
-      }
-    });
-
-    // Mask the UPI ID for public display protection
-    const maskedUpi = maskUpiId(recipientUpiId);
-
-    res.render('pages/payment-gateway', {
-      title: `Pay First Month Rent ₹${payment.amount.toLocaleString('en-IN')} | ZAP UPI Gateway`,
-      activePage: 'checkout',
-      payment,
-      upiUri,
-      qrCodeDataUrl,
-      maskedUpi,
-      phonePeUri: upiUri.replace('upi://', 'phonepe://'),
-      gPayUri: upiUri,
-      paytmUri: upiUri.replace('upi://', 'paytmmp://')
+    // If hosted gateway URL is missing, display clear configuration status
+    return res.status(400).render('pages/payment-failed', {
+      title: 'Hosted Gateway Checkout Unavailable',
+      orderId: payment.orderId,
+      errorMessage: 'Hosted payment checkout URL is not available. Please ensure your ZapUPI Merchant Key (zap_key) from panel.zapupi.com is configured in your environment settings.'
     });
   } catch (err) {
     console.error('[Payment Gateway Pay] Error:', err.message);

@@ -80,13 +80,13 @@ class ZapUpiService {
   }) {
     const zapKey = process.env.ZAP_UPI_API_KEY;
 
-    // Simulation/sandbox mode when API key is not configured
+    // ZapUPI gateway requires a valid merchant API key (zap_key)
     if (!this.isConfigured()) {
       return {
-        success: true,
+        success: false,
         orderId,
         amount,
-        paymentUrl: `/payments/pay/${orderId}`
+        error: 'ZapUPI Merchant API Key is not configured. Please set a valid ZAP_UPI_API_KEY in your Render dashboard / environment variables to enable the hosted checkout gateway.'
       };
     }
 
