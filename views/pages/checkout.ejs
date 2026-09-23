@@ -57,27 +57,27 @@
     </div>
   </div>
 
-  <!-- 3. Escrow Protection Guarantee Banner -->
+  <!-- 3. Secure Payment & Booking Banner -->
   <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm space-y-space-sm relative overflow-hidden">
     <div class="flex items-start gap-3">
       <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0 text-primary">
         <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
       </div>
       <div>
-        <h3 class="font-title-md text-title-md font-bold text-primary">100% Escrow Protection Protocol</h3>
+        <h3 class="font-title-md text-title-md font-bold text-primary">Secure Payment Processing</h3>
         <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
-          Your first month rent of ₹<%= (bookingDetails.payableAmount || bookingDetails.monthlyRent).toLocaleString('en-IN') %> is deposited into an <strong class="text-on-surface font-semibold">RBI-regulated Escrow vault</strong>. It is transferred to property management ONLY after you step into <%= bookingDetails.roomNumber %>, verify inventory, and sign your digital agreement.
+          Your payment of ₹<%= (bookingDetails.payableAmount || bookingDetails.monthlyRent).toLocaleString('en-IN') %> is processed securely through our payment gateway to confirm and hold your room reservation.
         </p>
       </div>
     </div>
     <div class="space-y-1.5 pt-1 pl-1">
       <div class="flex items-start gap-2">
         <span class="material-symbols-outlined text-[17px] text-primary shrink-0 mt-0.5">check_circle</span>
-        <p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Full 100% instant refund</span> if you cancel within 48 hours with 1-tap</p>
+        <p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Instant confirmation</span> directly linked to your student reservation</p>
       </div>
       <div class="flex items-start gap-2">
         <span class="material-symbols-outlined text-[17px] text-primary shrink-0 mt-0.5">check_circle</span>
-        <p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Zero brokerage & zero hidden ledger fees</span> guaranteed</p>
+        <p class="font-body-sm text-body-sm text-on-surface"><span class="font-semibold">Transparent pricing</span> with clear breakdown of rent and fees</p>
       </div>
     </div>
   </div>
@@ -99,7 +99,7 @@
       </div>
       <div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
         <div class="flex items-center gap-1">
-          <span>Nestly Escrow & Trust Fee</span>
+          <span>Nestly Platform Service Fee</span>
           <span class="material-symbols-outlined text-[14px] text-secondary">info</span>
         </div>
         <span class="text-primary font-medium flex items-center gap-1">
@@ -111,11 +111,11 @@
       <div class="flex justify-between items-center pt-0.5">
         <div>
           <div class="font-title-md text-title-md font-bold text-on-surface">First Month Rent Payable Today</div>
-          <div class="font-body-sm text-body-sm text-secondary">Secures your bed reservation under 100% Escrow Protection</div>
+          <div class="font-body-sm text-body-sm text-secondary">Secures your bed reservation via payment gateway</div>
         </div>
         <div class="text-right">
           <span class="font-headline-sm text-headline-sm font-bold text-primary">₹<%= (bookingDetails.payableAmount || bookingDetails.monthlyRent).toLocaleString('en-IN') %></span>
-          <div class="font-label-sm text-label-sm text-secondary font-semibold">100% Refundable</div>
+          <div class="font-label-sm text-label-sm text-secondary font-semibold">Direct Booking Hold</div>
         </div>
       </div>
     </div>
@@ -166,7 +166,7 @@
     <!-- Trust Badges -->
     <div class="flex items-center justify-center gap-2 text-outline text-label-sm font-label-sm pt-2">
       <span class="material-symbols-outlined text-[14px] text-primary">lock</span>
-      <span>256-Bit Escrow Vault</span>
+      <span>Secure Payment Gateway</span>
       <span>•</span>
       <span>Powered by ZAP UPI Gateway</span>
     </div>

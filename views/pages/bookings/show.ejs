@@ -28,12 +28,12 @@
           <% } else if (booking.status === 'cancelled') { %>
             This accommodation request was cancelled.
           <% } else { %>
-            Your unit hold is active in the Nestly system. First month rent of ₹<%= booking.amount.toLocaleString('en-IN') %> is protected under Escrow.
+            Your unit hold is active in the Nestly system. First month rent of ₹<%= booking.amount.toLocaleString('en-IN') %> is payable via secure payment gateway.
           <% } %>
         </p>
       </div>
 
-      <!-- Escrow / Booking Reference Panel -->
+      <!-- Booking Reference Panel -->
       <div class="w-full bg-surface-container-lowest rounded-xl p-space-sm shadow-sm flex items-center justify-between border border-outline-variant/30">
         <div class="flex items-center gap-space-xs text-left">
           <span class="material-symbols-outlined text-secondary text-[22px]">receipt_long</span>
@@ -118,11 +118,11 @@
           <span class="font-semibold text-on-surface">₹<%= booking.securityDeposit.toLocaleString('en-IN') %></span>
         </div>
         <div class="flex justify-between text-on-surface-variant">
-          <span>First Month Rent (Escrow)</span>
+          <span>First Month Rent</span>
           <span class="font-bold text-primary">₹<%= booking.amount.toLocaleString('en-IN') %></span>
         </div>
         <div class="flex justify-between items-center text-on-surface-variant">
-          <span>Escrow Payment Status</span>
+          <span>Payment Status</span>
           <div class="flex items-center gap-2">
             <span class="font-semibold uppercase text-xs px-2 py-0.5 rounded <%= booking.paymentStatus === 'completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-surface-container text-secondary' %>"><%= booking.paymentStatus %></span>
             <% if (isStudent && booking.paymentStatus !== 'completed' && booking.status !== 'cancelled' && booking.status !== 'rejected') { %>

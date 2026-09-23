@@ -118,11 +118,13 @@ class ZapUpiService {
         signal: AbortSignal.timeout(20000)
       });
 
+      const httpStatus = response.status;
       const data = await response.json();
       const resData = (data && typeof data.data === 'object' && data.data !== null) ? data.data : (data?.order || data || {});
       const status = String(data?.status || resData?.status || '').toLowerCase();
       const paymentUrl = resData?.payment_url || data?.payment_url || resData?.paymentUrl || data?.paymentUrl || resData?.checkout_url || data?.checkout_url;
       const payId = resData?.pay_id || data?.pay_id;
+      const environment = resData?.environment || data?.environment || 'cashier';
 
       // When ZapUPI successfully returns a live payment checkout URL
       if (paymentUrl && (paymentUrl.startsWith('http://') || paymentUrl.startsWith('https://'))) {
@@ -132,7 +134,9 @@ class ZapUpiService {
           amount,
           paymentUrl,
           payId: payId || null,
-          raw: data
+          environment,
+          httpStatus,
+          rawStatus: data?.status || resData?.status || 'success'
         };
       }
 
@@ -144,19 +148,36 @@ class ZapUpiService {
           amount,
           paymentUrl,
           payId: payId || null,
-          raw: data
+          environment,
+          httpStatus,
+          rawStatus: data?.status || resData?.status || 'success'
         };
       }
 
       // If gateway rejected the order creation or returned an error
       const errorMsg = data?.message || data?.msg || resData?.message || 'ZapUPI gateway could not generate checkout URL';
-      console.error('[ZapUPI createOrder] Gateway rejected order creation:', errorMsg, data);
+      const isProviderBalanceError = /topup|balance/i.test(errorMsg);
+
+      // Safe developer diagnostics — NEVER log API key or secrets
+      console.error('[ZapUPI createOrder] Gateway rejected order creation:', {
+        orderId,
+        amount,
+        httpStatus,
+        providerStatus: data?.status || resData?.status || 'error',
+        providerMessage: errorMsg,
+        environment,
+        isProviderBalanceError
+      });
+
       return {
         success: false,
         orderId,
         amount,
+        httpStatus,
+        rawStatus: data?.status || resData?.status || 'error',
         error: errorMsg,
-        raw: data
+        isProviderBalanceError,
+        environment
       };
     } catch (err) {
       console.error('[ZapUPI createOrder] Network/fetch error:', err.message);

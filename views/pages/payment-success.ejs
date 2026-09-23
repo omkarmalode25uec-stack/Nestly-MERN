@@ -16,22 +16,22 @@
     <div class="relative z-10 space-y-space-xs">
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-low text-primary text-label-sm font-label-sm tracking-wide uppercase">
         <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-        Escrow Deposit Confirmed
+        Payment Confirmed
       </div>
       <h2 class="font-display text-display-mobile lg:text-headline-lg text-on-background tracking-tight">
         Bed Reserved & Protected!
       </h2>
       <p class="font-body-md text-body-md text-on-surface-variant">
-        First month rent of <span class="font-title-md text-primary font-bold">₹<%= payment.amount.toLocaleString('en-IN') %></span> safely held in <strong class="text-on-background">ZAP UPI Escrow Vault</strong>.
+        First month rent of <span class="font-title-md text-primary font-bold">₹<%= payment.amount.toLocaleString('en-IN') %></span> processed securely via <strong class="text-on-background">ZapUPI Payment Gateway</strong>.
       </p>
     </div>
 
-    <!-- Escrow Reference Micro-Panel -->
+    <!-- Payment Reference Micro-Panel -->
     <div class="relative z-10 mt-space-md w-full bg-surface-container-lowest rounded-2xl p-space-sm shadow-sm flex items-center justify-between gap-space-xs border border-outline-variant/30">
       <div class="flex items-center gap-space-xs min-w-0 pl-2">
         <span class="material-symbols-outlined text-secondary text-[20px]">account_balance</span>
         <div class="flex flex-col text-left truncate">
-          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Escrow Reference ID</span>
+          <span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Payment Order Reference</span>
           <span class="font-title-md text-title-md text-primary font-mono tracking-tight font-bold truncate"><%= payment.orderId %></span>
         </div>
       </div>

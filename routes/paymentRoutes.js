@@ -347,12 +347,28 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
 
     if (!gatewayResult.success) {
       payment.status = 'failed';
+      payment.gatewayResponse = {
+        error: gatewayResult.error,
+        httpStatus: gatewayResult.httpStatus || null,
+        providerStatus: gatewayResult.rawStatus || null,
+        isProviderBalanceError: !!gatewayResult.isProviderBalanceError
+      };
       await payment.save();
       await syncBookingPayment(payment, 'failed');
+
+      let studentErrorMessage = 'Payment could not be started. Please try again later.';
+      if (gatewayResult.isProviderBalanceError) {
+        console.error(`[ZapUPI Merchant Notice] Provider returned "${gatewayResult.error}" for Order ${orderId} (₹${amount}). The ZapUPI merchant account requires an active Topup Balance on panel.zapupi.com to accept orders of this value.`);
+        studentErrorMessage = 'Payment could not be started. Please try again later.';
+      } else if (gatewayResult.error && !/invalid|unauthorized|internal|secret|key/i.test(gatewayResult.error)) {
+        studentErrorMessage = gatewayResult.error;
+      }
+
       return res.status(400).render('pages/payment-failed', {
-        title: 'Payment Initiation Failed',
+        title: 'Payment Could Not Be Started',
         orderId,
-        errorMessage: gatewayResult.error || 'Failed to initiate payment gateway request'
+        payment,
+        errorMessage: studentErrorMessage
       });
     }
 
