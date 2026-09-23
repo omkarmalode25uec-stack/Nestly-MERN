@@ -125,6 +125,19 @@ class ZapUpiService {
       const paymentUrl = resData?.payment_url || data?.payment_url || resData?.paymentUrl || data?.paymentUrl || resData?.checkout_url || data?.checkout_url;
       const payId = resData?.pay_id || data?.pay_id;
       const environment = resData?.environment || data?.environment || 'cashier';
+      const rawMsg = data?.message || data?.msg || resData?.message || '';
+      const paymentUrlPresence = !!(paymentUrl && typeof paymentUrl === 'string' && paymentUrl.trim().length > 0);
+
+      // Safe Diagnostic Logging (Only safe fields: order_id, amount, HTTP status, response status, response message, response environment, payment_url presence)
+      console.log('[ZapUPI createOrder Diagnostic Log]', {
+        order_id: String(orderId),
+        amount: Number(amount),
+        'HTTP status': httpStatus,
+        'response status': data?.status || resData?.status || 'unknown',
+        'response message': rawMsg,
+        'response environment': environment,
+        'payment_url presence': paymentUrlPresence
+      });
 
       // When ZapUPI successfully returns a live payment checkout URL
       if (paymentUrl && (paymentUrl.startsWith('http://') || paymentUrl.startsWith('https://'))) {
