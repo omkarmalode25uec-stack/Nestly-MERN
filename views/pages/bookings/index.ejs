@@ -109,10 +109,17 @@
 
             <!-- Right: Action Buttons -->
             <div class="flex items-center gap-2 w-full md:w-auto justify-end pt-2 md:pt-0 border-t md:border-0 border-surface-container">
-              <a href="/bookings/<%= booking._id %>" class="px-4 py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-semibold transition-all shadow-sm flex items-center gap-1.5">
+              <a href="/bookings/<%= booking._id %>" class="px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-all shadow-sm flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-[16px]">receipt_long</span>
                 <span>View Pass</span>
               </a>
+
+              <% if (booking.paymentStatus !== 'completed' && booking.status !== 'cancelled' && booking.status !== 'rejected') { %>
+                <a href="/checkout?bookingId=<%= booking._id %>" class="px-4 py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-[16px]">payment</span>
+                  <span>Pay Rent</span>
+                </a>
+              <% } %>
 
               <% if (booking.status === 'pending') { %>
                 <form action="/bookings/<%= booking._id %>/cancel" method="POST" onsubmit="return confirm('Cancel this booking request?');" class="inline">

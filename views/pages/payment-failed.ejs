@@ -1,4 +1,4 @@
-﻿<% layout('layouts/boilerplate') %>
+<% layout('layouts/boilerplate') %>
 
 <div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-xl space-y-space-md text-center">
   <div class="w-16 h-16 rounded-full bg-error/10 text-error flex items-center justify-center mx-auto mb-space-md">
@@ -16,11 +16,12 @@
   </div>
 
   <div class="pt-space-md flex flex-col sm:flex-row items-center justify-center gap-space-sm">
-    <a href="/checkout" class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg font-bold">
+    <% const retryBookingId = (typeof payment !== 'undefined' && payment && payment.booking) ? payment.booking : ''; %>
+    <a href="<%= retryBookingId ? '/checkout?bookingId=' + retryBookingId : '/checkout' %>" class="w-full sm:w-auto px-space-xl py-3 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold shadow-md transition-all">
       Try Again
     </a>
-    <a href="/" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container text-on-surface font-label-lg text-label-lg font-semibold">
-      Back to Home
+    <a href="/bookings" class="w-full sm:w-auto px-space-lg py-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold transition-all">
+      View My Bookings
     </a>
   </div>
 </div>

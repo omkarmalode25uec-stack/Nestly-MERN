@@ -115,7 +115,7 @@ class ZapUpiService {
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(10000)
+        signal: AbortSignal.timeout(20000)
       });
 
       const data = await response.json();
@@ -252,7 +252,7 @@ class ZapUpiService {
           'Accept': 'application/json'
         },
         body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(10000)
+        signal: AbortSignal.timeout(20000)
       });
 
       const data = await response.json();

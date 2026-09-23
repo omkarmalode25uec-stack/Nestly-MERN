@@ -124,8 +124,8 @@ router.post('/stays/:id/book', isLoggedIn, async (req, res, next) => {
 
     await booking.save()
 
-    req.flash('success', 'Your reservation request has been submitted! Unit hold is active pending owner confirmation.')
-    res.redirect(`/bookings/${booking._id}`)
+    req.flash('success', 'Reservation request created! Please complete first month rent payment to secure your bed.');
+    res.redirect(`/checkout?bookingId=${booking._id}`);
   } catch (err) {
     next(err)
   }

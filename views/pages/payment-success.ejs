@@ -90,11 +90,18 @@
 
     <!-- Action Buttons -->
     <div class="pt-2 flex flex-col sm:flex-row gap-space-sm">
-      <a href="/" class="flex-1 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold text-center transition-all shadow-md">
-        Return to Home
-      </a>
-      <a href="/checkout" class="py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold text-center transition-all">
-        View Another Stay
+      <% if (payment.booking) { %>
+        <a href="/bookings/<%= payment.booking %>" class="flex-1 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold text-center transition-all shadow-md flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">receipt_long</span>
+          <span>View Booking Pass</span>
+        </a>
+      <% } else { %>
+        <a href="/bookings" class="flex-1 py-3 px-4 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-bold text-center transition-all shadow-md">
+          View My Bookings
+        </a>
+      <% } %>
+      <a href="/stays" class="py-3 px-4 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-lg text-label-lg font-semibold text-center transition-all">
+        Explore More Stays
       </a>
     </div>
   </div>

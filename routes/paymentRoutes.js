@@ -343,12 +343,12 @@ router.post('/payments/webhook', async (req, res) => {
     if (normalizedStatus === 'success') {
       // Validate expected amount against gateway payload if reported
       const reportedAmount = parseFloat(inner.amount || inner.pay_amount || payload.amount || payload.pay_amount);
-      if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+      if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
         console.warn(`[Webhook Amount Mismatch] Order ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
         payment.status = 'failed';
         await payment.save();
         await syncBookingPayment(payment, 'failed');
-        return res.status(200).json({ status: 'error', message: 'Amount mismatch' });
+        return res.status(200).json({ status: 'error', message: 'Amount mismatch or invalid' });
       }
 
       payment.status = 'success';
@@ -425,7 +425,7 @@ router.get('/payments/verify/:orderId', async (req, res) => {
     if (verification.normalizedStatus === 'success' || verification.success) {
       // Validate expected amount against gateway response if reported
       const reportedAmount = parseFloat(verification.amount);
-      if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+      if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
         console.warn(`[Payment Verification] Amount mismatch for ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
         payment.status = 'failed';
         await payment.save();
@@ -705,7 +705,7 @@ router.get('/payments/check-status/:orderId', async (req, res) => {
         }
         if (verification.normalizedStatus === 'success' || verification.success) {
           const reportedAmount = parseFloat(verification.amount);
-          if (!isNaN(reportedAmount) && reportedAmount > 0 && Math.abs(reportedAmount - payment.amount) > 0.01) {
+          if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
             payment.status = 'failed';
             await payment.save();
             await syncBookingPayment(payment, 'failed');
