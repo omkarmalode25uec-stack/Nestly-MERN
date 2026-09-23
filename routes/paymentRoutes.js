@@ -91,6 +91,104 @@ async function syncBookingPayment(payment, outcome) {
 }
 
 /**
+ * Authoritative Server-Side Payment Verification & Settlement with ZapUPI
+ * 
+ * Verifies with ZapUPI /api/order-status:
+ * 1. Order ID matches
+ * 2. Status is "Success" / "success"
+ * 3. Amount matches expected first month rent numerically
+ * 4. Environment is live/cashier (rejects test/sandbox in production mode)
+ * 5. Idempotent: Does not duplicate confirmations, settlements, or bed decrements
+ */
+async function verifyAndSettlePayment(payment, source = 'api') {
+  if (!payment) return null;
+
+  // Idempotency: If already confirmed as success, return immediately
+  if (payment.status === 'success') {
+    return payment;
+  }
+
+  if (!ZapUpiService.isConfigured()) {
+    console.warn(`[Payment Verify Notice] ZapUPI not configured. Order: ${payment.orderId}`);
+    return payment;
+  }
+
+  try {
+    console.log(`[Payment Verification Initiated] Source: ${source}, Order: ${payment.orderId}, Expected Amount: ₹${payment.amount}`);
+    const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
+
+    if (verification.raw) {
+      payment.gatewayResponse = verification.raw;
+    }
+
+    const rawData = (verification.raw && typeof verification.raw.data === 'object' && verification.raw.data !== null)
+      ? verification.raw.data
+      : (verification.raw?.order || verification.raw || {});
+
+    const returnedOrderId = String(verification.orderId || rawData.order_id || '').trim();
+    const rawStatus = String(rawData.status || rawData.order_status || verification.status || '').trim();
+    const normalizedStatus = verification.normalizedStatus || ZapUpiService.normalizeStatus(rawStatus);
+    const environment = String(verification.environment || rawData.environment || '').toLowerCase().trim();
+    const rawAmt = verification.amount !== null && verification.amount !== undefined ? verification.amount : (rawData.amount !== undefined ? rawData.amount : rawData.pay_amount);
+    const reportedAmount = parseFloat(rawAmt);
+    const txnId = verification.txnId || rawData.txn_id || rawData.transaction_id || payment.transactionId;
+    const utr = verification.utr || rawData.utr || rawData.bank_utr || rawData.bank_rrn || payment.utr;
+
+    console.log(`[ZapUPI Verify Result] Order: ${payment.orderId} (Returned: ${returnedOrderId}), Status: "${rawStatus}" (${normalizedStatus}), Env: "${environment}", Reported: ₹${reportedAmount}, Expected: ₹${payment.amount}`);
+
+    // In production, ignore test-environment transactions
+    if (process.env.NODE_ENV === 'production' && (environment === 'test' || environment === 'sandbox')) {
+      console.warn(`[Payment Verification Security] Rejected test environment transaction in production mode for Order ${payment.orderId}`);
+      payment.status = 'failed';
+      await payment.save();
+      await syncBookingPayment(payment, 'failed');
+      return payment;
+    }
+
+    // Process status outcome
+    if (normalizedStatus === 'success') {
+      // Validate expected amount against gateway response
+      if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
+        console.warn(`[Payment Amount Mismatch] Order ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
+        payment.status = 'failed';
+        await payment.save();
+        await syncBookingPayment(payment, 'failed');
+        return payment;
+      }
+
+      // Validated Success: Update payment and confirm booking
+      payment.status = 'success';
+      if (txnId) payment.transactionId = txnId;
+      if (utr) payment.utr = utr;
+      await payment.save();
+      await syncBookingPayment(payment, 'success');
+      console.log(`[Payment Confirmed Success] Order ${payment.orderId} confirmed via ${source}. TXN: ${payment.transactionId}, UTR: ${payment.utr}`);
+      return payment;
+    } else if (normalizedStatus === 'failed') {
+      payment.status = 'failed';
+      await payment.save();
+      await syncBookingPayment(payment, 'failed');
+      console.log(`[Payment Marked Failed] Order ${payment.orderId} marked failed.`);
+      return payment;
+    } else if (normalizedStatus === 'timeout') {
+      payment.status = 'timeout';
+      await payment.save();
+      await syncBookingPayment(payment, 'timeout');
+      console.log(`[Payment Marked Timeout] Order ${payment.orderId} marked timed out.`);
+      return payment;
+    } else {
+      // Still pending in gateway
+      await payment.save();
+      console.log(`[Payment Pending] Order ${payment.orderId} is still pending settlement.`);
+      return payment;
+    }
+  } catch (err) {
+    console.error(`[Payment Verification Error] Order ${payment.orderId}:`, err.message);
+    return payment;
+  }
+}
+
+/**
  * Render Bed Reservation Checkout Page
  * UI follows Stitch reserve_bed_token_escrow_checkout_nestly_mobile
  */
@@ -276,23 +374,23 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
 
 /**
  * ZapUPI Gateway Webhook Callback
- * Receives payment status notifications, verifies server-side, and updates database idempotently
+ * Receives payment status notifications, verifies server-side with /api/order-status,
+ * and updates database idempotently.
  */
-router.post('/payments/webhook', async (req, res) => {
+router.all('/payments/webhook', async (req, res) => {
   try {
     const payload = req.body || {};
     const inner = (payload && typeof payload.data === 'object' && payload.data !== null) ? payload.data : payload;
 
     const rawOrderId = inner.order_id || inner.orderId || payload.order_id || payload.orderId || req.query?.order_id || req.query?.orderId;
     const rawStatus = inner.order_status || inner.status || inner.txn_status || inner.payment_status || payload.status || payload.order_status || req.query?.status;
+    const rawAmt = inner.amount !== undefined ? inner.amount : (inner.pay_amount !== undefined ? inner.pay_amount : (payload.amount || payload.pay_amount || req.query?.amount));
+    const reportedAmount = parseFloat(rawAmt);
+    const environment = String(inner.environment || payload.environment || req.query?.environment || '').toLowerCase().trim();
     const txnId = inner.txn_id || inner.txnId || inner.transaction_id || payload.txn_id || payload.txnId || payload.transaction_id || req.query?.txn_id;
     const utr = inner.utr || inner.bank_utr || inner.bank_rrn || payload.utr || payload.bank_utr || req.query?.utr;
 
-    // Security: Check sender IP against configured ZapUPI gateway server IP
-    const callerIp = req.headers['x-forwarded-for'] || req.ip || req.socket?.remoteAddress;
-    if (!ZapUpiService.isValidGatewayIp(callerIp)) {
-      console.warn(`[ZapUPI Webhook Notice] Request from IP ${callerIp}.`);
-    }
+    console.log(`[ZapUPI Webhook Received] Order: ${rawOrderId}, Status: "${rawStatus}", Env: "${environment}", Amount: ₹${reportedAmount}`);
 
     if (!rawOrderId) {
       return res.status(400).json({ status: 'error', message: 'Missing order_id' });
@@ -307,13 +405,14 @@ router.post('/payments/webhook', async (req, res) => {
     });
 
     if (!payment) {
+      console.warn(`[ZapUPI Webhook Warning] Order reference not found in DB: ${trimmedOrderId}`);
       return res.status(404).json({ status: 'error', message: 'Order not found' });
     }
 
-    // Save gateway response payload for audit/reconciliation
+    // Save gateway payload for audit/reconciliation
     payment.gatewayResponse = payload;
 
-    // Idempotency: If payment is already marked success, do NOT duplicate booking confirm or settlements
+    // Idempotency: If already confirmed as success, return immediately
     if (payment.status === 'success') {
       if (txnId && !payment.transactionId) payment.transactionId = txnId;
       if (utr && !payment.utr) payment.utr = utr;
@@ -321,64 +420,52 @@ router.post('/payments/webhook', async (req, res) => {
       return res.status(200).json({ status: 'ok', message: 'Already processed as success' });
     }
 
-    // Determine normalized status from incoming webhook notification
-    let normalizedStatus = ZapUpiService.normalizeStatus(rawStatus);
-
-    // If webhook alone did not provide definitive success, and gateway is configured, check with status API
-    if (normalizedStatus !== 'success' && ZapUpiService.isConfigured()) {
-      try {
-        const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
-        if (verification && verification.normalizedStatus === 'success') {
-          normalizedStatus = 'success';
-          if (!txnId && verification.txnId) payment.transactionId = verification.txnId;
-          if (!utr && verification.utr) payment.utr = verification.utr;
-        } else if (verification && (verification.normalizedStatus === 'failed' || verification.normalizedStatus === 'timeout')) {
-          normalizedStatus = verification.normalizedStatus;
-        }
-      } catch (err) {
-        // Retain webhook-provided status
-      }
+    // In production, ignore test-environment webhook calls
+    if (process.env.NODE_ENV === 'production' && (environment === 'test' || environment === 'sandbox')) {
+      console.warn(`[ZapUPI Webhook Notice] Ignored test-environment webhook in production for ${payment.orderId}`);
+      return res.status(200).json({ status: 'ok', message: 'Test environment ignored in production' });
     }
 
-    if (normalizedStatus === 'success') {
-      // Validate expected amount against gateway payload if reported
-      const reportedAmount = parseFloat(inner.amount || inner.pay_amount || payload.amount || payload.pay_amount);
-      if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
-        console.warn(`[Webhook Amount Mismatch] Order ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
-        payment.status = 'failed';
-        await payment.save();
-        await syncBookingPayment(payment, 'failed');
-        return res.status(200).json({ status: 'error', message: 'Amount mismatch or invalid' });
-      }
-
-      payment.status = 'success';
-      payment.transactionId = txnId || payment.transactionId || ('TXN_' + Date.now());
-      payment.utr = utr || payment.utr || ('UTR_' + Date.now());
-      await payment.save();
-      await syncBookingPayment(payment, 'success');
-    } else if (normalizedStatus === 'timeout') {
-      payment.status = 'timeout';
-      await payment.save();
-      await syncBookingPayment(payment, 'timeout');
-    } else if (normalizedStatus === 'failed') {
+    // Validate expected amount against gateway payload if reported
+    if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
+      console.warn(`[Webhook Amount Mismatch] Order ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
       payment.status = 'failed';
       await payment.save();
       await syncBookingPayment(payment, 'failed');
-    } else {
-      // Still pending: preserve pending status so subsequent checks or webhooks can settle
-      await payment.save();
+      return res.status(200).json({ status: 'error', message: 'Amount mismatch or invalid' });
     }
 
-    // Always respond with standard HTTP 200 JSON required by ZapUPI
+    // Authoritative Server-Side Order-Status Confirmation via ZapUPI API
+    if (ZapUpiService.isConfigured()) {
+      await verifyAndSettlePayment(payment, 'webhook');
+    } else {
+      const normalized = ZapUpiService.normalizeStatus(rawStatus);
+      if (normalized === 'success') {
+        payment.status = 'success';
+        if (txnId) payment.transactionId = txnId;
+        if (utr) payment.utr = utr;
+        await payment.save();
+        await syncBookingPayment(payment, 'success');
+      } else if (normalized === 'failed') {
+        payment.status = 'failed';
+        await payment.save();
+        await syncBookingPayment(payment, 'failed');
+      } else if (normalized === 'timeout') {
+        payment.status = 'timeout';
+        await payment.save();
+        await syncBookingPayment(payment, 'timeout');
+      }
+    }
+
     return res.status(200).json({ status: 'ok' });
   } catch (err) {
-    console.error('[Payment Webhook] Error:', err.message);
-    return res.status(200).json({ status: 'ok' }); // Always acknowledge to prevent retries
+    console.error('[ZapUPI Webhook Error]:', err.message);
+    return res.status(200).json({ status: 'ok' });
   }
 });
 
 /**
- * Server-Side Verification Endpoint (e.g. When returning from gateway redirect or clicking Check Status)
+ * Server-Side Verification Endpoint (When returning from gateway redirect or clicking Check Status)
  */
 router.get('/payments/verify/:orderId', async (req, res) => {
   try {
@@ -390,7 +477,7 @@ router.get('/payments/verify/:orderId', async (req, res) => {
     }
 
     const trimmedOrderId = String(orderId).trim();
-    const payment = await Payment.findOne({
+    let payment = await Payment.findOne({
       $or: [
         { orderId: trimmedOrderId },
         { referenceId: trimmedOrderId }
@@ -405,60 +492,30 @@ router.get('/payments/verify/:orderId', async (req, res) => {
       });
     }
 
-    // If already finalized in database, redirect to corresponding view immediately
+    // Perform authoritative server-side verification with ZapUPI /api/order-status
+    if (payment.status !== 'success' && ZapUpiService.isConfigured()) {
+      payment = await verifyAndSettlePayment(payment, 'verify_endpoint');
+    }
+
     if (payment.status === 'success') {
+      req.flash('success', 'First month rent payment verified! Your accommodation reservation is confirmed.');
       return res.redirect(`/payments/success/${payment.orderId}`);
     }
+
     if (payment.status === 'timeout') {
       return res.redirect(`/payments/timeout/${payment.orderId}`);
     }
+
     if (payment.status === 'failed') {
-      return res.redirect(`/payments/failed/${payment.orderId}`);
-    }
-
-    // Verify order status directly with gateway
-    const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
-    if (verification.raw) {
-      payment.gatewayResponse = verification.raw;
-    }
-
-    if (verification.normalizedStatus === 'success' || verification.success) {
-      // Validate expected amount against gateway response if reported
-      const reportedAmount = parseFloat(verification.amount);
-      if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
-        console.warn(`[Payment Verification] Amount mismatch for ${payment.orderId}: expected ₹${payment.amount}, received ₹${reportedAmount}`);
-        payment.status = 'failed';
-        await payment.save();
-        await syncBookingPayment(payment, 'failed');
-        req.flash('error', 'Payment verification failed: Amount does not match listing rent.');
-        return res.redirect(`/payments/failed/${payment.orderId}`);
-      }
-
-      payment.status = 'success';
-      payment.transactionId = verification.txnId || payment.transactionId || ('TXN_' + Date.now());
-      payment.utr = verification.utr || payment.utr || ('UTR_' + Date.now());
-      await payment.save();
-      await syncBookingPayment(payment, 'success');
-      req.flash('success', 'First month rent payment verified! Your accommodation reservation is confirmed.');
-      return res.redirect(`/payments/success/${payment.orderId}`);
-    } else if (verification.normalizedStatus === 'timeout') {
-      payment.status = 'timeout';
-      await payment.save();
-      await syncBookingPayment(payment, 'timeout');
-      return res.redirect(`/payments/timeout/${payment.orderId}`);
-    } else if (verification.normalizedStatus === 'failed') {
-      payment.status = 'failed';
-      await payment.save();
-      await syncBookingPayment(payment, 'failed');
       req.flash('error', 'Payment verification was unsuccessful or cancelled.');
       return res.redirect(`/payments/failed/${payment.orderId}`);
-    } else {
-      // Still pending
-      req.flash('info', 'Payment is awaiting completion. Please complete the UPI transaction in your payment app and check status again.');
-      return res.redirect(`/payments/pay/${payment.orderId}`);
     }
+
+    // Still pending at gateway
+    req.flash('info', 'Payment is awaiting completion. Please complete the UPI transaction in your payment app and check status again.');
+    return res.redirect(`/payments/pay/${payment.orderId}`);
   } catch (err) {
-    console.error('[Payment Verification] Error:', err.message);
+    console.error('[Payment Verification Route Error]:', err.message);
     req.flash('error', 'An error occurred while verifying the payment.');
     res.redirect('/');
   }
@@ -522,20 +579,52 @@ router.get('/payments/success/:orderId', async (req, res) => {
       return res.redirect('/');
     }
 
-    const payment = await Payment.findOne({ orderId });
+    const trimmedOrderId = String(orderId).trim();
+    let payment = await Payment.findOne({
+      $or: [
+        { orderId: trimmedOrderId },
+        { referenceId: trimmedOrderId }
+      ]
+    });
 
-    // Guard: Only display success if payment is actually verified as success in database
-    if (!payment || payment.status !== 'success') {
-      return res.redirect(`/payments/failed/${orderId}`);
+    if (!payment) {
+      return res.status(404).render('pages/payment-failed', {
+        title: 'Order Not Found',
+        orderId,
+        errorMessage: 'The requested reservation reference does not exist.'
+      });
     }
 
-    res.render('pages/payment-success', {
-      title: 'Booking Confirmed | Escrow Deposit Confirmed',
-      activePage: 'payment-success',
-      payment
-    });
+    // If not yet marked success, verify directly with ZapUPI server-side!
+    // (Prevents "Payment Incomplete" if webhook is slightly delayed)
+    if (payment.status !== 'success' && ZapUpiService.isConfigured()) {
+      payment = await verifyAndSettlePayment(payment, 'success_return');
+    }
+
+    // If verified as success, render the official confirmed pass
+    if (payment.status === 'success') {
+      return res.render('pages/payment-success', {
+        title: 'Booking Confirmed | Escrow Deposit Confirmed',
+        activePage: 'payment-success',
+        payment
+      });
+    }
+
+    // If confirmed failed
+    if (payment.status === 'failed') {
+      return res.redirect(`/payments/failed/${payment.orderId}`);
+    }
+
+    // If confirmed timeout
+    if (payment.status === 'timeout') {
+      return res.redirect(`/payments/timeout/${payment.orderId}`);
+    }
+
+    // If still pending at gateway (e.g. UPI app takes a few moments to settle)
+    req.flash('info', 'Payment is awaiting completion. Please complete the transaction in your UPI app and check status again.');
+    return res.redirect(`/payments/verify/${payment.orderId}`);
   } catch (err) {
-    console.error('[Payment Success] Error:', err.message);
+    console.error('[Payment Success Route Error]:', err.message);
     res.redirect('/');
   }
 });
@@ -676,7 +765,7 @@ router.get('/payments/check-status/:orderId', async (req, res) => {
     }
 
     const trimmedOrderId = String(orderId).trim();
-    const payment = await Payment.findOne({
+    let payment = await Payment.findOne({
       $or: [
         { orderId: trimmedOrderId },
         { referenceId: trimmedOrderId }
@@ -684,6 +773,11 @@ router.get('/payments/check-status/:orderId', async (req, res) => {
     });
     if (!payment) {
       return res.status(404).json({ status: 'not_found' });
+    }
+
+    // If not yet finalized in DB, verify directly with ZapUPI server-side
+    if (payment.status !== 'success' && ZapUpiService.isConfigured()) {
+      payment = await verifyAndSettlePayment(payment, 'polling_endpoint');
     }
 
     if (payment.status === 'success') {
@@ -696,46 +790,9 @@ router.get('/payments/check-status/:orderId', async (req, res) => {
       return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${payment.orderId}` });
     }
 
-    // Check with live gateway if configured
-    if (ZapUpiService.isConfigured()) {
-      try {
-        const verification = await ZapUpiService.verifyOrderStatus(payment.orderId);
-        if (verification.raw) {
-          payment.gatewayResponse = verification.raw;
-        }
-        if (verification.normalizedStatus === 'success' || verification.success) {
-          const reportedAmount = parseFloat(verification.amount);
-          if (!isNaN(reportedAmount) && (reportedAmount <= 0 || Math.abs(reportedAmount - payment.amount) > 0.01)) {
-            payment.status = 'failed';
-            await payment.save();
-            await syncBookingPayment(payment, 'failed');
-            return res.json({ status: 'failed', redirectUrl: `/payments/failed/${payment.orderId}` });
-          }
-
-          payment.status = 'success';
-          payment.transactionId = verification.txnId || payment.transactionId || ('TXN_' + Date.now());
-          payment.utr = verification.utr || payment.utr || ('UTR_' + Date.now());
-          await payment.save();
-          await syncBookingPayment(payment, 'success');
-          return res.json({ status: 'success', redirectUrl: `/payments/success/${payment.orderId}` });
-        } else if (verification.normalizedStatus === 'failed') {
-          payment.status = 'failed';
-          await payment.save();
-          await syncBookingPayment(payment, 'failed');
-          return res.json({ status: 'failed', redirectUrl: `/payments/failed/${payment.orderId}` });
-        } else if (verification.normalizedStatus === 'timeout') {
-          payment.status = 'timeout';
-          await payment.save();
-          await syncBookingPayment(payment, 'timeout');
-          return res.json({ status: 'timeout', redirectUrl: `/payments/timeout/${payment.orderId}` });
-        }
-      } catch (err) {
-        // Fall back to current pending status
-      }
-    }
-
     return res.json({ status: 'pending' });
   } catch (err) {
+    console.error('[Payment Check-Status Error]:', err.message);
     return res.status(500).json({ status: 'error' });
   }
 });

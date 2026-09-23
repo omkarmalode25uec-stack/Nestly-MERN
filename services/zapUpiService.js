@@ -285,17 +285,21 @@ class ZapUpiService {
       }
 
       const isSuccess = normalizedStatus === 'success';
-      const amount = inner.amount || inner.pay_amount || data?.amount || data?.pay_amount || null;
+      const amount = inner.amount !== undefined ? inner.amount : (inner.pay_amount !== undefined ? inner.pay_amount : (data?.amount || data?.pay_amount || null));
       const txnId = inner.txn_id || inner.txnId || inner.transaction_id || data?.txn_id || data?.txnId || null;
       const utr = inner.utr || inner.bank_utr || inner.bank_rrn || data?.utr || data?.bank_utr || null;
+      const environment = inner.environment || data?.environment || 'cashier';
+      const verifiedOrderId = inner.order_id || inner.orderId || data?.order_id || orderId;
 
       return {
         success: isSuccess,
         status: rawStatus || normalizedStatus,
         normalizedStatus,
+        orderId: verifiedOrderId,
         amount,
         txnId,
         utr,
+        environment,
         raw: data
       };
     } catch (err) {
