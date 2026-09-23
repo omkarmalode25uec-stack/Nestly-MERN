@@ -12,6 +12,13 @@ const { isLoggedIn } = require('../middleware/auth');
 // Helper to validate and sanitize orderId parameter
 const isValidOrderId = (orderId) => typeof orderId === 'string' && /^[A-Za-z0-9_-]{3,64}$/.test(orderId);
 
+// Helper to reliably construct canonical base URL
+const getBaseUrl = (req) => {
+  const protocol = req.headers['x-forwarded-proto'] || (process.env.NODE_ENV === 'production' ? 'https' : req.protocol);
+  const host = req.get('host');
+  return `${protocol}://${host}`;
+};
+
 /**
  * Synchronize booking status and Escrow Settlement Ledger with payment outcome
  */
@@ -200,9 +207,7 @@ router.post('/payments/create-order', isLoggedIn, async (req, res) => {
     const orderId = 'ORD' + Math.floor(Date.now() / 1000) + Math.floor(100 + Math.random() * 900);
 
     // Determine gateway callback and redirect URLs
-    const protocol = req.headers['x-forwarded-proto'] || (process.env.NODE_ENV === 'production' ? 'https' : req.protocol);
-    const host = req.get('host');
-    const baseUrl = `${protocol}://${host}`;
+    const baseUrl = getBaseUrl(req);
     const webhookUrl = `${baseUrl}/payments/webhook`;
     const redirectUrl = `${baseUrl}/payments/verify/${orderId}`;
     const successUrl = `${baseUrl}/payments/success/${orderId}`;
@@ -624,6 +629,28 @@ router.get('/payments/pay/:orderId', async (req, res) => {
     // Redirect directly to ZapUPI's hosted gateway checkout page if present
     if (payment.paymentUrl && (payment.paymentUrl.startsWith('http://') || payment.paymentUrl.startsWith('https://'))) {
       return res.redirect(payment.paymentUrl);
+    }
+
+    // If paymentUrl is not yet generated, attempt to create it on the fly
+    if (ZapUpiService.isConfigured()) {
+      const baseUrl = getBaseUrl(req);
+      const gatewayResult = await ZapUpiService.createOrder({
+        orderId: payment.orderId,
+        amount: payment.amount,
+        customerMobile: payment.customerMobile,
+        remark: `Nestly ${payment.orderId}`,
+        webhookUrl: `${baseUrl}/payments/webhook`,
+        redirectUrl: `${baseUrl}/payments/verify/${payment.orderId}`,
+        successUrl: `${baseUrl}/payments/success/${payment.orderId}`,
+        failedUrl: `${baseUrl}/payments/failed/${payment.orderId}`,
+        timeoutUrl: `${baseUrl}/payments/timeout/${payment.orderId}`
+      });
+
+      if (gatewayResult.success && gatewayResult.paymentUrl) {
+        payment.paymentUrl = gatewayResult.paymentUrl;
+        await payment.save();
+        return res.redirect(gatewayResult.paymentUrl);
+      }
     }
 
     // If hosted gateway URL is missing, display clear configuration status
