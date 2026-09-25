@@ -455,11 +455,18 @@ router.get('/stays/:id', async (req, res, next) => {
       return res.redirect('/stays');
     }
 
-    const property = await Property.findById(id).populate('owner', 'name email phone avatar');
+    // Security requirement: Never leak owner phone or email in public listing view
+    const property = await Property.findById(id).populate('owner', 'name avatar verificationStatus ownerType');
 
     if (!property) {
       req.flash('error', 'Accommodation listing not found.');
       return res.redirect('/stays');
+    }
+
+    // Keep contact phone private server-side (only property owner or admin can see direct phone)
+    const isOwnerOrAdmin = req.user && (req.user._id.equals(property.owner._id) || req.user.role === 'admin');
+    if (!isOwnerOrAdmin) {
+      property.contactPhone = undefined;
     }
 
     const reviews = await Review.find({ property: id })

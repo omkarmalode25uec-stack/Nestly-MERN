@@ -16,7 +16,7 @@ if (process.platform === 'win32') {
   const currentServers = dns.getServers()
   if (currentServers.length === 1 && currentServers[0] === '127.0.0.1') {
     try {
-      dns.setServers(['8.8.8.8', '1.1.1.1'])
+      dns.setServers(['10.119.201.61', '1.1.1.1', '8.8.8.8'])
     } catch (e) {}
   }
 }
@@ -104,14 +104,38 @@ passport.deserializeUser(User.deserializeUser())
 
 const { getPrimaryServiceArea, getActiveLocationQueryFilter } = require('./config/serviceArea')
 
+const NotificationService = require('./services/notificationService')
+const Chat = require('./models/Chat')
+const RentCycleService = require('./services/rentCycleService')
+
 // template locals
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.success = req.flash('success')
   res.locals.error = req.flash('error')
   res.locals.info = req.flash('info')
   res.locals.currentUser = req.user || null
   res.locals.primaryServiceArea = getPrimaryServiceArea()
   res.locals.mapboxToken = process.env.MAPBOX_ACCESS_TOKEN || process.env.MAP_TOKEN || ''
+  res.locals.unreadNotificationsCount = 0
+  res.locals.unreadChatsCount = 0
+
+  if (req.user) {
+    try {
+      const isOwner = req.user.role === 'owner'
+      const chatQuery = isOwner
+        ? { owner: req.user._id, unreadByOwner: { $gt: 0 } }
+        : { student: req.user._id, unreadByStudent: { $gt: 0 } }
+
+      const [notifCount, chatCount] = await Promise.all([
+        NotificationService.getUnreadCount(req.user._id),
+        Chat.countDocuments(chatQuery)
+      ])
+      res.locals.unreadNotificationsCount = notifCount || 0
+      res.locals.unreadChatsCount = chatCount || 0
+    } catch (countErr) {
+      // Non-blocking fallback
+    }
+  }
   next()
 })
 
@@ -123,6 +147,19 @@ const paymentRoutes = require('./routes/paymentRoutes')
 const ownerRoutes = require('./routes/ownerRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
 const adminRoutes = require('./routes/adminRoutes')
+const chatRoutes = require('./routes/chatRoutes')
+const notificationRoutes = require('./routes/notificationRoutes')
+
+// Automated rent cycle background processing on connection
+mongoose.connection.once('open', () => {
+  RentCycleService.processAllActiveRentCycles()
+    .then((r) => console.log(`[RentCycleService] Initial cycle sync completed: ${r.processed || 0} active stays checked.`))
+    .catch((err) => console.log('[RentCycleService] Initial cycle sync notice:', err.message))
+
+  setInterval(() => {
+    RentCycleService.processAllActiveRentCycles().catch(() => {})
+  }, 12 * 60 * 60 * 1000)
+})
 
 const Property = require('./models/Property')
 
@@ -154,6 +191,8 @@ app.use(profileRoutes)
 app.use(propertyRoutes)
 app.use(bookingRoutes)
 app.use(paymentRoutes)
+app.use(chatRoutes)
+app.use(notificationRoutes)
 app.use(reviewRoutes)
 app.use('/owner', ownerRoutes)
 app.use('/admin', adminRoutes)

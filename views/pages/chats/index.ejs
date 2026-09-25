@@ -1,0 +1,132 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <div class="max-w-5xl mx-auto px-margin-mobile md:px-margin space-y-space-lg">
+
+    <!-- Header & Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md pb-space-sm border-b border-outline-variant/30">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[18px] text-primary">chat</span>
+          <span>In-App Messages</span>
+        </div>
+        <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">
+          <%= isOwner ? 'Student Inquiries & Messages' : 'Host Inquiries & Conversations' %>
+        </h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          <%= isOwner ? 'Respond to student questions regarding availability, rent, and house rules with complete privacy.' : 'Communicate directly with verified accommodation hosts without sharing personal contact numbers.' %>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-space-sm">
+        <a href="<%= isOwner ? '/owner/dashboard' : '/stays' %>" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+          <span class="material-symbols-outlined text-[18px]"><%= isOwner ? 'dashboard' : 'search' %></span>
+          <span><%= isOwner ? 'Owner Dashboard' : 'Explore Stays' %></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Security & Privacy Banner -->
+    <div class="p-space-md rounded-2xl bg-secondary-container/30 border border-secondary/20 flex items-start gap-space-md">
+      <div class="w-10 h-10 rounded-xl bg-secondary-container text-primary flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[22px]">shield</span>
+      </div>
+      <div class="space-y-0.5 text-xs text-on-surface-variant">
+        <p class="font-bold text-on-surface text-sm">Protected Direct Communication</p>
+        <p>Personal phone numbers and contact details are kept strictly private on Nestly. All stay discussions, room inquiries, and rent updates occur securely within this channel.</p>
+      </div>
+    </div>
+
+    <!-- Chat Threads List -->
+    <% if (chats && chats.length > 0) { %>
+      <div class="space-y-space-xs">
+        <% chats.forEach(chat => { %>
+          <% 
+            const partner = isOwner ? chat.student : chat.owner;
+            const unreadCount = isOwner ? (chat.unreadByOwner || 0) : (chat.unreadByStudent || 0);
+            const isUnread = unreadCount > 0;
+          %>
+          <a href="/chats/<%= chat._id %>" class="block p-space-md rounded-2xl transition-all border <%= isUnread ? 'bg-surface-container-lowest border-primary/40 shadow-sm ring-1 ring-primary/20' : 'bg-surface-container-lowest hover:bg-surface-container-low border-outline-variant/30' %>">
+            <div class="flex items-start sm:items-center justify-between gap-space-md">
+              
+              <!-- Avatar & Identity -->
+              <div class="flex items-center gap-space-md min-w-0">
+                <div class="relative shrink-0">
+                  <img class="w-12 h-12 rounded-full object-cover ring-2 <%= isUnread ? 'ring-primary' : 'ring-outline-variant/40' %>" src="<%= (partner && partner.avatar) ? partner.avatar : 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAqpTMQUCkhceotbCDpxAeWqtXHfAaUd_MvLbHpoUKqbSReNrdROy2OxJ61b2HqePtFbEMVR10ceaXifCBtpESiztRrvm8YE-x5_CI3jGo4SfPWrOHiQ8ZEMQWrK4aFi6A_w_5fYZW8xVmq0M2Wfi2nQl26KqZ1Y9c-Gd9B8S9ay1POG96lryJev6l73TDl0uvnogfOth_Tx2LfXvMyBHZr4hxiN1CYSdO86eYigQFE-EKDCs9yeUs' %>" alt="<%= partner ? partner.name : 'User' %>"/>
+                  <% if (isUnread) { %>
+                    <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-primary border-2 border-surface-container-lowest"></span>
+                  <% } %>
+                </div>
+
+                <div class="space-y-0.5 min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-title-md text-title-md <%= isUnread ? 'font-bold text-on-surface' : 'font-semibold text-on-surface' %> truncate">
+                      <%= partner ? partner.name : (isOwner ? 'Student' : 'Property Host') %>
+                    </span>
+                    <% if (isOwner && partner && partner.college) { %>
+                      <span class="text-xs px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-medium truncate max-w-[160px]">
+                        <%= partner.college %>
+                      </span>
+                    <% } %>
+                    <% if (!isOwner && partner && partner.role === 'owner') { %>
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-semibold flex items-center gap-0.5">
+                        <span class="material-symbols-outlined text-[12px]">verified</span>
+                        Host
+                      </span>
+                    <% } %>
+                    <span class="text-xs px-2 py-0.5 rounded-md bg-surface-container text-secondary capitalize font-medium">
+                      <%= chat.topic || 'General' %>
+                    </span>
+                  </div>
+
+                  <p class="font-body-sm text-body-sm <%= isUnread ? 'font-semibold text-on-surface' : 'text-on-surface-variant' %> truncate max-w-lg">
+                    <%= chat.lastMessage || 'Conversation started...' %>
+                  </p>
+
+                  <p class="text-[11px] text-outline flex items-center gap-1">
+                    <span class="material-symbols-outlined text-[13px]">apartment</span>
+                    <span class="truncate"><%= chat.property ? chat.property.title : 'Accommodation' %> • <%= chat.property ? chat.property.locality : '' %></span>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Time & Unread Badge -->
+              <div class="flex flex-col items-end gap-1.5 shrink-0 pl-2">
+                <span class="text-[11px] font-medium <%= isUnread ? 'text-primary font-bold' : 'text-on-surface-variant' %>">
+                  <%= new Date(chat.lastMessageAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %>
+                </span>
+                <% if (unreadCount > 0) { %>
+                  <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary text-[11px] font-bold">
+                    <%= unreadCount %> new
+                  </span>
+                <% } %>
+                <span class="material-symbols-outlined text-[18px] text-outline-variant hidden sm:inline">chevron_right</span>
+              </div>
+
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <!-- Empty State -->
+      <div class="p-space-2xl rounded-2xl bg-surface-container-lowest border border-outline-variant/30 text-center space-y-space-md">
+        <div class="w-16 h-16 rounded-full bg-secondary-container text-primary flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-[32px]">chat_bubble_outline</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-title-lg text-title-lg font-bold text-on-surface">No conversations yet</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto">
+            <%= isOwner ? 'When students send inquiries about your listings, you will see their questions here and can reply directly.' : 'Have a question about a stay? Open any listing and click "Chat with Owner" to ask about room sharing, rent, or amenities.' %>
+          </p>
+        </div>
+        <div class="pt-2">
+          <a href="<%= isOwner ? '/owner/dashboard' : '/stays' %>" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-on-primary-fixed-variant transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[18px]"><%= isOwner ? 'dashboard' : 'search' %></span>
+            <span><%= isOwner ? 'Back to Dashboard' : 'Explore Accommodations' %></span>
+          </a>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</div>

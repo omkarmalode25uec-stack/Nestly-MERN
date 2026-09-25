@@ -46,6 +46,28 @@
       </a>
 
       <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <!-- Messages & Inquiries Icon -->
+        <a class="relative flex items-center justify-center w-10 h-10 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors" href="/chats" title="Messages &amp; Inquiries">
+          <span class="material-symbols-outlined text-[22px]">chat</span>
+          <% if (typeof unreadChatsCount !== 'undefined' && unreadChatsCount > 0) { %>
+            <span class="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-primary text-on-primary font-label-sm text-[10px] font-bold">
+              <%= unreadChatsCount %>
+            </span>
+          <% } %>
+        </a>
+
+        <!-- Notifications Icon -->
+        <a class="relative flex items-center justify-center w-10 h-10 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-colors" href="/notifications" title="Notifications &amp; Alerts">
+          <span class="material-symbols-outlined text-[22px]">notifications</span>
+          <% if (typeof unreadNotificationsCount !== 'undefined' && unreadNotificationsCount > 0) { %>
+            <span class="absolute top-1 right-1 flex items-center justify-center min-w-4 h-4 px-1 rounded-full bg-amber-600 text-white font-label-sm text-[10px] font-bold animate-pulse">
+              <%= unreadNotificationsCount %>
+            </span>
+          <% } %>
+        </a>
+      <% } %>
+
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
         <!-- Logged-in User Profile Dropdown Pill -->
         <div class="relative" id="userMenuContainer">
           <button class="flex items-center gap-space-sm p-1.5 rounded-lg hover:bg-surface-container-low transition-colors text-left focus:outline-none cursor-pointer" type="button" id="userMenuToggle">
@@ -101,6 +123,26 @@
                 </a>
               <% } %>
             <% } %>
+
+            <a href="/chats" class="flex items-center justify-between px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-secondary">chat</span>
+                <span>Messages</span>
+              </span>
+              <% if (typeof unreadChatsCount !== 'undefined' && unreadChatsCount > 0) { %>
+                <span class="px-2 py-0.5 rounded-full bg-primary text-on-primary text-[10px] font-bold"><%= unreadChatsCount %></span>
+              <% } %>
+            </a>
+
+            <a href="/notifications" class="flex items-center justify-between px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+              <span class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-secondary">notifications</span>
+                <span>Notifications</span>
+              </span>
+              <% if (typeof unreadNotificationsCount !== 'undefined' && unreadNotificationsCount > 0) { %>
+                <span class="px-2 py-0.5 rounded-full bg-amber-600 text-white text-[10px] font-bold"><%= unreadNotificationsCount %></span>
+              <% } %>
+            </a>
 
             <a href="/profile" class="flex items-center gap-2 px-4 py-2 font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
               <span class="material-symbols-outlined text-[18px] text-secondary">person</span>
@@ -158,6 +200,8 @@
     <% } %>
 
     <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'chats' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/chats">Messages <%= (typeof unreadChatsCount !== 'undefined' && unreadChatsCount > 0) ? '(' + unreadChatsCount + ')' : '' %></a>
+      <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'notifications' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/notifications">Notifications <%= (typeof unreadNotificationsCount !== 'undefined' && unreadNotificationsCount > 0) ? '(' + unreadNotificationsCount + ')' : '' %></a>
       <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'profile' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/profile">My Profile</a>
       <% if (currentUser.role === 'student') { %>
         <a class="block px-space-md py-2.5 rounded-lg font-label-lg text-label-lg <%= typeof activePage !== 'undefined' && activePage === 'bookings' ? 'bg-secondary-container text-on-secondary-container' : 'text-on-surface-variant hover:bg-surface-container-low' %>" href="/bookings">My Bookings</a>

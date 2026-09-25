@@ -70,6 +70,29 @@ const bookingSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Payment',
       default: null
+    },
+    nextDueDate: {
+      type: Date,
+      default: null
+    },
+    stayEndDate: {
+      type: Date,
+      default: null
+    },
+    totalCycles: {
+      type: Number,
+      default: function () {
+        return this.durationMonths || 10;
+      }
+    },
+    paidCycles: {
+      type: Number,
+      default: 0
+    },
+    rentCycleStatus: {
+      type: String,
+      enum: ['paid', 'due', 'overdue', 'completed'],
+      default: 'paid'
     }
   },
   {

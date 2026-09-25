@@ -45,8 +45,61 @@ async function syncBookingPayment(payment, outcome) {
         });
       }
 
-      // Escrow Settlement Architecture:
-      // Create pending owner settlement ledger entry upon successful student payment (first month's rent)
+      // Synchronize rent cycles and notifications
+      const RentCycleService = require('../services/rentCycleService');
+      const RentPayment = require('../models/RentPayment');
+      const NotificationService = require('../services/notificationService');
+
+      if (payment.paymentType === 'monthly_rent' && payment.rentPayment) {
+        const rentPayment = await RentPayment.findById(payment.rentPayment);
+        if (rentPayment && rentPayment.status !== 'paid') {
+          rentPayment.status = 'paid';
+          rentPayment.paidAt = new Date();
+          rentPayment.zapUpiOrderId = payment.orderId;
+          rentPayment.zapUpiTxnId = payment.transactionId || null;
+          rentPayment.zapUpiUtr = payment.utr || null;
+          await rentPayment.save();
+
+          await RentCycleService.syncBookingCycles(booking);
+
+          await NotificationService.send({
+            recipient: booking.user,
+            type: 'payment_success',
+            title: `Rent Payment Verified: ₹${payment.amount.toLocaleString('en-IN')}`,
+            message: `Your rent payment of ₹${payment.amount.toLocaleString('en-IN')} for Month ${rentPayment.cycleNumber} has been verified and settled.`,
+            link: `/bookings/${booking._id}`
+          });
+
+          await NotificationService.send({
+            recipient: booking.owner,
+            type: 'payment_success',
+            title: `Rent Payment Received: ₹${payment.amount.toLocaleString('en-IN')}`,
+            message: `Received ₹${payment.amount.toLocaleString('en-IN')} from ${payment.customerName || 'Student'} for ${payment.propertyTitle || 'Stay'}.`,
+            link: `/owner/dashboard`
+          });
+        }
+      } else {
+        // Initial booking payment confirmed
+        await RentCycleService.syncBookingCycles(booking);
+
+        await NotificationService.send({
+          recipient: booking.user,
+          type: 'payment_success',
+          title: 'Reservation Confirmed',
+          message: `Your reservation payment of ₹${payment.amount.toLocaleString('en-IN')} is confirmed. Your unit allocation pass is ready.`,
+          link: `/payments/success/${payment.orderId}`
+        });
+
+        await NotificationService.send({
+          recipient: booking.owner,
+          type: 'new_booking',
+          title: 'New Student Booking Confirmed',
+          message: `${payment.customerName || 'A student'} reserved a bed in ${payment.propertyTitle || 'Stay'}. First month rent of ₹${payment.amount.toLocaleString('en-IN')} received.`,
+          link: `/owner/dashboard`
+        });
+      }
+
+      // Record owner settlement entry
       const ownerId = booking.owner || (booking.property && booking.property.owner);
       if (ownerId) {
         const owner = await User.findById(ownerId);
@@ -61,7 +114,7 @@ async function syncBookingPayment(payment, outcome) {
             payment: payment._id,
             property: booking.property._id || booking.property,
             grossAmount: payableRent,
-            platformFee: 0, // Zero broker fee under Nestly Student Guarantee
+            platformFee: 0,
             netAmount: payableRent,
             status: 'pending',
             settlementMethod: profile.settlementMethod || 'upi',
@@ -69,7 +122,7 @@ async function syncBookingPayment(payment, outcome) {
             destinationAccountHolder: profile.accountHolderName || (owner ? owner.name : ''),
             destinationBankName: profile.bankName || '',
             destinationAccountNumberMasked: profile.accountNumber ? `******${profile.accountNumber.slice(-4)}` : '',
-            notes: `First month rent escrow for Booking ${booking.referenceCode || booking._id}`
+            notes: `${payment.paymentType === 'monthly_rent' ? 'Monthly rent' : 'First month rent'} for Booking ${booking.referenceCode || booking._id}`
           });
           await settlement.save();
         }
@@ -232,6 +285,176 @@ router.get('/checkout', isLoggedIn, async (req, res) => {
     });
   } catch (err) {
     res.redirect('/stays');
+  }
+});
+
+/**
+ * Render Monthly Rent Checkout Page
+ */
+router.get('/checkout/rent/:rentPaymentId', isLoggedIn, async (req, res) => {
+  try {
+    const { rentPaymentId } = req.params;
+
+    if (!rentPaymentId || !mongoose.Types.ObjectId.isValid(rentPaymentId)) {
+      req.flash('error', 'Rent payment reference not found.');
+      return res.redirect('/bookings');
+    }
+
+    const RentPayment = require('../models/RentPayment');
+    const rentPayment = await RentPayment.findById(rentPaymentId)
+      .populate('booking')
+      .populate('property')
+      .populate('student');
+
+    if (!rentPayment) {
+      req.flash('error', 'Rent payment record not found.');
+      return res.redirect('/bookings');
+    }
+
+    // Security Authorization: strictly the student who booked or admin
+    if (!rentPayment.student._id.equals(req.user._id) && req.user.role !== 'admin') {
+      req.flash('error', 'You are not authorized to view this rent payment.');
+      return res.redirect('/bookings');
+    }
+
+    if (rentPayment.status === 'paid') {
+      req.flash('info', `Rent for Month ${rentPayment.cycleNumber} is already paid.`);
+      return res.redirect(`/bookings/${rentPayment.booking._id}`);
+    }
+
+    res.render('pages/checkout-rent', {
+      title: `Pay Monthly Rent • Month ${rentPayment.cycleNumber}`,
+      activePage: 'checkout',
+      rentPayment,
+      booking: rentPayment.booking,
+      property: rentPayment.property,
+      currentUser: req.user
+    });
+  } catch (err) {
+    req.flash('error', 'Unable to load rent checkout.');
+    res.redirect('/bookings');
+  }
+});
+
+/**
+ * Create Payment Order for Monthly Rent with ZapUPI gateway
+ */
+router.post('/payments/create-rent-order', isLoggedIn, async (req, res) => {
+  try {
+    const { rentPaymentId } = req.body;
+
+    if (!rentPaymentId || !mongoose.Types.ObjectId.isValid(rentPaymentId)) {
+      req.flash('error', 'Invalid rent payment reference.');
+      return res.redirect('/bookings');
+    }
+
+    const RentPayment = require('../models/RentPayment');
+    const rentPayment = await RentPayment.findById(rentPaymentId)
+      .populate('booking')
+      .populate('property')
+      .populate('owner');
+
+    if (!rentPayment) {
+      req.flash('error', 'Rent payment record not found.');
+      return res.redirect('/bookings');
+    }
+
+    if (!rentPayment.student.equals(req.user._id) && req.user.role !== 'admin') {
+      req.flash('error', 'Access denied.');
+      return res.redirect('/bookings');
+    }
+
+    if (rentPayment.status === 'paid') {
+      req.flash('info', 'This monthly rent is already paid.');
+      return res.redirect(`/bookings/${rentPayment.booking._id}`);
+    }
+
+    // Amount strictly from trusted database record
+    const amount = rentPayment.amount;
+
+    // Generate unique order ID conforming to ZapUPI ORD format
+    const orderId = 'ORD' + Math.floor(Date.now() / 1000) + Math.floor(100 + Math.random() * 900);
+
+    const baseUrl = getBaseUrl(req);
+    const webhookUrl = `${baseUrl}/payments/webhook`;
+    const redirectUrl = `${baseUrl}/payments/verify/${orderId}`;
+    const successUrl = `${baseUrl}/payments/success/${orderId}`;
+    const failedUrl = `${baseUrl}/payments/failed/${orderId}`;
+    const timeoutUrl = `${baseUrl}/payments/timeout/${orderId}`;
+
+    const resolvedMobile = (req.user && req.user.phone) || '9876543210';
+    const resolvedName = (req.user && req.user.name) || 'Student Resident';
+    const propertyTitle = rentPayment.property ? rentPayment.property.title : 'Accommodation';
+
+    // Create Payment record
+    const payment = new Payment({
+      user: req.user._id,
+      booking: rentPayment.booking._id,
+      rentPayment: rentPayment._id,
+      paymentType: 'monthly_rent',
+      owner: rentPayment.owner ? (rentPayment.owner._id || rentPayment.owner) : null,
+      property: rentPayment.property ? (rentPayment.property._id || rentPayment.property) : null,
+      orderId,
+      referenceId: orderId,
+      propertyTitle: String(propertyTitle).substring(0, 100),
+      roomNumber: `Month ${rentPayment.cycleNumber} Rent`,
+      customerName: String(resolvedName).substring(0, 100),
+      customerMobile: String(resolvedMobile).substring(0, 15),
+      amount,
+      status: 'pending'
+    });
+    await payment.save();
+
+    // Call ZapUPI Gateway
+    const gatewayResult = await ZapUpiService.createOrder({
+      orderId,
+      amount,
+      customerMobile: resolvedMobile,
+      remark: `Nestly Rent Month ${rentPayment.cycleNumber}`,
+      webhookUrl,
+      redirectUrl,
+      successUrl,
+      failedUrl,
+      timeoutUrl
+    });
+
+    if (!gatewayResult.success) {
+      payment.status = 'failed';
+      payment.gatewayResponse = {
+        error: gatewayResult.error,
+        httpStatus: gatewayResult.httpStatus || null,
+        providerStatus: gatewayResult.rawStatus || null,
+        isProviderBalanceError: !!gatewayResult.isProviderBalanceError
+      };
+      await payment.save();
+
+      let studentErrorMessage = 'Payment could not be started. Please try again later.';
+      if (gatewayResult.isProviderBalanceError) {
+        console.error(`[ZapUPI Merchant Notice] Provider returned "${gatewayResult.error}" for rent order ${orderId} (₹${amount}).`);
+        studentErrorMessage = 'Payment could not be started. Please try again later.';
+      } else if (gatewayResult.error && !/invalid|unauthorized|internal|secret|key/i.test(gatewayResult.error)) {
+        studentErrorMessage = gatewayResult.error;
+      }
+
+      return res.status(400).render('pages/payment-failed', {
+        title: 'Payment Could Not Be Started',
+        orderId,
+        payment,
+        errorMessage: studentErrorMessage
+      });
+    }
+
+    payment.paymentUrl = gatewayResult.paymentUrl;
+    await payment.save();
+
+    return res.redirect(gatewayResult.paymentUrl);
+  } catch (err) {
+    console.error('[Payment] Create rent order error:', err.message);
+    res.status(500).render('pages/payment-failed', {
+      title: 'Payment Error',
+      orderId: 'N/A',
+      errorMessage: 'An unexpected server error occurred while initiating your rent payment.'
+    });
   }
 });
 

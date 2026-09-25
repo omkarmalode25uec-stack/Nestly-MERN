@@ -25,6 +25,10 @@
 
     <!-- Controls / Action Buttons -->
     <div class="flex flex-wrap items-center gap-space-sm">
+      <a href="/chats" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
+        <span class="material-symbols-outlined text-[18px]">chat</span>
+        <span>Student Inquiries</span>
+      </a>
       <a href="/stays" class="inline-flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors">
         <span class="material-symbols-outlined text-[18px]">visibility</span>
         <span>Student View</span>
@@ -132,59 +136,311 @@
     </div>
   </section>
 
-  <!-- Payouts & Escrow Settlement Hub Overview -->
+  <!-- Stay Management: My Students Section (Stitch Partner Hub) -->
+  <section class="space-y-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+      <div class="space-y-0.5">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-[24px]">group</span>
+          <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Stay Management: My Students</h2>
+          <span class="px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+            <%= (typeof studentManagement !== 'undefined' && studentManagement.students) ? studentManagement.students.length : 0 %> Residents
+          </span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Active resident tenancies, dynamic monthly billing cycles, and payment status tracking.
+        </p>
+      </div>
+    </div>
+
+    <!-- 5-Card Summary Grid for Stay Management -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-space-sm">
+      <!-- Active Students -->
+      <div class="p-space-md rounded-2xl bg-surface-container-lowest border border-outline-variant/30 space-y-1 shadow-sm">
+        <span class="text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold block">Active Residents</span>
+        <div class="font-headline-sm text-headline-sm font-bold text-on-surface">
+          <%= (typeof studentManagement !== 'undefined' && studentManagement.stats) ? studentManagement.stats.totalActiveStudents : 0 %>
+        </div>
+        <p class="text-[11px] text-primary font-medium">Currently residing</p>
+      </div>
+
+      <!-- Payments Received -->
+      <div class="p-space-md rounded-2xl bg-emerald-50/70 border border-emerald-200/80 space-y-1 shadow-sm">
+        <span class="text-[11px] uppercase tracking-wider text-emerald-800 font-semibold block">Cycles Paid</span>
+        <div class="font-headline-sm text-headline-sm font-bold text-emerald-900">
+          <%= (typeof studentManagement !== 'undefined' && studentManagement.stats) ? studentManagement.stats.paymentsReceived : 0 %>
+        </div>
+        <p class="text-[11px] text-emerald-700 font-medium">Up to date</p>
+      </div>
+
+      <!-- Payments Due -->
+      <div class="p-space-md rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-1 shadow-sm">
+        <span class="text-[11px] uppercase tracking-wider text-amber-800 font-semibold block">Rent Due</span>
+        <div class="font-headline-sm text-headline-sm font-bold text-amber-900">
+          <%= (typeof studentManagement !== 'undefined' && studentManagement.stats) ? studentManagement.stats.paymentsDue : 0 %>
+        </div>
+        <p class="text-[11px] text-amber-700 font-medium">In payment window</p>
+      </div>
+
+      <!-- Overdue Payments -->
+      <div class="p-space-md rounded-2xl bg-red-50/70 border border-red-200/80 space-y-1 shadow-sm">
+        <span class="text-[11px] uppercase tracking-wider text-red-800 font-semibold block">Overdue</span>
+        <div class="font-headline-sm text-headline-sm font-bold text-red-900">
+          <%= (typeof studentManagement !== 'undefined' && studentManagement.stats) ? studentManagement.stats.overduePayments : 0 %>
+        </div>
+        <p class="text-[11px] text-red-700 font-medium">Action required</p>
+      </div>
+
+      <!-- Upcoming Renewals -->
+      <div class="p-space-md rounded-2xl bg-secondary-container/40 border border-secondary/20 space-y-1 shadow-sm col-span-2 sm:col-span-1">
+        <span class="text-[11px] uppercase tracking-wider text-secondary font-semibold block">Upcoming Term Ends</span>
+        <div class="font-headline-sm text-headline-sm font-bold text-on-secondary-container">
+          <%= (typeof studentManagement !== 'undefined' && studentManagement.stats) ? studentManagement.stats.upcomingRenewals : 0 %>
+        </div>
+        <p class="text-[11px] text-secondary font-medium">Within 30 days</p>
+      </div>
+    </div>
+
+    <!-- Active Students Table -->
+    <% if (typeof studentManagement !== 'undefined' && studentManagement.students && studentManagement.students.length > 0) { %>
+      <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-surface-container-low text-[11px] uppercase tracking-wider text-on-surface-variant font-semibold border-b border-outline-variant/30">
+                <th class="py-3 px-4">Student Resident</th>
+                <th class="py-3 px-4">Stay &amp; Room</th>
+                <th class="py-3 px-4">Stay Dates</th>
+                <th class="py-3 px-4">Monthly Rent</th>
+                <th class="py-3 px-4">Next Due Date</th>
+                <th class="py-3 px-4">Cycle Status</th>
+                <th class="py-3 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/20 text-sm">
+              <% studentManagement.students.forEach(st => { %>
+                <tr class="hover:bg-surface-container-low/50 transition-colors">
+                  <td class="py-3 px-4">
+                    <div class="flex items-center gap-2.5">
+                      <img src="<%= st.studentAvatar || 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAqpTMQUCkhceotbCDpxAeWqtXHfAaUd_MvLbHpoUKqbSReNrdROy2OxJ61b2HqePtFbEMVR10ceaXifCBtpESiztRrvm8YE-x5_CI3jGo4SfPWrOHiQ8ZEMQWrK4aFi6A_w_5fYZW8xVmq0M2Wfi2nQl26KqZ1Y9c-Gd9B8S9ay1POG96lryJev6l73TDl0uvnogfOth_Tx2LfXvMyBHZr4hxiN1CYSdO86eYigQFE-EKDCs9yeUs' %>" alt="<%= st.studentName %>" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/40 shrink-0"/>
+                      <div>
+                        <p class="font-semibold text-on-surface"><%= st.studentName %></p>
+                        <p class="text-[11px] text-on-surface-variant"><%= st.studentCollege || 'Verified Student' %></p>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="py-3 px-4">
+                    <p class="font-medium text-on-surface"><%= st.propertyTitle %></p>
+                    <p class="text-[11px] text-outline"><%= st.roomNumber %></p>
+                  </td>
+                  <td class="py-3 px-4 text-xs text-on-surface-variant">
+                    <p>From: <strong class="text-on-surface"><%= new Date(st.moveInDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></strong></p>
+                    <p>To: <%= new Date(st.stayEndDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                  </td>
+                  <td class="py-3 px-4 font-bold text-tertiary-container">
+                    ₹<%= (st.monthlyRent || 0).toLocaleString('en-IN') %>/mo
+                  </td>
+                  <td class="py-3 px-4 text-xs">
+                    <% if (st.nextDueDate) { %>
+                      <p class="font-bold text-on-surface"><%= new Date(st.nextDueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                      <p class="text-[11px] text-outline">Cycle <%= st.paidCycles %> of <%= st.totalCycles %> paid</p>
+                    <% } else { %>
+                      <span class="text-outline">Term completed</span>
+                    <% } %>
+                  </td>
+                  <td class="py-3 px-4">
+                    <% if (st.currentStatus === 'Paid') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">
+                        <span class="material-symbols-outlined text-[13px]">check_circle</span>
+                        Paid
+                      </span>
+                    <% } else if (st.currentStatus === 'Overdue') { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-bold animate-pulse">
+                        <span class="material-symbols-outlined text-[13px]">warning</span>
+                        Overdue
+                      </span>
+                    <% } else { %>
+                      <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
+                        <span class="material-symbols-outlined text-[13px]">schedule</span>
+                        Due
+                      </span>
+                    <% } %>
+                  </td>
+                  <td class="py-3 px-4 text-right">
+                    <div class="flex items-center justify-end gap-1.5">
+                      <a href="/bookings/<%= st.bookingId %>" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition-colors">
+                        Pass
+                      </a>
+                      <a href="/chats/start?propertyId=<%= st.propertyId %>" class="px-2.5 py-1 rounded-lg bg-primary hover:bg-on-primary-fixed-variant text-on-primary text-xs font-bold transition-all shadow-sm flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">chat</span>
+                        <span>Chat</span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 text-center space-y-1 shadow-sm">
+        <span class="material-symbols-outlined text-[28px] text-outline-variant">person_search</span>
+        <p class="font-title-md text-title-md text-on-surface font-semibold">No active student tenancies</p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">When students book accommodations and their reservations are confirmed, their monthly billing cycles and tenancy progress will appear here.</p>
+      </div>
+    <% } %>
+  </section>
+
+  <!-- Verified Rent & Deposit Ledger Section (Stitch Partner Hub) -->
   <section class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-md">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-outline-variant/20 pb-space-md">
       <div class="space-y-1">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[22px]">account_balance_wallet</span>
-          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Escrow Deposits &amp; Settlements</h2>
-          <% if (currentUser.settlementProfile && currentUser.settlementProfile.isConfigured) { %>
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
-              <span class="material-symbols-outlined text-[13px]">check_circle</span>
-              Payout Destination Set
-            </span>
-          <% } else { %>
-            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200 font-label-sm text-label-sm font-semibold">
-              <span class="material-symbols-outlined text-[13px]">warning</span>
-              Payout Account Unset
-            </span>
-          <% } %>
+          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Verified Rent &amp; Deposit Ledger</h2>
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">
+            <span class="material-symbols-outlined text-[13px]">verified</span>
+            Cryptographically Verified
+          </span>
         </div>
         <p class="font-body-sm text-body-sm text-on-surface-variant">
-          First month rent deposits collected via ZapUPI PayIn enter platform escrow and disburse directly to your registered destination.
+          All calculations are strictly derived from verified ZapUPI checkout transactions in the Nestly database.
         </p>
       </div>
       <a href="/owner/settlement" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-on-primary-fixed-variant font-label-md text-label-md font-bold transition-all shadow-sm self-start sm:self-auto whitespace-nowrap">
-        <span>Payout Ledger &amp; Settings</span>
+        <span>Settlement Ledger &amp; Bank Settings</span>
         <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
       </a>
     </div>
 
-    <!-- Settlement Metric Tiles -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-md pt-space-xs">
+    <!-- Verified Metric Tiles -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md pt-space-xs">
       <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-1">
-        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Escrow Collected</span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Total Verified Collected</span>
         <div class="font-headline-md text-headline-md font-bold text-on-surface">
-          ₹<%= ((stats && stats.totalCollected) || 0).toLocaleString('en-IN') %>
+          ₹<%= ((typeof ledgerData !== 'undefined' && ledgerData.totals) ? ledgerData.totals.totalVerifiedPayments : (stats && stats.totalCollected) || 0).toLocaleString('en-IN') %>
         </div>
-        <p class="text-[12px] text-on-surface-variant">Student token deposits secured</p>
+        <p class="text-[12px] text-on-surface-variant">All lifetime verified transactions</p>
       </div>
 
-      <div class="p-space-md rounded-xl bg-secondary-container/30 border border-secondary/20 space-y-1">
-        <span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-bold">Settled &amp; Disbursed</span>
-        <div class="font-headline-md text-headline-md font-bold text-on-secondary-container">
-          ₹<%= ((stats && stats.settledAmount) || 0).toLocaleString('en-IN') %>
+      <div class="p-space-md rounded-xl bg-emerald-50/80 border border-emerald-200/80 space-y-1">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-emerald-800 font-bold">Collected This Month</span>
+        <div class="font-headline-md text-headline-md font-bold text-emerald-900">
+          ₹<%= ((typeof ledgerData !== 'undefined' && ledgerData.totals) ? ledgerData.totals.paidThisMonth : 0).toLocaleString('en-IN') %>
         </div>
-        <p class="text-[12px] text-on-surface-variant">Transferred with bank UTR proof</p>
+        <p class="text-[12px] text-emerald-800">Current calendar month intake</p>
       </div>
 
       <div class="p-space-md rounded-xl bg-amber-50/80 border border-amber-200/80 space-y-1">
-        <span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-800 font-bold">Pending Escrow Release</span>
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-amber-800 font-bold">Pending Rent Due</span>
         <div class="font-headline-md text-headline-md font-bold text-amber-900">
-          ₹<%= ((stats && stats.pendingSettlement) || 0).toLocaleString('en-IN') %>
+          ₹<%= ((typeof ledgerData !== 'undefined' && ledgerData.totals) ? ledgerData.totals.pendingAmount : 0).toLocaleString('en-IN') %>
         </div>
-        <p class="text-[12px] text-amber-800">Under campus clearance / check-in</p>
+        <p class="text-[12px] text-amber-800">Active monthly billing cycles</p>
+      </div>
+
+      <div class="p-space-md rounded-xl bg-red-50/80 border border-red-200/80 space-y-1">
+        <span class="font-label-sm text-label-sm uppercase tracking-wider text-red-800 font-bold">Overdue Rent Balance</span>
+        <div class="font-headline-md text-headline-md font-bold text-red-900">
+          ₹<%= ((typeof ledgerData !== 'undefined' && ledgerData.totals) ? ledgerData.totals.overdueAmount : 0).toLocaleString('en-IN') %>
+        </div>
+        <p class="text-[12px] text-red-800">Past payment due dates</p>
+      </div>
+    </div>
+
+    <!-- Verified Transactions Table -->
+    <% if (typeof ledgerData !== 'undefined' && ledgerData.verifiedPayments && ledgerData.verifiedPayments.length > 0) { %>
+      <div class="pt-2">
+        <h3 class="text-sm font-bold text-on-surface mb-2">Recent Verified Transactions</h3>
+        <div class="overflow-x-auto border border-outline-variant/20 rounded-xl">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container-low text-on-surface-variant uppercase font-semibold">
+              <tr>
+                <th class="py-2.5 px-3">Order Code</th>
+                <th class="py-2.5 px-3">Student</th>
+                <th class="py-2.5 px-3">Stay</th>
+                <th class="py-2.5 px-3">Payment Type</th>
+                <th class="py-2.5 px-3">Amount</th>
+                <th class="py-2.5 px-3">Date</th>
+                <th class="py-2.5 px-3 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10 text-on-surface">
+              <% ledgerData.verifiedPayments.slice(0, 5).forEach(pay => { %>
+                <tr class="hover:bg-surface-container-low/40">
+                  <td class="py-2 px-3 font-mono font-semibold text-primary"><%= pay.orderId || pay.transactionId || 'ORD-VERIFIED' %></td>
+                  <td class="py-2 px-3 font-medium"><%= pay.user ? pay.user.name : 'Student' %></td>
+                  <td class="py-2 px-3"><%= pay.property ? pay.property.title : 'Stay' %></td>
+                  <td class="py-2 px-3 capitalize"><%= pay.paymentType === 'monthly_rent' ? 'Monthly Rent' : 'Reservation Hold' %></td>
+                  <td class="py-2 px-3 font-bold text-tertiary-container">₹<%= (pay.amount || 0).toLocaleString('en-IN') %></td>
+                  <td class="py-2 px-3 text-outline"><%= new Date(pay.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></td>
+                  <td class="py-2 px-3 text-right">
+                    <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">Verified</span>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% } %>
+  </section>
+
+  <!-- Automated Bank Payouts & Cashier Notice (Stitch Partner Hub) -->
+  <section class="p-space-lg rounded-2xl bg-surface-container-lowest shadow-sm border border-outline-variant/30 space-y-space-md">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm border-b border-outline-variant/20 pb-space-md">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary text-[22px]">payments</span>
+          <h2 class="font-title-lg text-title-lg font-bold text-on-surface">Automated Bank Settlements &amp; Cashier</h2>
+          <span class="px-2.5 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-semibold">
+            Automated API Integration Coming Soon
+          </span>
+        </div>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Automated host bank payouts will be enabled once our banking payout API partner integration goes live. All verified student payments are recorded in the ledger above and will be disbursed directly to your registered destination.
+        </p>
+      </div>
+      <a href="/owner/settlement" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors self-start sm:self-auto">
+        <span class="material-symbols-outlined text-[16px]">settings</span>
+        <span>Update Payout Details</span>
+      </a>
+    </div>
+
+    <!-- Settlement Destination Preview Card -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-space-md pt-space-xs">
+      <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-2">
+        <span class="text-xs uppercase tracking-wider text-on-surface-variant font-bold block">Configured Payout Destination</span>
+        <% if (currentUser.settlementProfile && currentUser.settlementProfile.isConfigured) { %>
+          <div class="space-y-1 text-sm">
+            <p><span class="text-on-surface-variant">Account Holder:</span> <strong class="text-on-surface"><%= currentUser.settlementProfile.accountHolderName %></strong></p>
+            <% if (currentUser.settlementProfile.settlementMethod === 'upi') { %>
+              <p><span class="text-on-surface-variant">UPI ID:</span> <strong class="font-mono text-primary"><%= currentUser.settlementProfile.upiId %></strong></p>
+            <% } else { %>
+              <p><span class="text-on-surface-variant">Bank:</span> <strong><%= currentUser.settlementProfile.bankName %></strong> (<%= currentUser.settlementProfile.ifscCode %>)</p>
+              <p><span class="text-on-surface-variant">Account:</span> <strong class="font-mono">••••<%= String(currentUser.settlementProfile.accountNumber || '').slice(-4) %></strong></p>
+            <% } %>
+          </div>
+        <% } else { %>
+          <div class="flex items-center gap-2 text-amber-800 text-sm">
+            <span class="material-symbols-outlined text-[18px]">warning</span>
+            <span>No payout destination configured yet. Please set your bank or UPI details in <a href="/owner/settlement" class="underline font-bold">Settlement Settings</a>.</span>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="p-space-md rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col justify-between gap-space-sm">
+        <div class="space-y-1">
+          <span class="text-xs uppercase tracking-wider text-on-surface-variant font-bold block">Instant Cashier Withdrawal</span>
+          <p class="text-xs text-on-surface-variant">
+            Automated host withdrawals are currently in sandbox staging. Platform operations verify and disburse payments directly via manual settlement batch clearance.
+          </p>
+        </div>
+        <button type="button" disabled class="w-full py-2.5 px-4 rounded-xl bg-surface-container-high text-outline cursor-not-allowed text-xs font-bold flex items-center justify-center gap-1.5 opacity-70">
+          <span class="material-symbols-outlined text-[16px]">lock</span>
+          <span>Automated Payout API Integration In Progress</span>
+        </button>
       </div>
     </div>
   </section>

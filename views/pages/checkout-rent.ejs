@@ -1,0 +1,147 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="max-w-xl mx-auto px-margin-mobile md:px-margin py-space-md space-y-space-md">
+  <!-- 1. Top Urgency / Cycle Due Card -->
+  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm space-y-space-sm overflow-hidden relative border border-outline-variant/30">
+    <div class="flex items-center justify-between gap-space-xs">
+      <div class="inline-flex items-center gap-1.5 <%= rentPayment.status === 'overdue' ? 'bg-error/10 text-error' : 'bg-secondary-container text-on-secondary-container' %> px-2.5 py-1 rounded-full font-label-sm text-label-sm font-bold tracking-wide">
+        <span class="material-symbols-outlined text-[15px]"><%= rentPayment.status === 'overdue' ? 'warning' : 'calendar_clock' %></span>
+        <span><%= rentPayment.status === 'overdue' ? 'RENT PAYMENT OVERDUE' : 'MONTHLY RENT DUE' %></span>
+      </div>
+      <div class="flex items-center gap-1 text-tertiary-container font-label-md text-label-md bg-tertiary-fixed/60 px-2 py-0.5 rounded-full font-bold">
+        <span class="material-symbols-outlined text-[14px]">event</span>
+        <span>Due: <%= new Date(rentPayment.dueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+      </div>
+    </div>
+    <div class="space-y-1">
+      <p class="font-title-md text-title-md text-on-surface font-semibold">
+        Month <%= rentPayment.cycleNumber %> Rent • <%= property.roomSharing %> Room
+      </p>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Billing Term: <%= new Date(rentPayment.billingPeriod.startDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %> – <%= new Date(rentPayment.billingPeriod.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. Property & Room Reservation Summary -->
+  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm space-y-space-md border border-outline-variant/30">
+    <div class="flex gap-space-md items-start">
+      <img class="w-20 h-20 rounded-xl object-cover shrink-0 bg-surface-container" 
+           alt="<%= property.title %>" 
+           src="<%= (property.images && property.images.length) ? property.images[0].url : 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80' %>"/>
+      <div class="flex-1 min-w-0">
+        <div class="inline-flex items-center gap-1 bg-surface-container px-2 py-0.5 rounded text-primary font-label-sm text-label-sm mb-1">
+          <span class="material-symbols-outlined text-[12px]">apartment</span>
+          <span><%= property.propertyType %></span>
+        </div>
+        <h2 class="font-title-md text-title-md text-on-surface font-semibold truncate"><%= property.title %></h2>
+        <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+          <span class="material-symbols-outlined text-[14px] shrink-0 text-secondary">location_on</span>
+          <span class="truncate"><%= property.locality %>, <%= property.city %></span>
+        </p>
+      </div>
+    </div>
+    <div class="bg-surface-container-low rounded-xl p-space-sm space-y-space-xs">
+      <div class="flex justify-between items-center text-on-surface">
+        <span class="font-label-md text-label-md text-on-surface-variant">Resident</span>
+        <span class="font-label-md text-label-md font-bold text-primary"><%= currentUser.name %></span>
+      </div>
+      <div class="flex justify-between items-center text-on-surface">
+        <span class="font-label-md text-label-md text-on-surface-variant">Allocated Bed Space</span>
+        <span class="font-label-md text-label-md"><%= booking.roomType || 'Standard' %> Room</span>
+      </div>
+      <div class="flex justify-between items-center text-on-surface">
+        <span class="font-label-md text-label-md text-on-surface-variant">Stay Term</span>
+        <span class="font-label-md text-label-md"><%= booking.durationMonths %> Months Academic Lease</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Secure Payment Notice Banner -->
+  <div class="bg-surface-container-low rounded-2xl p-space-md shadow-sm space-y-space-sm relative overflow-hidden">
+    <div class="flex items-start gap-3">
+      <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center shrink-0 text-primary">
+        <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">shield_with_heart</span>
+      </div>
+      <div>
+        <h3 class="font-title-md text-title-md font-bold text-primary">Secure Payment Processing</h3>
+        <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+          Your payment of ₹<%= rentPayment.amount.toLocaleString('en-IN') %> is processed directly through the official payment gateway. A verified receipt and updated ledger record are generated immediately upon confirmation.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Transparent Payment Breakdown Ledger -->
+  <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm space-y-space-md border border-outline-variant/30">
+    <div class="flex items-center justify-between">
+      <h3 class="font-title-md text-title-md text-on-surface font-semibold">Rent Breakdown</h3>
+      <span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded text-secondary font-semibold">Verified Ledger</span>
+    </div>
+    <div class="space-y-2.5">
+      <div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+        <span>Monthly Room Rent (Month <%= rentPayment.cycleNumber %>)</span>
+        <span class="text-on-surface font-medium">₹<%= rentPayment.amount.toLocaleString('en-IN') %></span>
+      </div>
+      <div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+        <span>Convenience / Service Surcharge</span>
+        <span class="text-primary font-medium">₹0 (Free)</span>
+      </div>
+      <div class="h-px bg-surface-container-highest my-1"></div>
+      <div class="flex justify-between items-center pt-0.5">
+        <div>
+          <div class="font-title-md text-title-md font-bold text-on-surface">Total Rent Payable Today</div>
+          <div class="font-body-sm text-body-sm text-secondary">Covers stay up to <%= new Date(rentPayment.billingPeriod.endDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+        </div>
+        <div class="text-right">
+          <span class="font-headline-sm text-headline-sm font-bold text-primary">₹<%= rentPayment.amount.toLocaleString('en-IN') %></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Payment Submission Form (POST to /payments/create-rent-order) -->
+  <form action="/payments/create-rent-order" method="POST" class="space-y-space-md">
+    <input type="hidden" name="rentPaymentId" value="<%= rentPayment._id %>"/>
+
+    <div class="bg-surface-container-lowest rounded-2xl p-space-md shadow-sm space-y-space-sm border border-outline-variant/30 ring-2 ring-primary">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold">
+            <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-label-lg text-label-lg font-bold text-on-surface">Instant UPI via ZAP</span>
+              <span class="font-label-sm text-label-sm bg-secondary-container text-on-secondary-container px-1.5 py-0.2 rounded font-semibold">0% Surcharge</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Google Pay, PhonePe, Paytm, BHIM</p>
+          </div>
+        </div>
+        <span class="material-symbols-outlined text-primary text-[22px]">radio_button_checked</span>
+      </div>
+
+      <div class="pt-2 border-t border-surface-container-highest flex items-center justify-between text-body-sm font-body-sm text-secondary px-1">
+        <span class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px] text-primary">shield</span>
+          <span>Official ZapUPI Hosted Payment Gateway</span>
+        </span>
+        <span class="font-medium text-primary">Secure Checkout</span>
+      </div>
+    </div>
+
+    <!-- Action Pay Button -->
+    <button type="submit" class="w-full h-14 bg-primary hover:bg-on-primary-fixed-variant active:scale-[0.98] transition-all text-on-primary rounded-2xl font-label-lg text-label-lg font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
+      <span>Pay Monthly Rent ₹<%= rentPayment.amount.toLocaleString('en-IN') %></span>
+      <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+    </button>
+
+    <!-- Trust Badges -->
+    <div class="flex items-center justify-center gap-2 text-outline text-label-sm font-label-sm pt-2">
+      <span class="material-symbols-outlined text-[14px] text-primary">lock</span>
+      <span>Secure Payment Gateway</span>
+      <span>•</span>
+      <span>Powered by ZAP UPI Gateway</span>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,125 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <div class="max-w-4xl mx-auto px-margin-mobile md:px-margin space-y-space-lg">
+
+    <!-- Header & Quick Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/30">
+      <div class="space-y-1">
+        <div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+          <span class="material-symbols-outlined text-[18px] text-primary">notifications</span>
+          <span>In-App Activity &amp; Alerts</span>
+        </div>
+        <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">Notifications</h1>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">
+          Stay up to date with your stay reservations, rent cycle due dates, and host communications.
+        </p>
+      </div>
+
+      <% if (unreadCount > 0) { %>
+        <form action="/notifications/read-all" method="POST">
+          <button type="submit" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md font-semibold transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-[18px]">done_all</span>
+            <span>Mark All as Read (<%= unreadCount %>)</span>
+          </button>
+        </form>
+      <% } %>
+    </div>
+
+    <!-- Notifications Feed -->
+    <% if (notifications && notifications.length > 0) { %>
+      <div class="space-y-space-xs">
+        <% notifications.forEach(notif => { %>
+          <%
+            let icon = 'notifications';
+            let iconColor = 'text-primary';
+            let bgColor = 'bg-surface-container';
+
+            if (notif.type === 'rent_due' || notif.type === 'rent_reminder') {
+              icon = 'calendar_clock';
+              iconColor = 'text-amber-700';
+              bgColor = 'bg-amber-100';
+            } else if (notif.type === 'rent_overdue') {
+              icon = 'warning';
+              iconColor = 'text-red-700';
+              bgColor = 'bg-red-100';
+            } else if (notif.type === 'payment_success') {
+              icon = 'verified';
+              iconColor = 'text-emerald-700';
+              bgColor = 'bg-emerald-100';
+            } else if (notif.type === 'payment_failed') {
+              icon = 'error';
+              iconColor = 'text-red-700';
+              bgColor = 'bg-red-100';
+            } else if (notif.type === 'chat_message') {
+              icon = 'chat';
+              iconColor = 'text-primary';
+              bgColor = 'bg-secondary-container';
+            } else if (notif.type === 'booking_status') {
+              icon = 'apartment';
+              iconColor = 'text-secondary';
+              bgColor = 'bg-secondary-container';
+            }
+          %>
+          <div class="p-space-md rounded-2xl transition-all border <%= !notif.isRead ? 'bg-surface-container-lowest border-primary/30 shadow-sm ring-1 ring-primary/10' : 'bg-surface-container-lowest/80 border-outline-variant/20 hover:bg-surface-container-lowest' %> flex items-start justify-between gap-space-md">
+            
+            <div class="flex items-start gap-space-md min-w-0">
+              <div class="w-10 h-10 rounded-xl <%= bgColor %> <%= iconColor %> flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-[20px]"><%= icon %></span>
+              </div>
+
+              <div class="space-y-1 min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="font-title-sm text-title-sm <%= !notif.isRead ? 'font-bold text-on-surface' : 'font-semibold text-on-surface' %>">
+                    <%= notif.title %>
+                  </h3>
+                  <% if (!notif.isRead) { %>
+                    <span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+                  <% } %>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                  <%= notif.message %>
+                </p>
+                <div class="flex items-center gap-3 pt-1 text-xs">
+                  <span class="text-outline">
+                    <%= new Date(notif.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) %>
+                  </span>
+                  <% if (notif.link) { %>
+                    <a href="<%= notif.link %>" class="text-primary font-semibold hover:underline flex items-center gap-0.5">
+                      <span>View details</span>
+                      <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                    </a>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Single Mark Read Form -->
+            <% if (!notif.isRead) { %>
+              <form action="/notifications/<%= notif._id %>/read" method="POST" class="shrink-0">
+                <button type="submit" class="p-1.5 rounded-lg text-outline hover:text-primary hover:bg-surface-container transition-colors" title="Mark as read">
+                  <span class="material-symbols-outlined text-[18px]">check</span>
+                </button>
+              </form>
+            <% } %>
+
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <!-- Empty State -->
+      <div class="p-space-2xl rounded-2xl bg-surface-container-lowest border border-outline-variant/30 text-center space-y-space-md">
+        <div class="w-16 h-16 rounded-full bg-surface-container text-outline flex items-center justify-center mx-auto">
+          <span class="material-symbols-outlined text-[32px]">notifications_none</span>
+        </div>
+        <div class="space-y-1">
+          <h3 class="font-title-lg text-title-lg font-bold text-on-surface">No notifications yet</h3>
+          <p class="font-body-md text-body-md text-on-surface-variant max-w-sm mx-auto">
+            You are all caught up! Booking updates, monthly rent reminders, and host messages will appear here.
+          </p>
+        </div>
+      </div>
+    <% } %>
+
+  </div>
+</div>

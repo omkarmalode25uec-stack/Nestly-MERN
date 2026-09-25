@@ -178,12 +178,34 @@ router.get('/bookings/:id', isLoggedIn, async (req, res, next) => {
       return res.redirect('/')
     }
 
+    // Security: Redact owner phone number from student view
+    if (isStudent && booking.owner) {
+      booking.owner.phone = undefined
+    }
+
+    // Sync rent cycles for confirmed bookings
+    let rentPayments = []
+    let nextDueRentPayment = null
+    if (booking.status === 'confirmed') {
+      try {
+        const RentCycleService = require('../services/rentCycleService')
+        const RentPayment = require('../models/RentPayment')
+        await RentCycleService.syncBookingCycles(booking)
+        rentPayments = await RentPayment.find({ booking: booking._id }).sort({ cycleNumber: 1 })
+        nextDueRentPayment = rentPayments.find(r => r.status === 'due' || r.status === 'overdue')
+      } catch (syncErr) {
+        console.error('[BookingDetails] Cycle sync notice:', syncErr.message)
+      }
+    }
+
     res.render('pages/bookings/show', {
       title: `Booking Details | ${booking.property ? booking.property.title : 'Nestly'}`,
       activePage: 'bookings',
       booking,
       isStudent,
-      isOwner
+      isOwner,
+      rentPayments,
+      nextDueRentPayment
     })
   } catch (err) {
     next(err)

@@ -144,13 +144,21 @@ router.get('/dashboard', isLoggedIn, isOwner, async (req, res, next) => {
       totalCollected
     }
 
+    const RentCycleService = require('../services/rentCycleService')
+    const [studentManagement, ledgerData] = await Promise.all([
+      RentCycleService.getOwnerStudentManagementData(req.user._id).catch(() => ({ students: [], stats: {} })),
+      RentCycleService.getOwnerEarningsLedger(req.user._id).catch(() => ({ totals: {}, verifiedPayments: [] }))
+    ])
+
     res.render('pages/owner/dashboard', {
       title: 'Partner / Owner Operations Dashboard | Nestly',
       activePage: 'owner-dashboard',
       properties,
       bookings,
       settlements,
-      stats
+      stats,
+      studentManagement,
+      ledgerData
     })
   } catch (err) {
     next(err)

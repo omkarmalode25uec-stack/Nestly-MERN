@@ -1,0 +1,109 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="relative w-full min-h-[calc(100vh-80px)] bg-surface py-space-xl">
+  <div class="max-w-2xl mx-auto px-margin-mobile md:px-margin space-y-space-lg">
+
+    <!-- Top Breadcrumb & Title -->
+    <div class="space-y-space-xs">
+      <nav aria-label="Breadcrumb" class="flex items-center gap-space-xs text-on-surface-variant font-label-md text-label-md">
+        <a class="hover:text-primary transition-colors" href="/stays">Stays</a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <a class="hover:text-primary transition-colors" href="/stays/<%= property._id %>"><%= property.title %></a>
+        <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+        <span class="text-primary font-semibold">Message Host</span>
+      </nav>
+      <h1 class="font-headline-md text-headline-md text-on-surface font-bold tracking-tight">Chat with Accommodation Host</h1>
+      <p class="font-body-sm text-body-sm text-on-surface-variant">
+        Send a direct message regarding availability, rent terms, rules, or facilities.
+      </p>
+    </div>
+
+    <!-- Property Card Snippet -->
+    <div class="p-space-md rounded-2xl bg-surface-container-lowest border border-outline-variant/30 flex items-center gap-space-md shadow-sm">
+      <img src="<%= property.images && property.images.length ? property.images[0] : 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgBDIxb-WpmtqzQeuCJSuSq2xX8QDvXr1slAGbURtXyJxN1EqB7ZQN2uJsIR2IHJAeFy8PJBYdzTUXtXauyeiyJGJ_hIkT7iD6LFwF3Kv2furgx1OFHMa3IgG6pkdwEkXtd1oaVY81xlSKh_4wY83NF4dvK1FY7rV1QydaTNCcnwXskfd2UVBLHS0jGhK42ss_rQBeQ4JTh6BZjWV5_73HR08RwMDZlbIk5AJMDqAewgHwnHt0Qoul' %>" alt="<%= property.title %>" class="w-16 h-16 rounded-xl object-cover shrink-0 bg-surface-container"/>
+      <div class="space-y-0.5 min-w-0 flex-1">
+        <h3 class="font-title-md text-title-md text-on-surface font-bold truncate"><%= property.title %></h3>
+        <p class="text-xs text-on-surface-variant flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px] text-secondary">location_on</span>
+          <span><%= property.locality %>, <%= property.city %></span>
+        </p>
+        <p class="text-xs text-tertiary-container font-bold">₹<%= property.price.toLocaleString('en-IN') %>/mo • <%= property.roomSharing %> Sharing</p>
+      </div>
+      <div class="text-right shrink-0">
+        <div class="flex items-center gap-1 text-xs text-on-surface-variant">
+          <span class="material-symbols-outlined text-[15px] text-primary">person</span>
+          <span class="font-semibold text-on-surface"><%= property.owner ? property.owner.name : 'Host' %></span>
+        </div>
+        <span class="text-[10px] text-secondary font-semibold bg-secondary-container px-2 py-0.5 rounded-full inline-block mt-1">Verified Host</span>
+      </div>
+    </div>
+
+    <!-- Inquiry Form -->
+    <form action="/chats/start" method="POST" class="p-space-lg rounded-2xl bg-surface-container-lowest border border-outline-variant/30 space-y-space-md shadow-sm">
+      <input type="hidden" name="propertyId" value="<%= property._id %>"/>
+
+      <!-- Topic Selection -->
+      <div class="space-y-2">
+        <label class="block font-label-md text-label-md text-on-surface font-semibold">
+          Select Topic
+        </label>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <% 
+            const topics = [
+              { id: 'availability', label: 'Availability', icon: 'event_available' },
+              { id: 'rent', label: 'Rent & Pricing', icon: 'payments' },
+              { id: 'amenities', label: 'Amenities', icon: 'wifi' },
+              { id: 'rules', label: 'Rules & Curfew', icon: 'rule' },
+              { id: 'location', label: 'Campus Distance', icon: 'directions_walk' },
+              { id: 'booking-related questions', label: 'Booking Help', icon: 'help_outline' }
+            ];
+          %>
+          <% topics.forEach((t, i) => { %>
+            <label class="flex items-center gap-2 p-2.5 rounded-xl border border-outline-variant/30 hover:border-primary/50 cursor-pointer transition-colors bg-surface-container-low has-[:checked]:bg-secondary-container has-[:checked]:border-secondary has-[:checked]:text-on-secondary-container">
+              <input type="radio" name="topic" value="<%= t.id %>" <%= (typeof defaultTopic !== 'undefined' && defaultTopic === t.id) || (!defaultTopic && i === 0) ? 'checked' : '' %> class="text-primary focus:ring-primary h-4 w-4"/>
+              <span class="material-symbols-outlined text-[18px]"><%= t.icon %></span>
+              <span class="text-xs font-semibold"><%= t.label %></span>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+
+      <!-- Message Textarea -->
+      <div class="space-y-1">
+        <div class="flex justify-between items-center">
+          <label for="chatMessageInput" class="font-label-md text-label-md text-on-surface font-semibold">Your Message to Host</label>
+          <span class="text-[11px] text-outline" id="charCount">0 / 1000</span>
+        </div>
+        <textarea id="chatMessageInput" name="message" rows="5" maxlength="1000" required placeholder="Hi <%= property.owner ? property.owner.name : 'Host' %>, I am looking for accommodation from next month. Could you please confirm if..." class="w-full p-space-md rounded-xl bg-surface-container-low border border-outline-variant/40 focus:border-primary focus:ring-1 focus:ring-primary text-body-md text-on-surface outline-none transition-all placeholder:text-outline-variant"></textarea>
+      </div>
+
+      <!-- Privacy Guarantee Note -->
+      <div class="p-3 rounded-xl bg-surface-container flex items-center gap-2 text-xs text-on-surface-variant">
+        <span class="material-symbols-outlined text-[18px] text-primary shrink-0">lock</span>
+        <span>Your contact number is never shared. All responses from the host will arrive in your Nestly Messages inbox.</span>
+      </div>
+
+      <!-- Submit & Cancel Buttons -->
+      <div class="flex items-center justify-end gap-space-sm pt-space-xs border-t border-outline-variant/20">
+        <a href="/stays/<%= property._id %>" class="px-4 py-2.5 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors">
+          Cancel
+        </a>
+        <button type="submit" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-bold transition-all shadow-sm flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[18px]">send</span>
+          <span>Send Message</span>
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+<script>
+  const msgInput = document.getElementById('chatMessageInput');
+  const charCount = document.getElementById('charCount');
+  if (msgInput && charCount) {
+    msgInput.addEventListener('input', () => {
+      charCount.textContent = `${msgInput.value.length} / 1000`;
+    });
+  }
+</script>

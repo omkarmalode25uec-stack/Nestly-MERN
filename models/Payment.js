@@ -22,6 +22,16 @@ const paymentSchema = new mongoose.Schema(
       ref: 'Property',
       default: null
     },
+    rentPayment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'RentPayment',
+      default: null
+    },
+    paymentType: {
+      type: String,
+      enum: ['booking_token', 'monthly_rent'],
+      default: 'booking_token'
+    },
     orderId: {
       type: String,
       required: true,
